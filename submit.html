@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Здати роботу · Інформатика</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="logo">~/informatyka/<span class="dim">submit</span> $</div>
+    <div class="links">
+      <a href="index.html">index.html</a>
+      <a href="10-klas/index.html">10-klas</a>
+      <a href="11-klas/index.html">11-klas</a>
+      <a href="submit.html" class="active">submit.html</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap narrow">
+
+  <div class="eyebrow"><span class="green">$</span> ./submit --lesson</div>
+  <h1>Здати <span class="green">роботу</span></h1>
+  <p class="lead">Заповни поля й надішли — робота одразу потрапить у таблицю вчителя. Окремий обліковий запис не потрібен.</p>
+
+  <form id="submitForm">
+    <div class="form-row">
+      <div class="field">
+        <label>Прізвище</label>
+        <input type="text" id="lastname" required placeholder="Наприклад: Шевченко">
+      </div>
+      <div class="field">
+        <label>Ім'я</label>
+        <input type="text" id="firstname" required placeholder="Наприклад: Тарас">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="field">
+        <label>Клас</label>
+        <select id="klass" required>
+          <option value="" disabled selected>Обери клас</option>
+          <option>10-А</option><option>10-Б</option><option>10-В</option>
+          <option>11-А</option><option>11-Б</option><option>11-В</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Урок / завдання</label>
+        <select id="lesson" required>
+          <option value="" disabled selected>Обери урок</option>
+          <optgroup label="10 клас · Тема 1">
+            <option>Урок 1 — БЖД, інформація/повідомлення/дані</option>
+            <option>Урок 4 — ПР1. Проблеми інформаційної безпеки</option>
+          </optgroup>
+          <optgroup label="10 клас · Тема 2">
+            <option>Урок 11 — Статистичний аналіз даних</option>
+            <option>Урок 12 — Візуалізація даних, інфографіка</option>
+            <option>Урок 15 — Тематичне оцінювання (Місія аналітика)</option>
+          </optgroup>
+          <option>Інше</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Тип роботи</label>
+      <select id="worktype" required>
+        <option value="" disabled selected>Обери тип</option>
+        <option>Практична робота</option>
+        <option>Тематичне оцінювання</option>
+        <option>Домашнє завдання</option>
+        <option>Інше</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Посилання на роботу (Google Docs / Sheets / Slides)</label>
+      <input type="url" id="link" placeholder="https://docs.google.com/... (не обов'язково, якщо є текстова відповідь нижче)">
+    </div>
+
+    <div class="field">
+      <label>Або коротка текстова відповідь / коментар</label>
+      <textarea id="answer" placeholder="Наприклад, результат «Місії аналітика»: 17/19 балів"></textarea>
+    </div>
+
+    <button type="submit" class="btn">$ надіслати →</button>
+    <div class="status-msg" id="statusMsg"></div>
+  </form>
+
+  <div class="panel panel-note" style="margin-top:34px;">
+    <h3>⚙ Для вчителя: як це підключити (одноразово)</h3>
+    <p>1. Створи новий Google Sheet — це буде твій «кабінет» з усіма роботами.</p>
+    <p>2. Відкрий <code>Розширення → Apps Script</code>, встав код із файлу <code>apps-script/Code.gs</code> (додається окремо), збережи.</p>
+    <p>3. <code>Deploy → New deployment → Web app</code>. Execute as: <code>Me</code>. Who has access: <code>Anyone</code>. Натисни Deploy й скопіюй URL веб-застосунку.</p>
+    <p>4. Встав цей URL замість <code>SCRIPT_URL</code> на початку скрипта внизу цієї сторінки (у файлі <code>submit.html</code>) — і форма запрацює.</p>
+  </div>
+
+  <footer>Дані надсилаються напряму у ваш Google Sheet — сторонні сервери не використовуються.</footer>
+</div>
+
+<script>
+  // === НАЛАШТУВАННЯ ВЧИТЕЛЯ ===
+  // Встав сюди URL свого Google Apps Script Web App (див. підказку вище)
+  const SCRIPT_URL = "ВСТАВ_СЮДИ_URL_ТВОГО_APPS_SCRIPT_WEB_APP";
+
+  const form = document.getElementById('submitForm');
+  const statusMsg = document.getElementById('statusMsg');
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    if (SCRIPT_URL.indexOf('ВСТАВ_СЮДИ') !== -1) {
+      statusMsg.textContent = '⚠ Форму ще не підключено до Google Sheet. Учителю: заповни SCRIPT_URL у коді сторінки (інструкція вище).';
+      statusMsg.className = 'status-msg show status-err';
+      return;
+    }
+
+    const data = new URLSearchParams({
+      lastname: document.getElementById('lastname').value,
+      firstname: document.getElementById('firstname').value,
+      klass: document.getElementById('klass').value,
+      lesson: document.getElementById('lesson').value,
+      worktype: document.getElementById('worktype').value,
+      link: document.getElementById('link').value,
+      answer: document.getElementById('answer').value,
+      timestamp: new Date().toLocaleString('uk-UA')
+    });
+
+    statusMsg.textContent = '⏳ Надсилаю...';
+    statusMsg.className = 'status-msg show';
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: data.toString()
+    }).then(function(){
+      statusMsg.textContent = '✓ Роботу надіслано! Учитель побачить її в таблиці.';
+      statusMsg.className = 'status-msg show status-ok';
+      form.reset();
+    }).catch(function(){
+      statusMsg.textContent = '✕ Не вдалося надіслати. Перевір інтернет-з\'єднання й спробуй ще раз.';
+      statusMsg.className = 'status-msg show status-err';
+    });
+  });
+</script>
+
+</body>
+</html>
