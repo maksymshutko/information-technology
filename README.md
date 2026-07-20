@@ -1,0 +1,2 @@
+# information-technology
+Кабінет інформатики
