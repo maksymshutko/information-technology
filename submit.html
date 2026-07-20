@@ -10,19 +10,33 @@
 
 <nav class="topnav">
   <div class="topnav-inner">
-    <div class="logo">~/informatyka/<span class="dim">submit</span> $</div>
+    <div class="logo">
+      <svg class="mascot-nav" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="gNavSub" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs>
+        <line x1="60" y1="6" x2="60" y2="20" stroke="#c084fc" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="60" cy="6" r="7" fill="#f472b6"/>
+        <rect x="14" y="20" width="92" height="82" rx="28" fill="url(#gNavSub)"/>
+        <circle cx="10" cy="58" r="9" fill="#f472b6"/><circle cx="110" cy="58" r="9" fill="#f472b6"/>
+        <ellipse cx="42" cy="60" rx="13" ry="16" fill="#fff"/><ellipse cx="78" cy="60" rx="13" ry="16" fill="#fff"/>
+        <circle cx="45" cy="64" r="6.5" fill="#362a52"/><circle cx="81" cy="64" r="6.5" fill="#362a52"/>
+        <circle cx="41" cy="58" r="2.4" fill="#fff"/><circle cx="77" cy="58" r="2.4" fill="#fff"/>
+        <circle cx="28" cy="82" r="6" fill="#fbcfe8" opacity=".85"/><circle cx="92" cy="82" r="6" fill="#fbcfe8" opacity=".85"/>
+        <path d="M48 88 Q60 97 72 88" stroke="#362a52" stroke-width="4" fill="none" stroke-linecap="round"/>
+      </svg>
+      Інформатика
+    </div>
     <div class="links">
-      <a href="index.html">index.html</a>
-      <a href="10-klas/index.html">10-klas</a>
-      <a href="11-klas/index.html">11-klas</a>
-      <a href="submit.html" class="active">submit.html</a>
+      <a href="index.html">Головна</a>
+      <a href="10-klas/index.html">10 клас</a>
+      <a href="11-klas/index.html">11 клас</a>
+      <a href="submit.html" class="active">Здати роботу</a>
     </div>
   </div>
 </nav>
 
 <div class="wrap narrow">
 
-  <div class="eyebrow"><span class="green">$</span> ./submit --lesson</div>
+  <div class="eyebrow"><span class="green">✦</span> Здача робіт</div>
   <h1>Здати <span class="green">роботу</span></h1>
   <p class="lead">Заповни поля й надішли — робота одразу потрапить у таблицю вчителя. Окремий обліковий запис не потрібен.</p>
 
@@ -53,6 +67,7 @@
           <option value="" disabled selected>Обери урок</option>
           <optgroup label="10 клас · Тема 1">
             <option>Урок 1 — БЖД, інформація/повідомлення/дані</option>
+            <option>Урок 2 — Інформаційні системи</option>
             <option>Урок 4 — ПР1. Проблеми інформаційної безпеки</option>
           </optgroup>
           <optgroup label="10 клас · Тема 2">
@@ -86,7 +101,7 @@
       <textarea id="answer" placeholder="Наприклад, результат «Місії аналітика»: 17/19 балів"></textarea>
     </div>
 
-    <button type="submit" class="btn">$ надіслати →</button>
+    <button type="submit" class="btn">🚀 Надіслати роботу</button>
     <div class="status-msg" id="statusMsg"></div>
   </form>
 

@@ -10,30 +10,49 @@
 
 <nav class="topnav">
   <div class="topnav-inner">
-    <div class="logo">~/informatyka/<span class="dim">10-klas</span> $</div>
+    <div class="logo">
+      <svg class="mascot-nav" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="gNavSoon" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs>
+        <line x1="60" y1="6" x2="60" y2="20" stroke="#c084fc" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="60" cy="6" r="7" fill="#f472b6"/>
+        <rect x="14" y="20" width="92" height="82" rx="28" fill="url(#gNavSoon)"/>
+        <circle cx="10" cy="58" r="9" fill="#f472b6"/><circle cx="110" cy="58" r="9" fill="#f472b6"/>
+        <ellipse cx="42" cy="60" rx="13" ry="16" fill="#fff"/><ellipse cx="78" cy="60" rx="13" ry="16" fill="#fff"/>
+        <circle cx="45" cy="64" r="6.5" fill="#362a52"/><circle cx="81" cy="64" r="6.5" fill="#362a52"/>
+        <circle cx="41" cy="58" r="2.4" fill="#fff"/><circle cx="77" cy="58" r="2.4" fill="#fff"/>
+        <circle cx="28" cy="82" r="6" fill="#fbcfe8" opacity=".85"/><circle cx="92" cy="82" r="6" fill="#fbcfe8" opacity=".85"/>
+        <path d="M48 88 Q60 97 72 88" stroke="#362a52" stroke-width="4" fill="none" stroke-linecap="round"/>
+      </svg>
+      Інформатика
+    </div>
     <div class="links">
-      <a href="../index.html">index.html</a>
-      <a href="index.html" class="active">10-klas</a>
-      <a href="../11-klas/index.html">11-klas</a>
-      <a href="../submit.html">submit.html</a>
+      <a href="../index.html">Головна</a>
+      <a href="index.html" class="active">10 клас</a>
+      <a href="../11-klas/index.html">11 клас</a>
+      <a href="../submit.html">Здати роботу</a>
     </div>
   </div>
 </nav>
 
 <div class="wrap narrow">
   <div class="term">
-    <div class="term-head">
-      <span class="term-dot" style="background:#e0605a;"></span>
-      <span class="term-dot" style="background:#e0a640;"></span>
-      <span class="term-dot" style="background:#4fd67a;"></span>
-      <span class="term-title" id="termTitle">bash</span>
-    </div>
+    <svg class="mascot-hero" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="gHeroSoon" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs>
+      <line x1="60" y1="6" x2="60" y2="20" stroke="#c084fc" stroke-width="6" stroke-linecap="round"/>
+      <circle cx="60" cy="6" r="7" fill="#f472b6"/>
+      <rect x="14" y="20" width="92" height="82" rx="28" fill="url(#gHeroSoon)"/>
+      <circle cx="10" cy="58" r="9" fill="#f472b6"/><circle cx="110" cy="58" r="9" fill="#f472b6"/>
+      <ellipse cx="42" cy="60" rx="13" ry="16" fill="#fff"/><ellipse cx="78" cy="60" rx="13" ry="16" fill="#fff"/>
+      <circle cx="45" cy="64" r="6.5" fill="#362a52"/><circle cx="81" cy="64" r="6.5" fill="#362a52"/>
+      <circle cx="41" cy="58" r="2.4" fill="#fff"/><circle cx="77" cy="58" r="2.4" fill="#fff"/>
+      <circle cx="28" cy="82" r="6" fill="#fbcfe8" opacity=".85"/><circle cx="92" cy="82" r="6" fill="#fbcfe8" opacity=".85"/>
+      <path d="M48 88 Q60 97 72 88" stroke="#362a52" stroke-width="4" fill="none" stroke-linecap="round"/>
+    </svg>
     <div class="term-body">
-      <div class="prompt"><span class="sym">$</span> cat <span id="fileName">urok.html</span></div>
-      <div style="margin: 14px 0; color:#e0a640; font-size:13.5px;">
-        cat: файл ще не створено — матеріал уроку в розробці.
-      </div>
-      <div class="prompt"><span class="sym">$</span> <span class="cursor"></span></div>
+      <div class="term-speech" id="termTitle">Ой, урок ще готується! 🛠️</div>
+      <ul class="term-list">
+        <li>Файл <b id="fileName">urok.html</b> ще не створено</li>
+      </ul>
     </div>
   </div>
 
@@ -49,7 +68,6 @@
   const params = new URLSearchParams(window.location.search);
   const n = params.get('n') || '??';
   document.getElementById('fileName').textContent = 'urok-' + n + '.html';
-  document.getElementById('termTitle').textContent = 'urok-' + n + '.html — bash';
 </script>
 
 </body>
