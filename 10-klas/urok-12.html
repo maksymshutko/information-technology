@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Візуалізація рядів і трендів даних. Інфографіка — Урок 12</title>
+<style>
+  :root{
+    --bg: #f4f6f5;
+    --panel: #ffffff;
+    --ink: #14213d;
+    --muted: #5b6478;
+    --line: #dbe1e8;
+
+    --teal: #256b58;
+    --teal-bg: #e6f2ee;
+    --rust: #a8451f;
+    --rust-bg: #f7e9e1;
+    --indigo: #4a3f80;
+    --indigo-bg: #ecebf6;
+    --amber: #a5710d;
+    --amber-bg: #fbf1de;
+
+    --font-display: -apple-system, "Segoe UI", Arial, sans-serif;
+    --font-mono: ui-monospace, "SFMono-Regular", "Courier New", monospace;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0; background: var(--bg); color: var(--ink);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(20,33,61,0.045) 0px, rgba(20,33,61,0.045) 1px, transparent 1px, transparent 28px),
+      repeating-linear-gradient(90deg, rgba(20,33,61,0.045) 0px, rgba(20,33,61,0.045) 1px, transparent 1px, transparent 28px);
+  }
+
+  .wrap{ max-width: 980px; margin: 0 auto; padding: 44px 24px 80px; }
+
+  /* ---------- HERO ---------- */
+  .eyebrow{
+    font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 1.5px; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 14px;
+  }
+  .eyebrow span{ color: var(--ink); font-weight: 700; }
+  h1{
+    font-family: var(--font-display); font-weight: 800; font-size: clamp(26px, 4vw, 40px);
+    letter-spacing: -0.5px; margin: 0 0 10px; line-height: 1.15;
+  }
+  .subtitle{ color: var(--muted); font-size: 16.5px; max-width: 640px; line-height: 1.55; margin: 0 0 34px; }
+
+  .chart-card{
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+    padding: 26px 30px 20px; margin-bottom: 30px;
+  }
+  .chart-caption{ font-size: 13px; color: var(--muted); margin-top: 10px; line-height: 1.6; }
+  .chart-caption b{ color: var(--ink); }
+  .legend{ display:flex; gap: 22px; margin-top: 14px; flex-wrap: wrap; font-family: var(--font-mono); font-size: 12.5px; }
+  .legend-item{ display:flex; align-items:center; gap:7px; color: var(--muted); }
+  .legend-line{ width:18px; height:2px; display:inline-block; }
+
+  /* icon strip: типи діаграм */
+  .icon-strip{ display:flex; gap: 14px; margin-bottom: 46px; flex-wrap: wrap; }
+  .icon-chip{
+    flex: 1 1 130px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 12px; text-align:center;
+  }
+  .icon-chip svg{ display:block; margin: 0 auto 8px; }
+  .icon-chip span{ font-size: 12px; color: var(--muted); font-family: var(--font-mono); }
+
+  /* ---------- SECTIONS ---------- */
+  section{ margin-bottom: 50px; }
+  .section-head{ display:flex; align-items:baseline; gap: 12px; margin-bottom: 20px; }
+  .section-tag{
+    font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 1px; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 5px; font-weight: 700;
+  }
+  .tag-teal{ background: var(--teal-bg); color: var(--teal); }
+  .tag-rust{ background: var(--rust-bg); color: var(--rust); }
+  .tag-indigo{ background: var(--indigo-bg); color: var(--indigo); }
+  .tag-amber{ background: var(--amber-bg); color: var(--amber); }
+  .section-head h2{ font-family: var(--font-display); font-size: 22px; margin: 0; font-weight: 750; }
+
+  .intro-block{
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 20px 24px;
+    font-size: 15.5px; line-height: 1.7; margin-bottom: 20px;
+  }
+  .intro-block b{ color: var(--ink); }
+  .intro-block .term{ font-family: var(--font-mono); background: #eef1f4; padding: 1px 6px; border-radius: 4px; font-size: 14px; }
+  .intro-block ul{ margin: 8px 0 0; padding-left: 20px; }
+  .intro-block li{ margin-bottom: 6px; }
+
+  .concept-grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  @media (max-width: 760px){ .concept-grid{ grid-template-columns: 1fr; } }
+
+  .concept-card{
+    background: var(--panel); border: 1px solid var(--line); border-left-width: 4px; border-radius: 10px;
+    padding: 18px 18px 16px;
+  }
+  .concept-card h3{ font-size: 15.5px; margin: 0 0 8px; font-weight: 750; }
+  .concept-card p{ font-size: 13.8px; color: var(--muted); line-height: 1.6; margin: 0; }
+  .border-rust{ border-left-color: var(--rust); }
+
+  /* ---------- PROGRAM TOOLS TABLE ---------- */
+  .tool-table{ width:100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow:hidden; }
+  .tool-table th, .tool-table td{ padding: 12px 16px; text-align:left; font-size: 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .tool-table th{ background: var(--indigo-bg); color: var(--indigo); font-family: var(--font-mono); font-size: 11.5px; text-transform: uppercase; letter-spacing: .5px; }
+  .tool-table td:first-child{ font-weight: 700; white-space: nowrap; }
+  .tool-table tr:last-child td{ border-bottom: none; }
+  .tool-table tr:hover td{ background: #fafbfc; }
+  .func-mono{ font-family: var(--font-mono); font-size: 12.5px; background: var(--indigo-bg); color: var(--indigo); padding: 1px 6px; border-radius: 4px; }
+
+  /* ---------- TASK CARDS ---------- */
+  .task-grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  @media (max-width: 760px){ .task-grid{ grid-template-columns: 1fr; } }
+
+  .task-card{
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px;
+    position: relative;
+  }
+  .task-num{
+    font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: var(--amber);
+    background: var(--amber-bg); width: 30px; height: 30px; border-radius: 8px;
+    display:flex; align-items:center; justify-content:center; margin-bottom: 12px;
+  }
+  .task-card h3{ font-size: 15.5px; margin: 0 0 8px; font-weight: 750; }
+  .task-card p{ font-size: 13.8px; color: var(--muted); line-height: 1.6; margin: 0; }
+  .badge-extra{
+    position:absolute; top: 18px; right: 18px; font-family: var(--font-mono); font-size: 10.5px;
+    background: var(--rust-bg); color: var(--rust); padding: 3px 9px; border-radius: 999px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .4px;
+  }
+
+  footer{
+    margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--line);
+    font-size: 13px; color: var(--muted); font-family: var(--font-mono);
+  }
+</style>
+</head>
+<body>
+<div style="position:sticky;top:0;z-index:999;background:#0b0e14;border-bottom:1px solid #232a36;padding:10px 20px;font-family:ui-monospace,\x27Courier New\x27,monospace;font-size:12.5px;display:flex;gap:18px;align-items:center;">
+  <span style="color:#4fd67a;font-weight:700;">~/informatyka $</span>
+  <a href="../index.html" style="color:#8b95a5;text-decoration:none;">index.html</a>
+  <a href="index.html" style="color:#8b95a5;text-decoration:none;">10-klas</a>
+  <a href="../submit.html" style="color:#8b95a5;text-decoration:none;">submit.html</a>
+</div>
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="eyebrow">ТЕМА 2. МОДЕЛІ І МОДЕЛЮВАННЯ · <span>УРОК 12</span></div>
+  <h1>Візуалізація рядів і трендів даних. Інфографіка</h1>
+  <p class="subtitle">Типи діаграм, лінія тренду, принципи якісної інфографіки та програмні засоби для аналізу даних і фінансових розрахунків.</p>
+
+  <div class="chart-card">
+    <svg viewBox="0 0 900 210" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto; display:block;">
+      <!-- axes -->
+      <line x1="60" y1="170" x2="840" y2="170" stroke="#14213d" stroke-width="2"/>
+      <line x1="60" y1="30" x2="60" y2="170" stroke="#14213d" stroke-width="2"/>
+
+      <!-- data polyline: продажі за 8 тижнів -->
+      <polyline points="60,137.5 171,115.8 283,126.7 394,94.2 506,105 617,72.5 729,83.3 840,50.8"
+                fill="none" stroke="#14213d" stroke-width="2.5" opacity="0.55"/>
+      <g fill="#14213d">
+        <circle cx="60"  cy="137.5" r="4.5"/>
+        <circle cx="171" cy="115.8" r="4.5"/>
+        <circle cx="283" cy="126.7" r="4.5"/>
+        <circle cx="394" cy="94.2"  r="4.5"/>
+        <circle cx="506" cy="105"   r="4.5"/>
+        <circle cx="617" cy="72.5"  r="4.5"/>
+        <circle cx="729" cy="83.3"  r="4.5"/>
+        <circle cx="840" cy="50.8"  r="4.5"/>
+      </g>
+
+      <!-- trend line -->
+      <line x1="60" y1="136.6" x2="840" y2="59.9" stroke="#256b58" stroke-width="2.5" stroke-dasharray="7,5"/>
+      <polygon points="840,59.9 826,54 826,66" fill="#256b58"/>
+
+      <text x="700" y="46" font-family="ui-monospace, monospace" font-size="13" font-weight="700" fill="#256b58">тренд: зростання</text>
+      <text x="30" y="175" font-family="ui-monospace, monospace" font-size="11" fill="#5b6478">0</text>
+      <text x="20" y="35" font-family="ui-monospace, monospace" font-size="11" fill="#5b6478">продажі</text>
+      <text x="800" y="188" font-family="ui-monospace, monospace" font-size="11" fill="#5b6478">тиждень 8</text>
+    </svg>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-line" style="background:#14213d; opacity:.55;"></span> фактичний ряд даних (з коливаннями)</div>
+      <div class="legend-item"><span class="legend-line" style="background:#256b58; border-top: 2px dashed #256b58; background:transparent; height:0;"></span> лінія тренду</div>
+    </div>
+    <p class="chart-caption">Той самий ряд даних одразу показує два шари інформації: <b>фактичні значення</b> (з природними коливаннями) і <b>тренд</b> — згладжену лінію, яка відкидає шум і показує загальний напрямок зміни. Саме тренд, а не окремі точки, використовують для прогнозування.</p>
+  </div>
+
+  <!-- icon strip: типи діаграм -->
+  <div class="icon-strip">
+    <div class="icon-chip">
+      <svg width="48" height="36" viewBox="0 0 48 36"><polyline points="4,28 16,14 26,20 44,6" fill="none" stroke="#4a3f80" stroke-width="2.5"/></svg>
+      <span>лінійна — тренд</span>
+    </div>
+    <div class="icon-chip">
+      <svg width="48" height="36" viewBox="0 0 48 36"><rect x="6" y="18" width="7" height="14" fill="#4a3f80"/><rect x="20" y="8" width="7" height="24" fill="#4a3f80"/><rect x="34" y="14" width="7" height="18" fill="#4a3f80"/></svg>
+      <span>стовпчикова — порівняння</span>
+    </div>
+    <div class="icon-chip">
+      <svg width="48" height="36" viewBox="0 0 48 36"><circle cx="24" cy="18" r="14" fill="none" stroke="#4a3f80" stroke-width="2.5"/><path d="M24,18 L24,4 A14,14 0 0 1 36,25 Z" fill="#4a3f80"/></svg>
+      <span>кругова — частки</span>
+    </div>
+    <div class="icon-chip">
+      <svg width="48" height="36" viewBox="0 0 48 36"><circle cx="10" cy="26" r="2.5" fill="#4a3f80"/><circle cx="18" cy="14" r="2.5" fill="#4a3f80"/><circle cx="26" cy="22" r="2.5" fill="#4a3f80"/><circle cx="33" cy="8"  r="2.5" fill="#4a3f80"/><circle cx="40" cy="18" r="2.5" fill="#4a3f80"/></svg>
+      <span>точкова — взаємозв'язок</span>
+    </div>
+  </div>
+
+  <!-- ROW: візуалізація і типи діаграм -->
+  <section>
+    <div class="section-head">
+      <span class="section-tag tag-indigo">01</span>
+      <h2>Візуалізація даних і типи діаграм</h2>
+    </div>
+    <div class="intro-block">
+      <p><span class="term">Візуалізація даних</span> — подання числової чи іншої інформації у графічній формі з метою полегшити її сприйняття, порівняння та аналіз. Головне правило вибору діаграми — тип має відповідати завданню:</p>
+      <ul>
+        <li><b>лінійна діаграма</b> — динаміка величини в часі, тренди;</li>
+        <li><b>стовпчикова</b> — порівняння значень між категоріями;</li>
+        <li><b>кругова</b> — частка кожної категорії в цілому;</li>
+        <li><b>точкова (скатерограма)</b> — взаємозв'язок між двома величинами;</li>
+        <li><b>теплова карта</b> — інтенсивність показника за двома вимірами.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ROW: тренд -->
+  <section>
+    <div class="section-head">
+      <span class="section-tag tag-teal">02</span>
+      <h2>Тренд і лінія тренду</h2>
+    </div>
+    <div class="intro-block">
+      <p><span class="term">Тренд</span> — загальна тенденція зміни величини з часом (зростання, спадання, стабільність), яку видно попри окремі коливання значень.</p>
+      <p style="margin-bottom:0;"><span class="term">Лінія тренду</span> — апроксимаційна лінія, побудована на основі ряду даних, яка показує загальний напрямок зміни й відкидає випадкові коливання. Використовується не лише для опису наявних даних, а й для <b>прогнозування</b> майбутніх значень.</p>
+    </div>
+    <div class="concept-grid">
+      <div class="concept-card border-rust">
+        <h3>Лінійна лінія тренду</h3>
+        <p>Для рівномірного зростання чи спадання величини з приблизно однаковою швидкістю.</p>
+      </div>
+      <div class="concept-card border-rust">
+        <h3>Експоненціальна лінія тренду</h3>
+        <p>Для швидкого, прискореного зростання чи спадання величини з часом.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROW: інфографіка -->
+  <section>
+    <div class="section-head">
+      <span class="section-tag tag-rust">03</span>
+      <h2>Інфографіка</h2>
+    </div>
+    <div class="intro-block">
+      <p><span class="term">Інфографіка</span> — спосіб подання інформації, у якому текст, дані та графічні елементи поєднуються так, щоб донести складну інформацію швидко, наочно й у логічній послідовності.</p>
+      <p style="margin-bottom:0;"><b>Принципи якісної інфографіки:</b> чітка головна ідея · мінімалізм (лише потрібні дані) · логічна ієрархія (заголовок → ключові дані → деталі) · 2–3 кольори й 1–2 шрифти · доречні іконки та ілюстрації · зазначене джерело даних.</p>
+    </div>
+  </section>
+
+  <!-- ROW: програмні засоби -->
+  <section>
+    <div class="section-head">
+      <span class="section-tag tag-indigo">04</span>
+      <h2>Програмні засоби для аналізу даних і фінансових розрахунків</h2>
+    </div>
+    <table class="tool-table">
+      <thead>
+        <tr><th>Категорія</th><th>Інструменти та призначення</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Табличні процесори</td><td>Excel, Google Sheets — діаграми, лінії тренду, зведені таблиці, умовне форматування.</td></tr>
+        <tr><td>BI-інструменти</td><td>Power BI, Google Looker Studio, Tableau — інтерактивні дашборди для великих масивів даних.</td></tr>
+        <tr><td>Інфографіка</td><td>Canva, Piktochart, Venngage — онлайн-сервіси з готовими шаблонами.</td></tr>
+        <tr><td>Фінансові функції</td><td>
+          <span class="func-mono">ПЛТ / PMT</span> — розмір платежу за кредитом/депозитом ·
+          <span class="func-mono">БС / FV</span> — майбутня вартість вкладу ·
+          <span class="func-mono">ПС / PV</span> — теперішня вартість надходжень ·
+          <span class="func-mono">СТАВКА / RATE</span> — процентна ставка
+        </td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ROW: завдання -->
+  <section>
+    <div class="section-head">
+      <span class="section-tag tag-amber">05</span>
+      <h2>Практичні завдання</h2>
+    </div>
+    <div class="task-grid">
+      <div class="task-card">
+        <div class="task-num">1</div>
+        <h3>Лінійний графік ряду даних</h3>
+        <p>Побудувати лінійний графік вибірки з 8 значень (наприклад, продажі за тиждень), підписати осі та назву діаграми.</p>
+      </div>
+      <div class="task-card">
+        <div class="task-num">2</div>
+        <h3>Додати лінію тренду</h3>
+        <p>Додати до графіка лінію тренду (лінійного типу) через редактор діаграми. Визначити напрямок тенденції — зростання, спадання чи стабільність.</p>
+      </div>
+      <div class="task-card">
+        <div class="task-num">3</div>
+        <h3>Кругова діаграма часток</h3>
+        <p>Побудувати кругову діаграму для даних із кількох категорій (наприклад, розподіл часу учня протягом дня) і пояснити доречність такого вибору.</p>
+      </div>
+      <div class="task-card">
+        <div class="task-num">4</div>
+        <h3>Аналіз готової інфографіки</h3>
+        <p>Знайти приклад інфографіки в Інтернеті та оцінити його за вивченими принципами: головна ідея, мінімалізм, ієрархія, кольори.</p>
+      </div>
+      <div class="task-card">
+        <div class="task-num">5</div>
+        <h3>Фінансовий розрахунок</h3>
+        <p>Використати функцію ПЛТ/PMT для розрахунку щомісячного платежу за умовним депозитом (10000 грн, 12% річних, 12 місяців).</p>
+      </div>
+      <div class="task-card">
+        <div class="task-num">6</div>
+        <span class="badge-extra">додатково</span>
+        <h3>Власна міні-інфографіка</h3>
+        <p>Створити один слайд інфографіки (Slides/PowerPoint/Canva) на основі своєї статистичної вибірки з попереднього уроку.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Руденко В.Д. «Інформатика. 10 (11) клас» (рівень стандарту) · Тема 2. Моделі і моделювання. Аналіз та візуалізація даних · Урок 12
+  </footer>
+
+</div>
+</body>
+</html>

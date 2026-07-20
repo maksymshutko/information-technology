@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Урок у розробці · 10 клас</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="logo">~/informatyka/<span class="dim">10-klas</span> $</div>
+    <div class="links">
+      <a href="../index.html">index.html</a>
+      <a href="index.html" class="active">10-klas</a>
+      <a href="../11-klas/index.html">11-klas</a>
+      <a href="../submit.html">submit.html</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap narrow">
+  <div class="term">
+    <div class="term-head">
+      <span class="term-dot" style="background:#e0605a;"></span>
+      <span class="term-dot" style="background:#e0a640;"></span>
+      <span class="term-dot" style="background:#4fd67a;"></span>
+      <span class="term-title" id="termTitle">bash</span>
+    </div>
+    <div class="term-body">
+      <div class="prompt"><span class="sym">$</span> cat <span id="fileName">urok.html</span></div>
+      <div style="margin: 14px 0; color:#e0a640; font-size:13.5px;">
+        cat: файл ще не створено — матеріал уроку в розробці.
+      </div>
+      <div class="prompt"><span class="sym">$</span> <span class="cursor"></span></div>
+    </div>
+  </div>
+
+  <div class="panel panel-warn">
+    <h3>⏳ Цей урок ще готується</h3>
+    <p>Конспект і практичні завдання для цього уроку скоро з'являться тут у тому самому форматі, що й готові уроки. Поки що поверніться до переліку уроків.</p>
+  </div>
+
+  <a class="btn btn-ghost" href="index.html">← до переліку уроків</a>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const n = params.get('n') || '??';
+  document.getElementById('fileName').textContent = 'urok-' + n + '.html';
+  document.getElementById('termTitle').textContent = 'urok-' + n + '.html — bash';
+</script>
+
+</body>
+</html>

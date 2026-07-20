@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Місія аналітика даних — Тематичне оцінювання</title>
+<style>
+  :root{
+    --bg: #f4f6f5;
+    --panel: #ffffff;
+    --ink: #14213d;
+    --muted: #5b6478;
+    --line: #dbe1e8;
+
+    --teal: #256b58;   --teal-bg: #e6f2ee;
+    --rust: #a8451f;   --rust-bg: #f7e9e1;
+    --indigo: #4a3f80; --indigo-bg: #ecebf6;
+    --amber: #a5710d;  --amber-bg: #fbf1de;
+
+    --good: #256b58; --good-bg: #e6f2ee;
+    --bad: #a8451f;  --bad-bg: #f7e9e1;
+
+    --font-display: -apple-system, "Segoe UI", Arial, sans-serif;
+    --font-mono: ui-monospace, "SFMono-Regular", "Courier New", monospace;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background: var(--bg); color: var(--ink); font-family: 'Segoe UI', Arial, sans-serif;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(20,33,61,0.045) 0px, rgba(20,33,61,0.045) 1px, transparent 1px, transparent 28px),
+      repeating-linear-gradient(90deg, rgba(20,33,61,0.045) 0px, rgba(20,33,61,0.045) 1px, transparent 1px, transparent 28px);
+  }
+  .wrap{ max-width: 900px; margin:0 auto; padding: 0 20px 80px; }
+
+  /* ---------- STICKY SCORE BAR ---------- */
+  .scorebar{
+    position: sticky; top:0; z-index: 50; background: rgba(244,246,245,0.96); backdrop-filter: blur(3px);
+    padding: 14px 20px; border-bottom: 1px solid var(--line);
+  }
+  .scorebar-inner{ max-width: 900px; margin:0 auto; display:flex; align-items:center; gap: 16px; }
+  .scorebar .name{ font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); white-space:nowrap; }
+  .scorebar .track{ flex:1; height: 9px; border-radius: 6px; background: #e2e6ea; border: 1px solid var(--line); overflow:hidden; }
+  .scorebar .fill{ height:100%; background: linear-gradient(90deg, var(--indigo), var(--teal), var(--rust), var(--amber)); width:0%; transition: width .3s ease; }
+  .scorebar .score{ font-family: var(--font-mono); font-size: 13.5px; font-weight: 700; white-space:nowrap; }
+
+  /* ---------- HERO ---------- */
+  .hero{ padding: 36px 0 28px; }
+  .eyebrow{ font-family: var(--font-mono); font-size: 12px; letter-spacing: 1.4px; color: var(--muted); text-transform: uppercase; margin-bottom: 12px; }
+  h1{ font-family: var(--font-display); font-weight: 800; font-size: clamp(24px,4vw,36px); margin: 0 0 10px; letter-spacing: -0.4px; }
+  .hero p{ color: var(--muted); font-size: 15.5px; line-height: 1.6; max-width: 640px; margin: 0 0 20px; }
+  .stage-pips{ display:flex; gap: 10px; flex-wrap: wrap; }
+  .pip{ font-family: var(--font-mono); font-size: 12px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+
+  /* ---------- STAGE SECTIONS ---------- */
+  .stage{ margin-bottom: 46px; }
+  .stage-head{ display:flex; align-items:center; gap: 12px; margin-bottom: 18px; }
+  .stage-badge{ font-family: var(--font-mono); font-weight: 800; font-size: 15px; width: 38px; height:38px; border-radius: 9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .stage-head h2{ font-family: var(--font-display); font-size: 20px; margin:0; font-weight: 750; }
+  .stage-head .stage-points{ margin-left:auto; font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+
+  .q-card{ background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; margin-bottom: 14px; }
+  .q-card .q-text{ font-size: 14.5px; margin: 0 0 12px; line-height: 1.5; }
+  .opt{ display:flex; align-items:center; gap: 10px; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--line); margin-bottom: 8px; cursor:pointer; font-size: 13.8px; transition: all .15s ease; }
+  .opt:hover{ border-color: #b9c1cd; }
+  .opt input{ accent-color: var(--ink); }
+  .opt.correct{ background: var(--good-bg); border-color: var(--good); color: var(--good); font-weight: 600; }
+  .opt.wrong{ background: var(--bad-bg); border-color: var(--bad); color: var(--bad); }
+
+  /* matching */
+  .match-wrap{ display:grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width:640px){ .match-wrap{ grid-template-columns: 1fr; } }
+  .match-item{ padding: 10px 13px; border-radius: 8px; border: 1px solid var(--line); margin-bottom: 9px; font-size: 13.5px; cursor:pointer; transition: all .15s ease; background: var(--panel); }
+  .match-item:hover{ border-color: #b9c1cd; }
+  .match-item.selected{ border-color: var(--indigo); background: var(--indigo-bg); font-weight:600; }
+  .match-item.solved{ border-color: var(--good); background: var(--good-bg); color: var(--good); font-weight:600; cursor:default; }
+  .match-item.flash-wrong{ animation: flashred .4s ease; }
+  @keyframes flashred{ 0%,100%{ background: var(--panel); } 50%{ background: var(--bad-bg); border-color: var(--bad); } }
+
+  /* short answer */
+  .fill-row{ display:flex; align-items:center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+  .fill-row label{ font-size: 13.8px; flex: 1 1 300px; }
+  .fill-row input[type=text]{
+    flex: 0 0 150px; padding: 8px 10px; border-radius: 7px; border: 1px solid var(--line); font-family: var(--font-mono); font-size: 13.5px;
+  }
+  .fill-row input[type=text].correct{ border-color: var(--good); background: var(--good-bg); color: var(--good); font-weight:700; }
+  .fill-row input[type=text].wrong{ border-color: var(--bad); background: var(--bad-bg); color: var(--bad); }
+  .check-icon{ font-size: 15px; width: 20px; text-align:center; }
+
+  /* data visuals */
+  .chip-row{ display:flex; gap: 8px; flex-wrap: wrap; margin: 14px 0; }
+  .chip{ font-family: var(--font-mono); font-size: 15px; font-weight: 700; background: var(--teal-bg); color: var(--teal); border-radius: 8px; padding: 8px 13px; }
+
+  .caption{ font-size: 12.8px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+
+  /* finish */
+  .finish-zone{ text-align:center; padding: 30px 0 10px; }
+  .finish-btn{
+    background: var(--ink); color: #fff; border:none; padding: 14px 32px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor:pointer;
+    font-family: var(--font-display);
+  }
+  .finish-btn:hover{ opacity: .9; }
+
+  .result-panel{ display:none; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 34px 30px; text-align:center; margin-top: 20px; }
+  .result-panel.show{ display:block; }
+  .result-panel .rank{ font-family: var(--font-mono); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; }
+  .result-panel .rank-title{ font-family: var(--font-display); font-size: 26px; font-weight: 800; margin-bottom: 12px; }
+  .result-panel .final-score{ font-family: var(--font-mono); font-size: 42px; font-weight: 800; margin-bottom: 16px; }
+  .result-breakdown{ display:flex; justify-content:center; gap: 18px; flex-wrap: wrap; margin-top: 10px; font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); }
+  .result-breakdown b{ color: var(--ink); }
+
+  footer{ margin-top: 50px; padding-top: 22px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-family: var(--font-mono); }
+</style>
+</head>
+<body>
+<div style="position:sticky;top:0;z-index:999;background:#0b0e14;border-bottom:1px solid #232a36;padding:10px 20px;font-family:ui-monospace,\x27Courier New\x27,monospace;font-size:12.5px;display:flex;gap:18px;align-items:center;">
+  <span style="color:#4fd67a;font-weight:700;">~/informatyka $</span>
+  <a href="../index.html" style="color:#8b95a5;text-decoration:none;">index.html</a>
+  <a href="index.html" style="color:#8b95a5;text-decoration:none;">10-klas</a>
+  <a href="../submit.html" style="color:#8b95a5;text-decoration:none;">submit.html</a>
+</div>
+
+<div class="scorebar">
+  <div class="scorebar-inner">
+    <span class="name">БАЛИ МІСІЇ</span>
+    <div class="track"><div class="fill" id="scoreFill"></div></div>
+    <span class="score" id="scoreLabel">0 / 19</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow">Тематичне оцінювання · Тема 2</div>
+    <h1>Місія аналітика даних</h1>
+    <p>Тобі потрібно пройти 4 етапи розслідування — кожен перевіряє свою частину теми «Моделі і моделювання. Аналіз та візуалізація даних». Відповідай одразу в браузері: правильні відповіді підсвічуються зеленим, неправильні — червоним.</p>
+    <div class="stage-pips">
+      <span class="pip">01 · Моделювання</span>
+      <span class="pip">02 · Статистика</span>
+      <span class="pip">03 · Візуалізація</span>
+      <span class="pip">04 · Інструменти</span>
+    </div>
+  </div>
+
+  <!-- ============ STAGE 1 ============ -->
+  <div class="stage">
+    <div class="stage-head">
+      <div class="stage-badge" style="background:var(--indigo-bg); color:var(--indigo);">01</div>
+      <h2>Справа про модель</h2>
+      <span class="stage-points">3 бали</span>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">1. Спрощене подання реального об'єкта, що відображає його суттєві властивості, називається:</p>
+      <div class="mcq" data-qid="q1" data-correct="b">
+        <label class="opt" data-val="a"><input type="radio" name="q1" value="a">експериментом</label>
+        <label class="opt" data-val="b"><input type="radio" name="q1" value="b">моделлю</label>
+        <label class="opt" data-val="c"><input type="radio" name="q1" value="c">алгоритмом</label>
+        <label class="opt" data-val="d"><input type="radio" name="q1" value="d">вибіркою</label>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">2. До інформаційних моделей НЕ належить:</p>
+      <div class="mcq" data-qid="q2" data-correct="d">
+        <label class="opt" data-val="a"><input type="radio" name="q2" value="a">образна модель</label>
+        <label class="opt" data-val="b"><input type="radio" name="q2" value="b">знакова модель</label>
+        <label class="opt" data-val="c"><input type="radio" name="q2" value="c">комп'ютерна модель</label>
+        <label class="opt" data-val="d"><input type="radio" name="q2" value="d">матеріальна модель</label>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">3. Дослідження властивостей об'єкта шляхом багаторазового опрацювання його комп'ютерної моделі за різних вхідних даних називається:</p>
+      <div class="mcq" data-qid="q3" data-correct="b">
+        <label class="opt" data-val="a"><input type="radio" name="q3" value="a">формалізацією</label>
+        <label class="opt" data-val="b"><input type="radio" name="q3" value="b">комп'ютерним експериментом</label>
+        <label class="opt" data-val="c"><input type="radio" name="q3" value="c">вибіркою</label>
+        <label class="opt" data-val="d"><input type="radio" name="q3" value="d">інфографікою</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ STAGE 2 ============ -->
+  <div class="stage">
+    <div class="stage-head">
+      <div class="stage-badge" style="background:var(--teal-bg); color:var(--teal);">02</div>
+      <h2>Справа про вибірку</h2>
+      <span class="stage-points">9 балів</span>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">4. Значення, яке ділить упорядкований ряд даних навпіл, називається:</p>
+      <div class="mcq" data-qid="q4" data-correct="c">
+        <label class="opt" data-val="a"><input type="radio" name="q4" value="a">модою</label>
+        <label class="opt" data-val="b"><input type="radio" name="q4" value="b">розмахом</label>
+        <label class="opt" data-val="c"><input type="radio" name="q4" value="c">медіаною</label>
+        <label class="opt" data-val="d"><input type="radio" name="q4" value="d">дисперсією</label>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">5. Значення, яке зустрічається у вибірці найчастіше, — це:</p>
+      <div class="mcq" data-qid="q5" data-correct="a">
+        <label class="opt" data-val="a"><input type="radio" name="q5" value="a">мода</label>
+        <label class="opt" data-val="b"><input type="radio" name="q5" value="b">медіана</label>
+        <label class="opt" data-val="c"><input type="radio" name="q5" value="c">середнє арифметичне</label>
+        <label class="opt" data-val="d"><input type="radio" name="q5" value="d">стандартне відхилення</label>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">6. Установи відповідність: клацни на характеристику зліва, потім на її призначення справа.</p>
+      <div class="match-wrap">
+        <div id="matchLeft">
+          <div class="match-item" data-id="m1">Середнє арифметичне</div>
+          <div class="match-item" data-id="m2">Розмах</div>
+          <div class="match-item" data-id="m3">Медіана</div>
+          <div class="match-item" data-id="m4">Стандартне відхилення</div>
+        </div>
+        <div id="matchRight">
+          <div class="match-item" data-id="m3">Ділить упорядкований ряд навпіл</div>
+          <div class="match-item" data-id="m1">«Типове» значення, чутливе до викидів</div>
+          <div class="match-item" data-id="m4">Ступінь відхилення значень від середнього</div>
+          <div class="match-item" data-id="m2">Різниця між найбільшим і найменшим значеннями</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">7. Прочитай вибірку — результати міні-тесту 9 учнів (бали від 0 до 12) — і дай короткі відповіді.</p>
+      <div class="chip-row">
+        <span class="chip">2</span><span class="chip">3</span><span class="chip">3</span><span class="chip">4</span>
+        <span class="chip">4</span><span class="chip">4</span><span class="chip">5</span><span class="chip">6</span><span class="chip">9</span>
+      </div>
+      <div class="fill-row">
+        <label>Яка мода цієї вибірки? (одне число)</label>
+        <input type="text" id="t1" placeholder="напр. 4">
+        <span class="check-icon" id="t1icon"></span>
+      </div>
+      <div class="fill-row">
+        <label>Яка медіана цієї вибірки? (одне число)</label>
+        <input type="text" id="t2" placeholder="напр. 4">
+        <span class="check-icon" id="t2icon"></span>
+      </div>
+      <div class="fill-row">
+        <label>Середнє арифметичне (≈4,44) — більше чи менше за медіану?</label>
+        <input type="text" id="t3" placeholder="більше / менше">
+        <span class="check-icon" id="t3icon"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ STAGE 3 ============ -->
+  <div class="stage">
+    <div class="stage-head">
+      <div class="stage-badge" style="background:var(--rust-bg); color:var(--rust);">03</div>
+      <h2>Справа про тренд</h2>
+      <span class="stage-points">4 бали</span>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">8. Для показу частки кожної категорії в загальному цілому найдоречніше використати:</p>
+      <div class="mcq" data-qid="q6" data-correct="b">
+        <label class="opt" data-val="a"><input type="radio" name="q6" value="a">лінійну діаграму</label>
+        <label class="opt" data-val="b"><input type="radio" name="q6" value="b">кругову діаграму</label>
+        <label class="opt" data-val="c"><input type="radio" name="q6" value="c">точкову діаграму</label>
+        <label class="opt" data-val="d"><input type="radio" name="q6" value="d">теплову карту</label>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">9. Лінія, яка згладжує коливання ряду даних і показує загальний напрямок його зміни, називається:</p>
+      <div class="mcq" data-qid="q7" data-correct="b">
+        <label class="opt" data-val="a"><input type="radio" name="q7" value="a">лінією регресії</label>
+        <label class="opt" data-val="b"><input type="radio" name="q7" value="b">лінією тренду</label>
+        <label class="opt" data-val="c"><input type="radio" name="q7" value="c">медіаною</label>
+        <label class="opt" data-val="d"><input type="radio" name="q7" value="d">розмахом</label>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">10. Розгляньте графік відвідувачів шкільного сайту за 8 тижнів і дайте короткі відповіді.</p>
+      <svg viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto; display:block; margin-bottom:8px;">
+        <line x1="60" y1="160" x2="840" y2="160" stroke="#14213d" stroke-width="2"/>
+        <line x1="60" y1="30" x2="60" y2="160" stroke="#14213d" stroke-width="2"/>
+        <polyline points="60,128 171,107 283,117 394,86 506,96 617,65 729,75 840,44"
+                  fill="none" stroke="#14213d" stroke-width="2.5" opacity="0.55"/>
+        <g fill="#14213d">
+          <circle cx="60" cy="128" r="4.5"/><circle cx="171" cy="107" r="4.5"/><circle cx="283" cy="117" r="4.5"/>
+          <circle cx="394" cy="86" r="4.5"/><circle cx="506" cy="96" r="4.5"/><circle cx="617" cy="65" r="4.5"/>
+          <circle cx="729" cy="75" r="4.5"/><circle cx="840" cy="44" r="4.5"/>
+        </g>
+        <line x1="60" y1="127" x2="840" y2="52" stroke="#a8451f" stroke-width="2.5" stroke-dasharray="7,5"/>
+        <text x="65" y="185" font-family="ui-monospace, monospace" font-size="11" fill="#5b6478">тиждень 1</text>
+        <text x="770" y="185" font-family="ui-monospace, monospace" font-size="11" fill="#5b6478">тиждень 8</text>
+      </svg>
+      <div class="fill-row">
+        <label>Яка загальна тенденція ряду даних? (одне слово)</label>
+        <input type="text" id="c1" placeholder="зростає / спадає / стабільна">
+        <span class="check-icon" id="c1icon"></span>
+      </div>
+      <div class="fill-row">
+        <label>Орієнтовне значення на 9-й тиждень за лінією тренду? (число)</label>
+        <input type="text" id="c2" placeholder="напр. 11">
+        <span class="check-icon" id="c2icon"></span>
+      </div>
+      <p class="caption">Підказка: продовж пунктирну лінію тренду поглядом за межі графіка й оціни, де вона опиниться на наступному кроці.</p>
+    </div>
+  </div>
+
+  <!-- ============ STAGE 4 ============ -->
+  <div class="stage">
+    <div class="stage-head">
+      <div class="stage-badge" style="background:var(--amber-bg); color:var(--amber);">04</div>
+      <h2>Справа про інструменти</h2>
+      <span class="stage-points">3 бали</span>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">11. Інструмент табличного процесора для розв'язування задач на пошук максимуму/мінімуму цільової функції за заданих обмежень — це:</p>
+      <div class="mcq" data-qid="q8" data-correct="b">
+        <label class="opt" data-val="a"><input type="radio" name="q8" value="a">Підбір параметра</label>
+        <label class="opt" data-val="b"><input type="radio" name="q8" value="b">Пошук розв'язку (Solver)</label>
+        <label class="opt" data-val="c"><input type="radio" name="q8" value="c">Зведена таблиця</label>
+        <label class="opt" data-val="d"><input type="radio" name="q8" value="d">Умовне форматування</label>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">12. Сценарій: ряд даних про відвідувачів шкільного сайту за 8 тижнів показує тенденцію до зростання з коливаннями (той самий графік, що й у справі №3).</p>
+      <div class="fill-row">
+        <label>Який тип діаграми найкраще підходить для такого ряду? (одне слово)</label>
+        <input type="text" id="s1" placeholder="напр. лінійна">
+        <span class="check-icon" id="s1icon"></span>
+      </div>
+      <div class="fill-row">
+        <label>Що потрібно додати до графіка, щоб спрогнозувати наступне значення? (1–2 слова)</label>
+        <input type="text" id="s2" placeholder="напр. лінію тренду">
+        <span class="check-icon" id="s2icon"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="finish-zone">
+    <button class="finish-btn" onclick="finishMission()">Завершити місію</button>
+  </div>
+
+  <div class="result-panel" id="resultPanel">
+    <div class="rank">Результат місії</div>
+    <div class="rank-title" id="rankTitle"></div>
+    <div class="final-score" id="finalScore"></div>
+    <p style="color:var(--muted); font-size:13.5px; max-width:480px; margin:0 auto;">Покажи цей результат учителю — він внесе бал до журналу за внутрішньою шкалою оцінювання.</p>
+    <div class="result-breakdown" id="resultBreakdown"></div>
+  </div>
+
+  <footer>
+    Руденко В.Д. «Інформатика. 10 (11) клас» (рівень стандарту) · Тема 2. Моделі і моделювання. Аналіз та візуалізація даних · Тематичне оцінювання
+  </footer>
+
+</div>
+
+<script>
+  const TOTAL_POINTS = 19;
+  const matchedPairs = new Set();
+  let selectedLeft = null;
+
+  /* ---------- MCQ ---------- */
+  document.querySelectorAll('.mcq').forEach(group => {
+    group.addEventListener('change', () => {
+      const correct = group.dataset.correct;
+      group.querySelectorAll('.opt').forEach(opt => {
+        opt.classList.remove('correct','wrong');
+        const input = opt.querySelector('input');
+        if (input.checked) {
+          opt.classList.add(opt.dataset.val === correct ? 'correct' : 'wrong');
+        }
+      });
+      scoreAll();
+    });
+  });
+
+  /* ---------- MATCHING ---------- */
+  function clearLeftSelection(){
+    document.querySelectorAll('#matchLeft .match-item').forEach(el => el.classList.remove('selected'));
+    selectedLeft = null;
+  }
+
+  document.querySelectorAll('#matchLeft .match-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const id = el.dataset.id;
+      if (matchedPairs.has(id)) return;
+      clearLeftSelection();
+      el.classList.add('selected');
+      selectedLeft = id;
+    });
+  });
+
+  document.querySelectorAll('#matchRight .match-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const id = el.dataset.id;
+      if (matchedPairs.has(id) || !selectedLeft) return;
+      if (id === selectedLeft) {
+        matchedPairs.add(id);
+        document.querySelectorAll(`#matchLeft [data-id="${id}"]`).forEach(x => { x.classList.remove('selected'); x.classList.add('solved'); });
+        document.querySelectorAll(`#matchRight [data-id="${id}"]`).forEach(x => x.classList.add('solved'));
+        selectedLeft = null;
+      } else {
+        el.classList.add('flash-wrong');
+        setTimeout(() => el.classList.remove('flash-wrong'), 400);
+        clearLeftSelection();
+      }
+      scoreAll();
+    });
+  });
+
+  /* ---------- SHORT ANSWER ---------- */
+  function norm(s){ return (s || '').toString().trim().toLowerCase().replace(/[.,!?]/g,''); }
+
+  const shortAnswers = {
+    t1: { accepted: ['4'], type:'text' },
+    t2: { accepted: ['4'], type:'text' },
+    t3: { accepted: ['більше', 'бiльше'], type:'text' },
+    c1: { accepted: ['зростає','зростання','росте','зростаюча'], type:'text' },
+    c2: { type:'numeric', min: 10, max: 13 },
+    s1: { accepted: ['лінійна','лінійний','лінійний графік','графік','лінія'], type:'text' },
+    s2: { accepted: ['лінію тренду','лінія тренду','тренд','трендову лінію','додати лінію тренду'], type:'text' },
+  };
+
+  function checkShortAnswer(id){
+    const input = document.getElementById(id);
+    const icon = document.getElementById(id + 'icon');
+    const cfg = shortAnswers[id];
+    const val = input.value;
+    if (val.trim() === '') { input.classList.remove('correct','wrong'); icon.textContent=''; return; }
+    let ok = false;
+    if (cfg.type === 'numeric') {
+      const n = parseFloat(val.replace(',', '.'));
+      ok = !isNaN(n) && n >= cfg.min && n <= cfg.max;
+    } else {
+      ok = cfg.accepted.includes(norm(val));
+    }
+    input.classList.toggle('correct', ok);
+    input.classList.toggle('wrong', !ok);
+    icon.textContent = ok ? '✓' : '✕';
+    icon.style.color = ok ? 'var(--good)' : 'var(--bad)';
+  }
+
+  Object.keys(shortAnswers).forEach(id => {
+    document.getElementById(id).addEventListener('input', () => checkShortAnswer(id));
+  });
+
+  /* ---------- SCORING ---------- */
+  function scoreAll(){
+    let mcqScore = 0;
+    document.querySelectorAll('.mcq').forEach(group => {
+      const correct = group.dataset.correct;
+      const checked = group.querySelector('input:checked');
+      if (checked && checked.value === correct) mcqScore++;
+    });
+
+    const matchScore = matchedPairs.size;
+
+    let shortScore = 0;
+    Object.keys(shortAnswers).forEach(id => {
+      const input = document.getElementById(id);
+      if (input.classList.contains('correct')) shortScore++;
+    });
+
+    const total = mcqScore + matchScore + shortScore;
+    document.getElementById('scoreLabel').textContent = total + ' / ' + TOTAL_POINTS;
+    document.getElementById('scoreFill').style.width = Math.round((total / TOTAL_POINTS) * 100) + '%';
+    return { total, mcqScore, matchScore, shortScore };
+  }
+
+  function finishMission(){
+    const result = scoreAll();
+    const panel = document.getElementById('resultPanel');
+    panel.classList.add('show');
+
+    let rank, color;
+    if (result.total >= 17) { rank = 'Головний аналітик даних'; color = 'var(--good)'; }
+    else if (result.total >= 12) { rank = 'Аналітик даних'; color = 'var(--indigo)'; }
+    else if (result.total >= 7)  { rank = 'Стажист-аналітик'; color = 'var(--amber)'; }
+    else { rank = 'Потрібно ще потренуватися'; color = 'var(--bad)'; }
+
+    document.getElementById('rankTitle').textContent = rank;
+    document.getElementById('rankTitle').style.color = color;
+    document.getElementById('finalScore').textContent = result.total + ' / ' + TOTAL_POINTS;
+    document.getElementById('resultBreakdown').innerHTML =
+      '<span>Справа 01–04 (тести): <b>' + result.mcqScore + ' / 8</b></span>' +
+      '<span>Відповідність: <b>' + result.matchScore + ' / 4</b></span>' +
+      '<span>Читання даних: <b>' + result.shortScore + ' / 7</b></span>';
+
+    panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  scoreAll();
+</script>
+</body>
+</html>

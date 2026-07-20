@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Основи статистичного аналізу даних — Урок 11</title>
+<style>
+  :root{
+    --bg: #f4f6f5;
+    --panel: #ffffff;
+    --ink: #14213d;
+    --muted: #5b6478;
+    --line: #dbe1e8;
+
+    --teal: #256b58;
+    --teal-bg: #e6f2ee;
+    --rust: #a8451f;
+    --rust-bg: #f7e9e1;
+    --indigo: #4a3f80;
+    --indigo-bg: #ecebf6;
+    --amber: #a5710d;
+    --amber-bg: #fbf1de;
+
+    --font-display: -apple-system, "Segoe UI", Arial, sans-serif;
+    --font-body: Georgia, "Segoe UI", Arial, sans-serif;
+    --font-mono: ui-monospace, "SFMono-Regular", "Courier New", monospace;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0; background: var(--bg); color: var(--ink);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(20,33,61,0.045) 0px, rgba(20,33,61,0.045) 1px, transparent 1px, transparent 28px),
+      repeating-linear-gradient(90deg, rgba(20,33,61,0.045) 0px, rgba(20,33,61,0.045) 1px, transparent 1px, transparent 28px);
+  }
+
+  .wrap{ max-width: 980px; margin: 0 auto; padding: 44px 24px 80px; }
+
+  /* ---------- HERO ---------- */
+  .eyebrow{
+    font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 1.5px; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 14px;
+  }
+  .eyebrow span{ color: var(--ink); font-weight: 700; }
+  h1{
+    font-family: var(--font-display); font-weight: 800; font-size: clamp(28px, 4.2vw, 42px);
+    letter-spacing: -0.5px; margin: 0 0 10px; line-height: 1.12;
+  }
+  .subtitle{ color: var(--muted); font-size: 16.5px; max-width: 620px; line-height: 1.55; margin: 0 0 34px; }
+
+  .ruler-card{
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+    padding: 26px 30px 20px; margin-bottom: 46px;
+  }
+  .ruler-caption{ font-size: 13px; color: var(--muted); margin-top: 10px; line-height: 1.6; }
+  .ruler-caption b{ color: var(--ink); }
+  .legend{ display:flex; gap: 22px; margin-top: 14px; flex-wrap: wrap; font-family: var(--font-mono); font-size: 12.5px; }
+  .legend-item{ display:flex; align-items:center; gap:7px; color: var(--muted); }
+  .legend-dot{ width:10px; height:10px; border-radius:50%; display:inline-block; }
+
+  /* ---------- SECTIONS ---------- */
+  section{ margin-bottom: 50px; }
+  .section-head{ display:flex; align-items:baseline; gap: 12px; margin-bottom: 20px; }
+  .section-tag{
+    font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 1px; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 5px; font-weight: 700;
+  }
+  .tag-teal{ background: var(--teal-bg); color: var(--teal); }
+  .tag-rust{ background: var(--rust-bg); color: var(--rust); }
+  .tag-indigo{ background: var(--indigo-bg); color: var(--indigo); }
+  .tag-amber{ background: var(--amber-bg); color: var(--amber); }
+  .section-head h2{ font-family: var(--font-display); font-size: 22px; margin: 0; font-weight: 750; }
+
+  .intro-block{
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 20px 24px;
+    font-size: 15.5px; line-height: 1.7; margin-bottom: 20px;
+  }
+  .intro-block b{ color: var(--ink); }
+  .intro-block .term{ font-family: var(--font-mono); background: #eef1f4; padding: 1px 6px; border-radius: 4px; font-size: 14px; }
+
+  .concept-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 760px){ .concept-grid{ grid-template-columns: 1fr; } }
+
+  .concept-card{
+    background: var(--panel); border: 1px solid var(--line); border-left-width: 4px; border-radius: 10px;
+    padding: 18px 18px 16px;
+  }
+  .concept-card h3{ font-size: 15.5px; margin: 0 0 8px; font-weight: 750; }
+  .concept-card p{ font-size: 13.8px; color: var(--muted); line-height: 1.55; margin: 0 0 10px; }
+  .concept-card .example{
+    font-family: var(--font-mono); font-size: 12.5px; padding: 7px 10px; border-radius: 6px; line-height:1.5;
+  }
+  .border-teal{ border-left-color: var(--teal); } .example-teal{ background: var(--teal-bg); color: var(--teal); }
+  .border-rust{ border-left-color: var(--rust); } .example-rust{ background: var(--rust-bg); color: var(--rust); }
+
+  /* ---------- FUNCTION TABLE ---------- */
+  .func-table{ width:100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow:hidden; }
+  .func-table th, .func-table td{ padding: 12px 16px; text-align:left; font-size: 14px; border-bottom: 1px solid var(--line); }
+  .func-table th{ background: var(--indigo-bg); color: var(--indigo); font-family: var(--font-mono); font-size: 11.5px; text-transform: uppercase; letter-spacing: .5px; }
+  .func-table td:nth-child(2), .func-table td:nth-child(3){ font-family: var(--font-mono); font-size: 13px; }
+  .func-table tr:last-child td{ border-bottom: none; }
+  .func-table tr:hover td{ background: #fafbfc; }
+
+  /* ---------- TASK CARDS ---------- */
+  .task-grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  @media (max-width: 760px){ .task-grid{ grid-template-columns: 1fr; } }
+
+  .task-card{
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px;
+    position: relative;
+  }
+  .task-num{
+    font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: var(--amber);
+    background: var(--amber-bg); width: 30px; height: 30px; border-radius: 8px;
+    display:flex; align-items:center; justify-content:center; margin-bottom: 12px;
+  }
+  .task-card h3{ font-size: 15.5px; margin: 0 0 8px; font-weight: 750; }
+  .task-card p{ font-size: 13.8px; color: var(--muted); line-height: 1.6; margin: 0; }
+  .badge-extra{
+    position:absolute; top: 18px; right: 18px; font-family: var(--font-mono); font-size: 10.5px;
+    background: var(--rust-bg); color: var(--rust); padding: 3px 9px; border-radius: 999px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .4px;
+  }
+
+  footer{
+    margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--line);
+    font-size: 13px; color: var(--muted); font-family: var(--font-mono);
+  }
+</style>
+</head>
+<body>
+<div style="position:sticky;top:0;z-index:999;background:#0b0e14;border-bottom:1px solid #232a36;padding:10px 20px;font-family:ui-monospace,\x27Courier New\x27,monospace;font-size:12.5px;display:flex;gap:18px;align-items:center;">
+  <span style="color:#4fd67a;font-weight:700;">~/informatyka $</span>
+  <a href="../index.html" style="color:#8b95a5;text-decoration:none;">index.html</a>
+  <a href="index.html" style="color:#8b95a5;text-decoration:none;">10-klas</a>
+  <a href="../submit.html" style="color:#8b95a5;text-decoration:none;">submit.html</a>
+</div>
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="eyebrow">ТЕМА 2. МОДЕЛІ І МОДЕЛЮВАННЯ · <span>УРОК 11</span></div>
+  <h1>Основи статистичного аналізу даних</h1>
+  <p class="subtitle">Ряди даних, вибірка та обчислення основних статистичних характеристик — середнього, медіани, моди, розмаху й стандартного відхилення.</p>
+
+  <div class="ruler-card">
+    <svg viewBox="0 0 900 210" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto; display:block;">
+      <!-- axis -->
+      <line x1="60" y1="160" x2="840" y2="160" stroke="#14213d" stroke-width="2"/>
+      <!-- ticks -->
+      <g font-family="ui-monospace, monospace" font-size="12" fill="#5b6478">
+        <line x1="60"  y1="155" x2="60"  y2="165" stroke="#5b6478"/><text x="60"  y="182" text-anchor="middle">0</text>
+        <line x1="216" y1="155" x2="216" y2="165" stroke="#5b6478"/><text x="216" y="182" text-anchor="middle">2</text>
+        <line x1="372" y1="155" x2="372" y2="165" stroke="#5b6478"/><text x="372" y="182" text-anchor="middle">4</text>
+        <line x1="528" y1="155" x2="528" y2="165" stroke="#5b6478"/><text x="528" y="182" text-anchor="middle">6</text>
+        <line x1="684" y1="155" x2="684" y2="165" stroke="#5b6478"/><text x="684" y="182" text-anchor="middle">8</text>
+        <line x1="840" y1="155" x2="840" y2="165" stroke="#5b6478"/><text x="840" y="182" text-anchor="middle">10</text>
+      </g>
+
+      <!-- data dots: вибірка балів {2,3,3,4,4,4,5,6,9} -->
+      <g fill="#14213d" opacity="0.85">
+        <circle cx="216" cy="145" r="6"/>                          <!-- 2 -->
+        <circle cx="294" cy="145" r="6"/><circle cx="294" cy="130" r="6"/>              <!-- 3,3 -->
+        <circle cx="372" cy="145" r="6"/><circle cx="372" cy="130" r="6"/><circle cx="372" cy="115" r="6"/> <!-- 4,4,4 -->
+        <circle cx="450" cy="145" r="6"/>                          <!-- 5 -->
+        <circle cx="528" cy="145" r="6"/>                          <!-- 6 -->
+        <circle cx="762" cy="145" r="6"/>                          <!-- 9 -->
+      </g>
+
+      <!-- pin: медіана = мода = 4 -->
+      <line x1="372" y1="160" x2="372" y2="60" stroke="#256b58" stroke-width="2" stroke-dasharray="3,3"/>
+      <circle cx="372" cy="60" r="4" fill="#256b58"/>
+      <text x="372" y="42" text-anchor="middle" font-family="ui-monospace, monospace" font-size="13" font-weight="700" fill="#256b58">медіана = мода = 4</text>
+
+      <!-- pin: середнє ≈ 4.44 -->
+      <line x1="406" y1="160" x2="406" y2="100" stroke="#4a3f80" stroke-width="2" stroke-dasharray="3,3"/>
+      <circle cx="406" cy="100" r="4" fill="#4a3f80"/>
+      <text x="406" y="118" text-anchor="middle" font-family="ui-monospace, monospace" font-size="12.5" font-weight="700" fill="#4a3f80">середнє ≈ 4,44</text>
+    </svg>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot" style="background:#14213d"></span> точка даних (бал учня)</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#256b58"></span> медіана / мода</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#4a3f80"></span> середнє арифметичне</div>
+    </div>
+    <p class="ruler-caption">Вибірка з 9 оцінок: <b>2, 3, 3, 4, 4, 4, 5, 6, 9</b>. Значення «9» — нетипово високе, тому <b>середнє (4,44)</b> зміщується праворуч, тоді як <b>медіана й мода (4)</b> залишаються стійкими до цього викиду.</p>
+  </div>
+
+  <!-- ROW: ряд даних і вибірка -->
+  <section>
+    <div class="section-head">
+      <span class="section-tag tag-indigo">01</span>
+      <h2>Ряд даних і вибірка</h2>
+    </div>
+    <div class="intro-block">
+      <p><span class="term">Ряд даних</span> — упорядкована або невпорядкована послідовність числових значень, отриманих у результаті спостережень, вимірювань чи досліджень (наприклад, оцінки учнів класу з контрольної роботи, температура повітря за місяць).</p>
+      <p style="margin-bottom:0;"><span class="term">Вибірка</span> — частина сукупності даних, відібрана для аналізу з метою зробити висновки про всю сукупність. <b>Статистичний аналіз</b> — це методи збирання, опрацювання й інтерпретації числових даних для виявлення закономірностей і прийняття обґрунтованих рішень.</p>
+    </div>
+  </section>
+
+  <!-- ROW: центральна тенденція -->
+  <section>
+    <div class="section-head">
+      <span class="section-tag tag-teal">02</span>
+      <h2>Характеристики центральної тенденції</h2>
+    </div>
+    <div class="concept-grid">
+      <div class="concept-card border-teal">
+        <h3>Середнє арифметичне</h3>
+        <p>Сума всіх значень ряду, поділена на їх кількість. Показує «типове» значення вибірки, але чутливе до нетипово великих або малих значень.</p>
+        <div class="example example-teal">(2+3+3+4+4+4+5+6+9) / 9 ≈ 4,44</div>
+      </div>
+      <div class="concept-card border-teal">
+        <h3>Медіана</h3>
+        <p>Значення, яке ділить упорядкований ряд навпіл. Якщо кількість значень парна — середнє двох центральних значень. Стійка до викидів.</p>
+        <div class="example example-teal">2,3,3,[4],4,4,5,6,9 → медіана = 4</div>
+      </div>
+      <div class="concept-card border-teal">
+        <h3>Мода</h3>
+        <p>Значення, яке зустрічається найчастіше. Вибірка може мати одну моду, кілька мод або не мати моди взагалі.</p>
+        <div class="example example-teal">4 зустрічається 3 рази → мода = 4</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROW: розсіювання -->
+  <section>
+    <div class="section-head">
+      <span class="section-tag tag-rust">03</span>
+      <h2>Характеристики розсіювання даних</h2>
+    </div>
+    <div class="concept-grid">
+      <div class="concept-card border-rust">
+        <h3>Розмах вибірки</h3>
+        <p>Різниця між найбільшим і найменшим значеннями ряду. Показує, наскільки «розкидані» дані.</p>
+        <div class="example example-rust">9 − 2 = 7</div>
+      </div>
+      <div class="concept-card border-rust">
+        <h3>Дисперсія</h3>
+        <p>Середнє квадратів відхилень кожного значення від середнього арифметичного. Характеризує ступінь розсіювання даних.</p>
+        <div class="example example-rust">D = Σ(xᵢ − x̄)² / (n−1)</div>
+      </div>
+      <div class="concept-card border-rust">
+        <h3>Стандартне відхилення</h3>
+        <p>Квадратний корінь із дисперсії. Показує, наскільки в середньому значення відхиляються від середнього, в тих самих одиницях, що й дані.</p>
+        <div class="example example-rust">σ = √D</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROW: функції -->
+  <section>
+    <div class="section-head">
+      <span class="section-tag tag-indigo">04</span>
+      <h2>Функції табличного процесора</h2>
+    </div>
+    <table class="func-table">
+      <thead>
+        <tr><th>Характеристика</th><th>Excel</th><th>Google Sheets</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Середнє арифметичне</td><td>=СРЗНАЧ(A2:A10)</td><td>=AVERAGE(A2:A10)</td></tr>
+        <tr><td>Медіана</td><td>=МЕДИАНА(A2:A10)</td><td>=MEDIAN(A2:A10)</td></tr>
+        <tr><td>Мода</td><td>=МОДА(A2:A10)</td><td>=MODE(A2:A10)</td></tr>
+        <tr><td>Мінімум / Максимум</td><td>=МИН(A2:A10) / =МАКС(A2:A10)</td><td>=MIN(A2:A10) / =MAX(A2:A10)</td></tr>
+        <tr><td>Дисперсія</td><td>=ДИСП(A2:A10)</td><td>=VAR(A2:A10)</td></tr>
+        <tr><td>Стандартне відхилення</td><td>=СТАНДОТКЛОН(A2:A10)</td><td>=STDEV(A2:A10)</td></tr>
+        <tr><td>Кількість значень</td><td>=СЧЁТ(A2:A10)</td><td>=COUNT(A2:A10)</td></tr>
+        <tr><td>Розмах (формула)</td><td>=МАКС(A2:A10)-МИН(A2:A10)</td><td>=MAX(A2:A10)-MIN(A2:A10)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ROW: завдання -->
+  <section>
+    <div class="section-head">
+      <span class="section-tag tag-amber">05</span>
+      <h2>Практичні завдання</h2>
+    </div>
+    <div class="task-grid">
+      <div class="task-card">
+        <div class="task-num">1</div>
+        <h3>Внести ряд даних</h3>
+        <p>У стовпець A внести 10 умовних оцінок з контрольної роботи (числа 1–12). У стовпці B обчислити середнє арифметичне, медіану й моду за допомогою формул.</p>
+      </div>
+      <div class="task-card">
+        <div class="task-num">2</div>
+        <h3>Мінімум, максимум, розмах</h3>
+        <p>Обчислити мінімальне й максимальне значення вибірки та розмах. Порівняти середнє з медіаною — чи сильно відрізняються і чому.</p>
+      </div>
+      <div class="task-card">
+        <div class="task-num">3</div>
+        <h3>Дисперсія та відхилення</h3>
+        <p>Обчислити дисперсію й стандартне відхилення. Пояснити письмово (1–2 речення), що означає отримане значення для цієї вибірки.</p>
+      </div>
+      <div class="task-card">
+        <div class="task-num">4</div>
+        <h3>Друга вибірка — температура</h3>
+        <p>Створити вибірку з 10 значень температури за останні 10 днів (реальні або умовні дані) та обчислити для неї всі ті самі характеристики.</p>
+      </div>
+      <div class="task-card">
+        <div class="task-num">5</div>
+        <h3>Діаграма з лінією середнього</h3>
+        <p>Побудувати стовпчикову діаграму ряду даних (завдання 1 або 4) і додати на неї лінію або точку середнього значення для порівняння.</p>
+      </div>
+      <div class="task-card">
+        <div class="task-num">6</div>
+        <span class="badge-extra">додатково</span>
+        <h3>Вплив аномального значення</h3>
+        <p>Замінити одне типове значення на аномально велике. Перерахувати середнє й медіану, порівняти, яка характеристика змінилася сильніше — і чому.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Руденко В.Д. «Інформатика. 10 (11) клас» (рівень стандарту) · Тема 2. Моделі і моделювання. Аналіз та візуалізація даних · Урок 11
+  </footer>
+
+</div>
+</body>
+</html>

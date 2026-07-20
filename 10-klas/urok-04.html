@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Симуляція зламу слабкого пароля — вправа з кібербезпеки</title>
+<style>
+  :root{
+    --bg: #0d1321;
+    --panel: #121a2e;
+    --panel-2: #17203a;
+    --border: #2a3656;
+    --text: #dce3f0;
+    --muted: #7c8aad;
+    --amber: #e8a33d;
+    --amber-dim: #4a3a20;
+    --success: #4fd68c;
+    --success-dim: #16332a;
+    --danger: #ef5b5b;
+    --danger-dim: #3a1e22;
+    --mono: 'Courier New', Consolas, monospace;
+    --sans: 'Segoe UI', Arial, sans-serif;
+  }
+  *{ box-sizing: border-box; }
+  html,body{
+    margin:0; padding:0; background: var(--bg); color: var(--text);
+    font-family: var(--sans); min-height:100vh;
+  }
+  .wrap{ max-width: 1080px; margin: 0 auto; padding: 28px 20px 60px; }
+
+  .brief{
+    background: var(--panel); border:1px solid var(--border); border-radius: 10px;
+    padding: 18px 20px; margin-bottom: 22px;
+  }
+  .brief h1{ font-size: 19px; margin: 0 0 8px; letter-spacing: .3px; }
+  .brief p{ margin: 4px 0; color: var(--muted); font-size: 14.5px; line-height:1.55; }
+  .brief b{ color: var(--text); }
+
+  .console-bar{ display:flex; align-items:center; gap:8px; margin-bottom: 14px; }
+  .dot{ width:10px; height:10px; border-radius:50%; }
+  .dot.r{ background:#ef5b5b; } .dot.y{ background:#e8a33d; } .dot.g{ background:#4fd68c; }
+  .console-title{ font-family: var(--mono); font-size: 12.5px; color: var(--muted); margin-left: 8px; letter-spacing: .5px; }
+
+  .grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 820px){ .grid{ grid-template-columns: 1fr; } }
+
+  .card{ background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 22px; }
+
+  .login-card h2{ font-size: 15px; margin: 0 0 18px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .6px; }
+  .field{ margin-bottom: 16px; }
+  .field label{ display:block; font-size: 12.5px; color: var(--muted); margin-bottom: 6px; }
+  .field input{
+    width:100%; padding: 11px 12px; border-radius: 7px; border: 1px solid var(--border);
+    background: var(--panel-2); color: var(--text); font-family: var(--mono); font-size: 14.5px;
+  }
+  .field input:focus{ outline: 2px solid var(--amber); outline-offset: 1px; }
+  .field input[disabled]{ color: var(--muted); }
+
+  .btn{
+    width:100%; padding: 11px; border-radius: 7px; border: none; cursor:pointer;
+    background: var(--amber); color: #1a1204; font-weight: 700; font-size: 14.5px; letter-spacing:.2px;
+  }
+  .btn:active{ transform: translateY(1px); }
+  .btn:disabled{ opacity: .5; cursor:not-allowed; }
+
+  .progress-row{ display:flex; justify-content:space-between; align-items:center; margin: 16px 0 8px; font-family: var(--mono); font-size: 13px; color: var(--muted); }
+  .progress-bar{ height: 8px; border-radius: 6px; background: var(--panel-2); border: 1px solid var(--border); overflow:hidden; }
+  .progress-fill{ height:100%; background: linear-gradient(90deg, var(--amber), var(--success)); width:0%; transition: width .35s ease; }
+
+  .hints-panel{ margin-top: 16px; }
+  .hints-panel h3{ font-size: 12.5px; text-transform: uppercase; letter-spacing:.5px; color: var(--muted); margin: 0 0 8px; }
+  .hint-item{
+    padding: 9px 11px; border-radius: 7px; border-left: 3px solid var(--amber);
+    background: var(--amber-dim); color: #f2c98a; font-size: 13px; margin-bottom: 7px; line-height:1.5;
+  }
+  .hints-empty{ color: var(--muted); font-size: 13px; font-style: italic; }
+
+  .finish{ display:none; text-align:center; padding: 10px 4px 4px; }
+  .finish.show{ display:block; }
+  .finish .big{ font-size: 34px; margin-bottom: 4px; }
+  .finish h3{ margin: 6px 0 10px; font-size: 18px; }
+  .finish p{ color: var(--muted); font-size: 14px; line-height:1.6; }
+
+  .btn-row{ display:flex; gap:10px; margin-top: 16px; }
+  .btn-secondary{
+    flex:1; background: transparent; border: 1px solid var(--border); color: var(--muted);
+    padding: 9px 12px; border-radius: 7px; cursor:pointer; font-size: 13px;
+  }
+  .btn-secondary:hover{ color: var(--text); border-color: var(--amber); }
+
+  .log-card h2{ font-size: 15px; margin: 0 0 14px; color: var(--muted); font-weight:600; text-transform: uppercase; letter-spacing:.6px; }
+  .log-list{ display:flex; flex-direction:column; gap:8px; max-height: 480px; overflow-y:auto; padding-right: 4px; }
+  .log-empty{ color: var(--muted); font-size: 13.5px; font-style: italic; }
+  .log-item{
+    font-family: var(--mono); font-size: 13.5px; padding: 9px 11px; border-radius: 7px;
+    border-left: 3px solid var(--border); background: var(--panel-2); display:flex; justify-content:space-between; gap:10px;
+  }
+  .log-item.ok{ border-left-color: var(--success); background: var(--success-dim); color: #b9f3d3; }
+  .log-item.bad{ border-left-color: var(--danger); background: var(--danger-dim); color: #f5b8b8; }
+  .log-tag{ color: var(--muted); font-size: 11.5px; white-space:nowrap; }
+
+  .tips{ margin-top: 22px; background: var(--panel); border:1px solid var(--border); border-radius: 10px; padding: 20px 22px; }
+  .tips h2{ font-size: 16px; margin: 0 0 10px; }
+  .tips ul{ margin: 0; padding-left: 20px; color: var(--muted); font-size: 14px; line-height: 1.7; }
+  .tips li b{ color: var(--text); }
+</style>
+</head>
+<body>
+<div style="position:sticky;top:0;z-index:999;background:#0b0e14;border-bottom:1px solid #232a36;padding:10px 20px;font-family:ui-monospace,\x27Courier New\x27,monospace;font-size:12.5px;display:flex;gap:18px;align-items:center;">
+  <span style="color:#4fd67a;font-weight:700;">~/informatyka $</span>
+  <a href="../index.html" style="color:#8b95a5;text-decoration:none;">index.html</a>
+  <a href="index.html" style="color:#8b95a5;text-decoration:none;">10-klas</a>
+  <a href="../submit.html" style="color:#8b95a5;text-decoration:none;">submit.html</a>
+</div>
+<div class="wrap">
+
+  <div class="console-bar">
+    <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+    <span class="console-title">SECURE-LOGIN-SIM // НАВЧАЛЬНИЙ РЕЖИМ, ДАНІ ВИГАДАНІ</span>
+  </div>
+
+  <div class="brief">
+    <h1>🔐 Вправа: «Наскільки надійний твій пароль?»</h1>
+    <p>Перед тобою фейкова форма входу. У системі — пул із <b>24 найпоширеніших паролів світу</b>, а тобі особисто випадково призначено <b>12 із них</b>. Вводь варіанти в будь-якому порядку — система сама розпізнає, який із твоїх 12 паролів вгадано.</p>
+    <p>За кожен вгаданий пароль — <b>1 бал</b> (максимум 12 балів за урок). Кожна спроба потрапляє до журналу праворуч: <b style="color:#4fd68c">зелений</b> — правильно, <b style="color:#ef5b5b">червоний</b> — неправильно.</p>
+    <p>Після <b>кожних 10 невдалих спроб</b> система розкриває розгорнуту підказку (довжина, тип і перші символи одного з ще не вгаданих паролів).</p>
+    <p>Це безпечне навчальне середовище — жодні реальні акаунти тут не задіяні. Самі паролі в коді сторінки не зберігаються — лише їхні хеші, так само, як це роблять реальні системи.</p>
+  </div>
+
+  <div class="grid">
+
+    <div class="card login-card">
+      <h2>Вхід у обліковий запис</h2>
+
+      <div class="field">
+        <label>Логін</label>
+        <input type="text" value="user@email.com" disabled>
+      </div>
+
+      <div class="field">
+        <label>Пароль</label>
+        <input type="text" id="passInput" placeholder="Введи варіант пароля..." autocomplete="off">
+      </div>
+
+      <button class="btn" id="submitBtn" onclick="tryPassword()">Спробувати увійти</button>
+
+      <div class="progress-row">
+        <span id="progressLabel">Вгадано: 0 з 12</span>
+        <span id="scoreLabel">Бали: 0 / 12</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+      <div class="hints-panel">
+        <h3>Розкриті підказки</h3>
+        <div id="hintsList"><div class="hints-empty">Підказки з'являться після 10 невдалих спроб...</div></div>
+      </div>
+
+      <div class="finish" id="finishBox">
+        <div class="big">🏁</div>
+        <h3>Спробу завершено!</h3>
+        <p id="finishText"></p>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="finishNow()">Завершити спробу</button>
+        <button class="btn-secondary" onclick="resetGame()">Почати спочатку (нові 12)</button>
+      </div>
+    </div>
+
+    <div class="card log-card">
+      <h2>Журнал спроб</h2>
+      <div class="log-list" id="logList">
+        <div class="log-empty">Тут з'являтимуться твої спроби...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="tips">
+    <h2>Чому це важливо</h2>
+    <ul>
+      <li><b>Прості паролі зламують за секунди.</b> Усі паролі в цій вправі щороку входять до списків найпоширеніших і найненадійніших паролів світу.</li>
+      <li><b>Довжина важливіша за складність написання.</b> Пароль із 12+ символів надійніший за короткий пароль зі спецсимволами.</li>
+      <li><b>Уникай особистої інформації.</b> Дати народження, імена, «qwerty» та послідовності цифр — перше, що перевіряють зловмисники.</li>
+      <li><b>Реальні системи зберігають не сам пароль, а його хеш</b> — так само, як зроблено в коді цієї сторінки. Але навіть хеш не рятує слабкий пароль: його можна підібрати за словником поширених варіантів.</li>
+      <li>Використовуй різні паролі для різних сервісів та, за можливості, менеджер паролів і двофакторну автентифікацію.</li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+  // Сіль для хешування (та сама, що використана під час генерації хешів нижче)
+  const SALT = "CyberSafe10_2026_Salt_XQ7";
+
+  // Пул із 24 найпоширеніших паролів світу.
+  // Самі паролі в коді НЕ зберігаються — лише SHA-256(сіль + пароль) та метадані для підказок.
+  const pool = [
+    { hash: "9dd813e8b23a95cf9cb1d3514f4e52eba32fb254a836f167a700296137d3bcaa", len: 6,  category: "проста числова послідовність за зростанням", first2: "12" },
+    { hash: "59f476c0fe72369500e67962487d83b52814bf790fb3764445ecf20650175e6b", len: 8,  category: "англійське слово, що означає «пароль»", first2: "pa" },
+    { hash: "b1a47607fb59de7144519acb24107d5b11149c778a7f8011c779e109edc6827e", len: 9,  category: "числова послідовність за зростанням", first2: "12" },
+    { hash: "1b6783d8183b033892d682723eb91cfefdeb2bb437f5645b08b3c86a24fcf52b", len: 6,  category: "перший ряд літер клавіатури зліва направо", first2: "qw" },
+    { hash: "4600d70a9e0d7cb364ff3e6a916feecdbca7ffecd4be732c46a451ed57a0b09d", len: 8,  category: "числова послідовність за зростанням", first2: "12" },
+    { hash: "304d906dc1ac47e7e019e6102524e2e7e70de2b90499dc113c32ccf8d33c2422", len: 6,  category: "одна цифра, повторена шість разів", first2: "11" },
+    { hash: "eff76abb0bd65ffb00da3c341b7c6eaa3f2a4cddd28101840a2d93b135a714ea", len: 8,  category: "англійська фраза-освідчення, написана разом", first2: "il" },
+    { hash: "38321059a384ac63d608d77b270f7d664ef67a267ffb5bf7eebba2bbcea1421b", len: 5,  category: "слово для позначення адміністратора системи", first2: "ad" },
+    { hash: "0502fc9ea5395e9ff3efc06f7a1e1e0fc965f75d68eac6f75437cfed51e0d422", len: 6,  category: "послідовність із 3 цифр, повторена двічі", first2: "12" },
+    { hash: "8bbaff841233e8fdcd28049092af8ebd869b18f50af8f5f67a61fa46e4a737ff", len: 7,  category: "англійська фраза-прохання «впусти мене»", first2: "le" },
+    { hash: "c8a1a81bb6e77d2b07e0194f674db1a11d50c8b51bd61eecec3ac3879d9cd6c8", len: 9,  category: "клавіатурний ряд літер + прості цифри", first2: "qw" },
+    { hash: "b9a1b742a78047399f40954f863f4a684b6be827dc911194963d53e02eb70f0c", len: 6,  category: "перші літери алфавіту + перші цифри", first2: "ab" },
+    { hash: "997ebe6f36ffc439b501c51e128faccabf62453587af47c2083cd4ca831621aa", len: 6,  category: "назва тварини, одне з найпопулярніших слів-паролів", first2: "mo" },
+    { hash: "c2289e01cf938706bffbc1e5298f6f3cb391e46fbe59053bd4f7a02b912d4cda", len: 10, category: "повна числова послідовність від 1 до 0", first2: "12" },
+    { hash: "7d1642e9e0f4bec7915a3f6d4c50314982ab39c9d5703e086e0bd2036da120c8", len: 6,  category: "популярне «фентезійне» слово-пароль", first2: "dr" },
+    { hash: "f15db1f39c83c00174a0d7792e7621b343d8cdc19579a37028b8593e47a75a94", len: 6,  category: "числова послідовність, що читається як «дзеркало»", first2: "12" },
+    { hash: "ad33f792a434b20bc2776e5af73267160de11657198dde5497fbcf8854b43512", len: 9,  category: "слово «password» з цифрою в кінці", first2: "pa" },
+    { hash: "9bf00700a84f403e61f3bd5f616a194c8c5444c3963221d7bb7bfcd8c3b6fe14", len: 8,  category: "чергування сусідніх цифр і літер клавіатури", first2: "1q" },
+    { hash: "4e401ae8da8be4972e7d9696989e43dc8bd0184e5e0f7f2bcbc4fc5ac6532347", len: 6,  category: "одна цифра «0», повторена шість разів", first2: "00" },
+    { hash: "a029352b66bc3dab40a3bf5920c608af6222025870b9ec6079b8e887af30153b", len: 10, category: "весь верхній ряд літер клавіатури", first2: "qw" },
+    { hash: "d0dbcdba35fbef5a6e20f61b02751a47c388345df6eb23d29920ff880db591ed", len: 6,  category: "дві однакові цифри, повторені по три рази", first2: "11" },
+    { hash: "9b5d00031bab7fe4ce52df7057694d2ec292f64e7b7088f2fef0a667d45e178d", len: 7,  category: "англійське слово-привітання", first2: "we" },
+    { hash: "cbbc00a20247548b294535a6512d807dd98f346c6c5a81c6de2714e2e9de6e70", len: 8,  category: "англійське слово «сонячне світло»", first2: "su" },
+    { hash: "4db8554df60cc014d1effcca7956da9a089d460f27d4593005a570554ba947b3", len: 8,  category: "назва популярного виду спорту", first2: "fo" },
+  ];
+
+  let assignment = [];   // 12 випадкових елементів пулу для цього учня
+  let score = 0;
+  let wrongCount = 0;
+  let hintPointer = 0;
+  let finished = false;
+  let busy = false;      // блокування подвійних кліків під час обчислення хешу
+
+  const input = document.getElementById('passInput');
+  const logList = document.getElementById('logList');
+  const progressLabel = document.getElementById('progressLabel');
+  const scoreLabel = document.getElementById('scoreLabel');
+  const progressFill = document.getElementById('progressFill');
+  const hintsList = document.getElementById('hintsList');
+  const submitBtn = document.getElementById('submitBtn');
+  const finishBox = document.getElementById('finishBox');
+  const finishText = document.getElementById('finishText');
+
+  function shuffle(arr){
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function initAssignment(){
+    assignment = shuffle(pool).slice(0, 12).map(item => ({ ...item, solved: false }));
+  }
+
+  async function sha256Hex(text){
+    const enc = new TextEncoder().encode(text);
+    const buf = await crypto.subtle.digest('SHA-256', enc);
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  input.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') tryPassword();
+  });
+
+  function updateHeader(){
+    const solvedCount = assignment.filter(a => a.solved).length;
+    progressLabel.textContent = finished ? "Готово!" : ("Вгадано: " + solvedCount + " з " + assignment.length);
+    scoreLabel.textContent = "Бали: " + score + " / " + assignment.length;
+    progressFill.style.width = Math.round((score / assignment.length) * 100) + "%";
+  }
+
+  function addLog(text, kind, tag){
+    const empty = logList.querySelector('.log-empty');
+    if (empty) empty.remove();
+    const item = document.createElement('div');
+    item.className = 'log-item ' + kind;
+    item.innerHTML = '<span>' + text + '</span><span class="log-tag">' + (tag || '') + '</span>';
+    logList.insertBefore(item, logList.firstChild);
+  }
+
+  function addHint(text){
+    const empty = hintsList.querySelector('.hints-empty');
+    if (empty) empty.remove();
+    const item = document.createElement('div');
+    item.className = 'hint-item';
+    item.textContent = '💡 ' + text;
+    hintsList.appendChild(item);
+  }
+
+  function revealNextHint(){
+    const unsolved = assignment.filter(a => !a.solved);
+    if (unsolved.length === 0) return;
+    if (hintPointer >= assignment.length) hintPointer = 0;
+    // знайти наступний ще не вгаданий пароль, рухаючись по колу
+    let tries = 0;
+    while (assignment[hintPointer].solved && tries < assignment.length) {
+      hintPointer = (hintPointer + 1) % assignment.length;
+      tries++;
+    }
+    const target = assignment[hintPointer];
+    const msg = 'Довжина: ' + target.len + ' символів. Тип: ' + target.category + '. Починається на: «' + target.first2 + '».';
+    addHint(msg);
+    addLog('💡 нова підказка розкрита', 'bad', 'підказка');
+    hintPointer = (hintPointer + 1) % assignment.length;
+  }
+
+  async function tryPassword(){
+    if (finished || busy) return;
+    const raw = input.value.trim();
+    if (raw === '') return;
+
+    busy = true;
+    submitBtn.disabled = true;
+
+    const guessHash = await sha256Hex(SALT + raw.toLowerCase());
+    const match = assignment.find(a => !a.solved && a.hash === guessHash);
+
+    if (match) {
+      match.solved = true;
+      score++;
+      addLog('✓ "' + raw + '"', 'ok', 'вірно');
+      if (score >= assignment.length) {
+        endGame(true);
+      }
+    } else {
+      wrongCount++;
+      addLog('✕ "' + raw + '"', 'bad', 'спроба ' + wrongCount);
+      if (wrongCount % 10 === 0) {
+        revealNextHint();
+      }
+    }
+
+    input.value = '';
+    updateHeader();
+    busy = false;
+    submitBtn.disabled = false;
+    input.focus();
+  }
+
+  function finishNow(){
+    if (finished) return;
+    endGame(false);
+  }
+
+  function endGame(allSolved){
+    finished = true;
+    submitBtn.disabled = true;
+    input.disabled = true;
+    finishBox.classList.add('show');
+    if (allSolved) {
+      finishText.textContent = 'Вітаємо! Ти вгадав(-ла) усі 12 паролів і отримав(-ла) максимальні ' + score + ' балів. Усі ці паролі — одні з найпоширеніших у світі: саме тому їх так легко підібрати навіть без спеціальних програм.';
+    } else {
+      finishText.textContent = 'Спробу завершено достроково. Твій результат: ' + score + ' із ' + assignment.length + ' балів. Обговоріть у класі, чим сильний пароль відрізняється від слабкого.';
+    }
+    updateHeader();
+  }
+
+  function resetGame(){
+    initAssignment();
+    score = 0; wrongCount = 0; hintPointer = 0; finished = false;
+    input.disabled = false; submitBtn.disabled = false;
+    input.value = '';
+    hintsList.innerHTML = '<div class="hints-empty">Підказки з\'являться після 10 невдалих спроб...</div>';
+    finishBox.classList.remove('show');
+    logList.innerHTML = '<div class="log-empty">Тут з\'являтимуться твої спроби...</div>';
+    updateHeader();
+    input.focus();
+  }
+
+  initAssignment();
+  updateHeader();
+</script>
+</body>
+</html>
