@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Кабінет учителя · Інформатика</title>
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/config.js"></script>
+<style>
+  .cab-toolbar{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:20px; }
+  .cab-toolbar select, .cab-toolbar input[type=text]{
+    padding:10px 14px; background: var(--panel-soft); border:2px solid var(--border); border-radius:12px;
+    color: var(--ink); font-family: var(--font-body); font-size:13.5px; font-weight:600;
+  }
+  .cab-count{ color: var(--muted); font-size:13px; font-weight:700; margin-left:auto; white-space:nowrap; }
+  .score-pill{ display:inline-flex; padding:3px 10px; border-radius:999px; font-family: var(--font-mono); font-weight:800; font-size:12px; white-space:nowrap; }
+  .score-good{ background: var(--green-bg); color: var(--green); }
+  .score-mid{ background: var(--amber-bg); color: var(--amber); }
+  .score-bad{ background: var(--red-bg); color: var(--red); }
+  .cab-empty{ text-align:center; padding:50px 20px; color: var(--muted); font-weight:600; }
+  #keyGate{ max-width: 480px; margin: 40px auto 0; }
+  #keyGate .field{ margin: 14px 0; }
+  .cab-row-link{ color: var(--purple-dark); font-size:12.5px; }
+  table.data{ width:100%; }
+  table.data td, table.data th{ white-space: nowrap; }
+  table.data td.wrap-cell{ white-space: normal; max-width: 260px; }
+  .key-error{ display:none; color: var(--red); font-size: 13.5px; font-weight:700; margin-top: 12px; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="logo">
+      <svg class="mascot-nav" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="gNavKab" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs>
+        <line x1="60" y1="6" x2="60" y2="20" stroke="#c084fc" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="60" cy="6" r="7" fill="#f472b6"/>
+        <rect x="14" y="20" width="92" height="82" rx="28" fill="url(#gNavKab)"/>
+        <circle cx="10" cy="58" r="9" fill="#f472b6"/><circle cx="110" cy="58" r="9" fill="#f472b6"/>
+        <ellipse cx="42" cy="60" rx="13" ry="16" fill="#fff"/><ellipse cx="78" cy="60" rx="13" ry="16" fill="#fff"/>
+        <circle cx="45" cy="64" r="6.5" fill="#362a52"/><circle cx="81" cy="64" r="6.5" fill="#362a52"/>
+        <circle cx="41" cy="58" r="2.4" fill="#fff"/><circle cx="77" cy="58" r="2.4" fill="#fff"/>
+        <circle cx="28" cy="82" r="6" fill="#fbcfe8" opacity=".85"/><circle cx="92" cy="82" r="6" fill="#fbcfe8" opacity=".85"/>
+        <path d="M48 88 Q60 97 72 88" stroke="#362a52" stroke-width="4" fill="none" stroke-linecap="round"/>
+      </svg>
+      Інформатика
+    </div>
+    <div class="links">
+      <a href="index.html">Головна</a>
+      <a href="10-klas/index.html">10 клас</a>
+      <a href="11-klas/index.html">11 клас</a>
+      <a href="submit.html">Здати роботу</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <div class="eyebrow"><span class="green">✦</span> Лише для вчителя</div>
+  <h1>Кабінет <span class="green">учителя</span></h1>
+  <p class="lead">Усі здані роботи й результати тестів із Google Таблиці — в одному місці. Сторінка не пов'язана з навігацією сайту й захищена секретним ключем, тому пряме посилання варто зберегти лише собі.</p>
+
+  <div class="panel panel-note" id="keyGate">
+    <h3>🔑 Вхід за ключем</h3>
+    <p>Введи секретний ключ — той самий <code>CABINET_KEY</code>, що вказаний у <code>apps-script/Code.gs</code>.</p>
+    <div class="field">
+      <input type="password" id="keyInput" placeholder="Секретний ключ" style="width:100%; padding:12px 14px; background:var(--panel-soft); border:2px solid var(--border); border-radius:12px; color:var(--ink); font-family:var(--font-body); font-size:14px;">
+    </div>
+    <button class="btn" onclick="loadCabinet()">Увійти</button>
+    <p class="key-error" id="keyError"></p>
+  </div>
+
+  <div id="cabinetBody" style="display:none;">
+    <div class="cab-toolbar">
+      <select id="filterKlass"><option value="">Усі класи</option></select>
+      <select id="filterLesson"><option value="">Усі уроки</option></select>
+      <input type="text" id="filterSearch" placeholder="Пошук за прізвищем чи ім'ям…">
+      <button class="btn btn-ghost" onclick="refreshData()">↻ Оновити</button>
+      <span class="cab-count" id="rowCount"></span>
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table class="data" id="dataTable">
+        <thead>
+          <tr>
+            <th>Дата</th><th>Прізвище</th><th>Ім'я</th><th>Клас</th><th>Урок / завдання</th><th>Тип роботи</th><th>Результат / відповідь</th><th>Посилання</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="cab-empty" id="emptyState" style="display:none;">Поки що немає жодного запису за цим фільтром.</div>
+  </div>
+
+  <footer>Дані завжди читаються напряму з твого Google Sheet через Apps Script — сторонні сервери не використовуються.</footer>
+</div>
+
+<script>
+  let allRows = [];
+
+  function escapeHtml(s){
+    return (s === undefined || s === null ? '' : s).toString()
+      .replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function formatDate(v){
+    if (!v) return '';
+    const d = new Date(v);
+    if (isNaN(d.getTime())) return escapeHtml(v);
+    return d.toLocaleString('uk-UA');
+  }
+
+  function scoreClass(text){
+    const m = /(\d+)\s*\/\s*(\d+)/.exec(text || '');
+    if (!m) return '';
+    const ratio = parseInt(m[1], 10) / parseInt(m[2], 10);
+    if (ratio >= 0.75) return 'score-good';
+    if (ratio >= 0.5) return 'score-mid';
+    return 'score-bad';
+  }
+
+  function populateFilters(){
+    const klasses = [...new Set(allRows.map(r => r['Клас']).filter(Boolean))].sort();
+    const lessons = [...new Set(allRows.map(r => r['Урок / завдання']).filter(Boolean))].sort();
+
+    const klassSel = document.getElementById('filterKlass');
+    const lessonSel = document.getElementById('filterLesson');
+    const prevKlass = klassSel.value;
+    const prevLesson = lessonSel.value;
+
+    klassSel.innerHTML = '<option value="">Усі класи</option>' + klasses.map(k => '<option>' + escapeHtml(k) + '</option>').join('');
+    lessonSel.innerHTML = '<option value="">Усі уроки</option>' + lessons.map(l => '<option>' + escapeHtml(l) + '</option>').join('');
+
+    if (klasses.includes(prevKlass)) klassSel.value = prevKlass;
+    if (lessons.includes(prevLesson)) lessonSel.value = prevLesson;
+  }
+
+  function render(){
+    const klass = document.getElementById('filterKlass').value;
+    const lesson = document.getElementById('filterLesson').value;
+    const search = document.getElementById('filterSearch').value.trim().toLowerCase();
+
+    const rows = allRows.filter(r => {
+      if (klass && r['Клас'] !== klass) return false;
+      if (lesson && r['Урок / завдання'] !== lesson) return false;
+      if (search) {
+        const full = ((r['Прізвище'] || '') + ' ' + (r["Ім'я"] || '')).toLowerCase();
+        if (!full.includes(search)) return false;
+      }
+      return true;
+    }).slice().reverse();
+
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = rows.map(r => {
+      const answer = r['Текстова відповідь'] || '';
+      const cls = scoreClass(answer);
+      const answerHtml = cls
+        ? '<span class="score-pill ' + cls + '">' + escapeHtml(answer) + '</span>'
+        : escapeHtml(answer);
+      const linkVal = r['Посилання на роботу'];
+      const link = linkVal
+        ? '<a class="cab-row-link" href="' + escapeHtml(linkVal) + '" target="_blank" rel="noopener">відкрити</a>'
+        : '—';
+      return '<tr>' +
+        '<td>' + formatDate(r['Дата (сервер)']) + '</td>' +
+        '<td>' + escapeHtml(r['Прізвище']) + '</td>' +
+        '<td>' + escapeHtml(r["Ім'я"]) + '</td>' +
+        '<td>' + escapeHtml(r['Клас']) + '</td>' +
+        '<td class="wrap-cell">' + escapeHtml(r['Урок / завдання']) + '</td>' +
+        '<td>' + escapeHtml(r['Тип роботи']) + '</td>' +
+        '<td class="wrap-cell">' + answerHtml + '</td>' +
+        '<td>' + link + '</td>' +
+      '</tr>';
+    }).join('');
+
+    document.getElementById('rowCount').textContent = rows.length + ' / ' + allRows.length + ' записів';
+    document.getElementById('emptyState').style.display = rows.length ? 'none' : 'block';
+  }
+
+  async function fetchData(key){
+    const res = await fetch(SCRIPT_URL + '?key=' + encodeURIComponent(key));
+    const text = await res.text();
+    let json;
+    try { json = JSON.parse(text); } catch (e) { throw new Error('bad-key-or-response'); }
+    if (!json || !Array.isArray(json.rows)) throw new Error('bad-key-or-response');
+    return json.rows;
+  }
+
+  async function loadCabinet(){
+    const key = document.getElementById('keyInput').value.trim();
+    const err = document.getElementById('keyError');
+    err.style.display = 'none';
+    if (!key) return;
+
+    if (typeof SCRIPT_URL === 'undefined' || SCRIPT_URL.indexOf('ВСТАВ_СЮДИ') !== -1) {
+      err.textContent = '⚠ Спочатку встав робочий URL у файл assets/config.js.';
+      err.style.display = 'block';
+      return;
+    }
+
+    try {
+      allRows = await fetchData(key);
+      localStorage.setItem('cabinetKey', key);
+      document.getElementById('keyGate').style.display = 'none';
+      document.getElementById('cabinetBody').style.display = 'block';
+      populateFilters();
+      render();
+    } catch (e) {
+      err.textContent = '✕ Невірний ключ або не вдалося отримати дані. Перевір CABINET_KEY у Code.gs і підключення до інтернету.';
+      err.style.display = 'block';
+    }
+  }
+
+  async function refreshData(){
+    const key = localStorage.getItem('cabinetKey');
+    if (!key) return;
+    try {
+      allRows = await fetchData(key);
+      populateFilters();
+      render();
+    } catch (e) { /* тимчасовий збій мережі — просто лишаємо попередні дані на екрані */ }
+  }
+
+  document.getElementById('filterKlass').addEventListener('change', render);
+  document.getElementById('filterLesson').addEventListener('change', render);
+  document.getElementById('filterSearch').addEventListener('input', render);
+
+  (function init(){
+    const savedKey = localStorage.getItem('cabinetKey');
+    if (savedKey) {
+      document.getElementById('keyInput').value = savedKey;
+      loadCabinet();
+    }
+  })();
+</script>
+
+</body>
+</html>

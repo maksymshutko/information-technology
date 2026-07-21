@@ -110,17 +110,16 @@
     <p>1. Створи новий Google Sheet — це буде твій «кабінет» з усіма роботами.</p>
     <p>2. Відкрий <code>Розширення → Apps Script</code>, встав код із файлу <code>apps-script/Code.gs</code> (додається окремо), збережи.</p>
     <p>3. <code>Deploy → New deployment → Web app</code>. Execute as: <code>Me</code>. Who has access: <code>Anyone</code>. Натисни Deploy й скопіюй URL веб-застосунку.</p>
-    <p>4. Встав цей URL замість <code>SCRIPT_URL</code> на початку скрипта внизу цієї сторінки (у файлі <code>submit.html</code>) — і форма запрацює.</p>
+    <p>4. Встав цей URL замість <code>SCRIPT_URL</code> у файлі <code>assets/config.js</code> — і форма (та всі тести на сайті) запрацюють.</p>
+    <p>5. У тому ж файлі <code>Code.gs</code> заміни <code>CABINET_KEY</code> на свій секретний рядок. Результати й тести можна переглянути на сторінці <code>kabinet.html</code> (немає в меню — посилання зберігай собі) після введення цього ключа.</p>
   </div>
 
   <footer>Дані надсилаються напряму у ваш Google Sheet — сторонні сервери не використовуються.</footer>
 </div>
 
+<script src="assets/config.js"></script>
 <script>
-  // === НАЛАШТУВАННЯ ВЧИТЕЛЯ ===
-  // Встав сюди URL свого Google Apps Script Web App (див. підказку вище)
-  const SCRIPT_URL = "ВСТАВ_СЮДИ_URL_ТВОГО_APPS_SCRIPT_WEB_APP";
-
+  // SCRIPT_URL підключається з assets/config.js (спільний для всіх сторінок)
   const form = document.getElementById('submitForm');
   const statusMsg = document.getElementById('statusMsg');
 

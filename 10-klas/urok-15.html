@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Місія аналітика даних — Тематичне оцінювання</title>
 <link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/config.js"></script>
 <style>
   :root{
     --bg: #1a1330;
@@ -66,6 +67,9 @@
   .opt input{ accent-color: var(--indigo); }
   .opt.correct{ background: var(--good-bg); border-color: var(--good); color: var(--good); font-weight: 600; }
   .opt.wrong{ background: var(--bad-bg); border-color: var(--bad); color: var(--bad); }
+  .opt.selected{ border-color: var(--indigo); background: var(--indigo-bg); }
+  .finish-btn:disabled{ opacity: .55; cursor: not-allowed; }
+  .intro-error{ color: var(--bad); font-size: 13px; font-weight: 700; margin: 4px 0 0; display:none; }
 
   /* matching */
   .match-wrap{ display:grid; grid-template-columns: 1fr 1fr; gap: 24px; }
@@ -138,7 +142,7 @@
   </div>
 </nav>
 
-<div class="scorebar">
+<div class="scorebar" id="scoreBar" style="display:none;">
   <div class="scorebar-inner">
     <span class="name">БАЛИ МІСІЇ</span>
     <div class="track"><div class="fill" id="scoreFill"></div></div>
@@ -151,7 +155,7 @@
   <div class="hero">
     <div class="eyebrow">Тематичне оцінювання · Тема 2</div>
     <h1>Місія аналітика даних</h1>
-    <p>Тобі потрібно пройти 4 етапи розслідування — кожен перевіряє свою частину теми «Моделі і моделювання. Аналіз та візуалізація даних». Відповідай одразу в браузері: правильні відповіді підсвічуються зеленим, неправильні — червоним.</p>
+    <p>Тобі потрібно пройти 4 етапи розслідування — кожен перевіряє свою частину теми «Моделі і моделювання. Аналіз та візуалізація даних». Місію можна пройти лише один раз: правильні й неправильні відповіді підсвітяться тільки після кнопки «Завершити місію», і тоді ж результат автоматично піде вчителю.</p>
     <div class="stage-pips">
       <span class="pip">01 · Моделювання</span>
       <span class="pip">02 · Статистика</span>
@@ -159,6 +163,24 @@
       <span class="pip">04 · Інструменти</span>
     </div>
   </div>
+
+  <div class="result-panel show" id="alreadyDonePanel" style="display:none;">
+    <div class="rank">Робота вже здана</div>
+    <div class="rank-title" id="alreadyRank"></div>
+    <div class="final-score" id="alreadyScore"></div>
+    <p style="color:var(--muted); font-size:13.5px; max-width:480px; margin:0 auto;">Цю місію можна пройти лише один раз. Результат уже надіслано вчителю — повторно пройти тест на цьому пристрої не можна.</p>
+  </div>
+
+  <div class="q-card" id="introGate" style="max-width:560px;">
+    <p class="q-text">Перш ніж почати — вкажи, хто здає роботу. Місію можна пройти лише один раз: після кнопки «Завершити місію» відповіді заблокуються і результат одразу піде вчителю.</p>
+    <div class="fill-row"><label style="flex:0 0 110px;">Прізвище</label><input type="text" id="studentLastname" style="flex:1 1 220px;" placeholder="Шевченко"></div>
+    <div class="fill-row"><label style="flex:0 0 110px;">Ім'я</label><input type="text" id="studentFirstname" style="flex:1 1 220px;" placeholder="Тарас"></div>
+    <div class="fill-row"><label style="flex:0 0 110px;">Клас</label><input type="text" id="studentKlass" style="flex:1 1 220px;" placeholder="10-А"></div>
+    <p class="intro-error" id="introError">Заповни, будь ласка, всі три поля.</p>
+    <button class="finish-btn" onclick="startMission()" style="margin-top:10px;">Розпочати місію</button>
+  </div>
+
+  <div id="missionContent" style="display:none;">
 
   <!-- ============ STAGE 1 ============ -->
   <div class="stage">
@@ -361,15 +383,17 @@
   </div>
 
   <div class="finish-zone">
-    <button class="finish-btn" onclick="finishMission()">Завершити місію</button>
+    <button class="finish-btn" id="finishBtn" onclick="finishMission()">Завершити місію</button>
   </div>
 
   <div class="result-panel" id="resultPanel">
     <div class="rank">Результат місії</div>
     <div class="rank-title" id="rankTitle"></div>
     <div class="final-score" id="finalScore"></div>
-    <p style="color:var(--muted); font-size:13.5px; max-width:480px; margin:0 auto;">Покажи цей результат учителю — він внесе бал до журналу за внутрішньою шкалою оцінювання.</p>
+    <p style="color:var(--muted); font-size:13.5px; max-width:480px; margin:0 auto;">Результат уже надіслано вчителю автоматично.</p>
     <div class="result-breakdown" id="resultBreakdown"></div>
+  </div>
+
   </div>
 
   <footer>
@@ -382,21 +406,30 @@
   const TOTAL_POINTS = 19;
   const matchedPairs = new Set();
   let selectedLeft = null;
+  let studentInfo = null;
+  let missionLocked = false;
 
-  /* ---------- MCQ ---------- */
+  /* ---------- MCQ (під час спроби — лише нейтральне виділення, без "правильно/неправильно") ---------- */
   document.querySelectorAll('.mcq').forEach(group => {
     group.addEventListener('change', () => {
-      const correct = group.dataset.correct;
       group.querySelectorAll('.opt').forEach(opt => {
-        opt.classList.remove('correct','wrong');
+        opt.classList.remove('selected');
         const input = opt.querySelector('input');
-        if (input.checked) {
-          opt.classList.add(opt.dataset.val === correct ? 'correct' : 'wrong');
-        }
+        if (input.checked) opt.classList.add('selected');
       });
       scoreAll();
     });
   });
+
+  function revealMCQ(group){
+    const correct = group.dataset.correct;
+    const checked = group.querySelector('input:checked');
+    group.querySelectorAll('.opt').forEach(opt => {
+      opt.classList.remove('selected');
+      if (opt.dataset.val === correct) opt.classList.add('correct');
+      else if (checked && opt.dataset.val === checked.value) opt.classList.add('wrong');
+    });
+  }
 
   /* ---------- MATCHING ---------- */
   function clearLeftSelection(){
@@ -445,27 +478,31 @@
     s2: { accepted: ['лінію тренду','лінія тренду','тренд','трендову лінію','додати лінію тренду'], type:'text' },
   };
 
-  function checkShortAnswer(id){
+  function isShortAnswerCorrect(id){
     const input = document.getElementById(id);
-    const icon = document.getElementById(id + 'icon');
     const cfg = shortAnswers[id];
     const val = input.value;
-    if (val.trim() === '') { input.classList.remove('correct','wrong'); icon.textContent=''; return; }
-    let ok = false;
+    if (val.trim() === '') return false;
     if (cfg.type === 'numeric') {
       const n = parseFloat(val.replace(',', '.'));
-      ok = !isNaN(n) && n >= cfg.min && n <= cfg.max;
-    } else {
-      ok = cfg.accepted.includes(norm(val));
+      return !isNaN(n) && n >= cfg.min && n <= cfg.max;
     }
+    return cfg.accepted.includes(norm(val));
+  }
+
+  function revealShortAnswer(id){
+    const input = document.getElementById(id);
+    const icon = document.getElementById(id + 'icon');
+    const ok = isShortAnswerCorrect(id);
     input.classList.toggle('correct', ok);
     input.classList.toggle('wrong', !ok);
     icon.textContent = ok ? '✓' : '✕';
     icon.style.color = ok ? 'var(--good)' : 'var(--bad)';
   }
 
+  /* під час спроби відповіді НЕ підсвічуються — тільки оновлюємо загальний бал */
   Object.keys(shortAnswers).forEach(id => {
-    document.getElementById(id).addEventListener('input', () => checkShortAnswer(id));
+    document.getElementById(id).addEventListener('input', () => scoreAll());
   });
 
   /* ---------- SCORING ---------- */
@@ -481,8 +518,7 @@
 
     let shortScore = 0;
     Object.keys(shortAnswers).forEach(id => {
-      const input = document.getElementById(id);
-      if (input.classList.contains('correct')) shortScore++;
+      if (isShortAnswerCorrect(id)) shortScore++;
     });
 
     const total = mcqScore + matchScore + shortScore;
@@ -491,7 +527,68 @@
     return { total, mcqScore, matchScore, shortScore };
   }
 
+  /* ---------- СТАРТ МІСІЇ (форма з іменем) ---------- */
+  function startMission(){
+    const lastname = document.getElementById('studentLastname').value.trim();
+    const firstname = document.getElementById('studentFirstname').value.trim();
+    const klass = document.getElementById('studentKlass').value.trim();
+    const err = document.getElementById('introError');
+
+    if (!lastname || !firstname || !klass) {
+      err.style.display = 'block';
+      return;
+    }
+    err.style.display = 'none';
+
+    studentInfo = { lastname, firstname, klass };
+    document.getElementById('introGate').style.display = 'none';
+    document.getElementById('missionContent').style.display = 'block';
+    document.getElementById('scoreBar').style.display = '';
+    scoreAll();
+  }
+
+  /* ---------- БЛОКУВАННЯ ПІСЛЯ ЗАВЕРШЕННЯ ---------- */
+  function lockAll(){
+    document.querySelectorAll('.mcq input').forEach(i => { i.disabled = true; });
+    document.querySelectorAll('.fill-row input[type=text]').forEach(i => { i.disabled = true; });
+    document.querySelectorAll('.match-item').forEach(el => { el.style.pointerEvents = 'none'; });
+    document.getElementById('finishBtn').disabled = true;
+  }
+
+  /* ---------- ВІДПРАВКА РЕЗУЛЬТАТУ ВЧИТЕЛЮ ---------- */
+  function sendResult(result, rank){
+    if (typeof SCRIPT_URL === 'undefined' || SCRIPT_URL.indexOf('ВСТАВ_СЮДИ') !== -1) return;
+
+    const data = new URLSearchParams({
+      lastname: studentInfo.lastname,
+      firstname: studentInfo.firstname,
+      klass: studentInfo.klass,
+      lesson: "Урок 15 — Тематичне оцінювання (Місія аналітика)",
+      worktype: "Тематичне оцінювання (авто)",
+      link: '',
+      answer: result.total + '/' + TOTAL_POINTS + ' балів — ' + rank +
+        ' (тести ' + result.mcqScore + '/8, відповідність ' + result.matchScore + '/4, читання даних ' + result.shortScore + '/7)',
+      timestamp: new Date().toLocaleString('uk-UA')
+    });
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: data.toString()
+    }).catch(function(){ /* результат уже показано учню й збережено локально, мовчки ігноруємо збій мережі */ });
+  }
+
   function finishMission(){
+    if (missionLocked) return;
+    const confirmed = confirm('Завершити місію? Після цього відповіді заблокуються, а результат буде надіслано вчителю. Пройти тест повторно не можна.');
+    if (!confirmed) return;
+    missionLocked = true;
+
+    document.querySelectorAll('.mcq').forEach(revealMCQ);
+    Object.keys(shortAnswers).forEach(revealShortAnswer);
+    lockAll();
+
     const result = scoreAll();
     const panel = document.getElementById('resultPanel');
     panel.classList.add('show');
@@ -510,10 +607,25 @@
       '<span>Відповідність: <b>' + result.matchScore + ' / 4</b></span>' +
       '<span>Читання даних: <b>' + result.shortScore + ' / 7</b></span>';
 
+    sendResult(result, rank);
+    localStorage.setItem('urok15_done', JSON.stringify({ total: result.total, rank: rank }));
+
     panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
-  scoreAll();
+  /* ---------- ПЕРЕВІРКА ПРИ ЗАВАНТАЖЕННІ: чи вже здано з цього браузера ---------- */
+  (function initMission(){
+    const saved = localStorage.getItem('urok15_done');
+    if (!saved) return;
+    let info;
+    try { info = JSON.parse(saved); } catch (e) { return; }
+
+    document.getElementById('introGate').style.display = 'none';
+    const panel = document.getElementById('alreadyDonePanel');
+    panel.style.display = 'block';
+    document.getElementById('alreadyRank').textContent = info.rank;
+    document.getElementById('alreadyScore').textContent = info.total + ' / ' + TOTAL_POINTS;
+  })();
 </script>
 </body>
 </html>
