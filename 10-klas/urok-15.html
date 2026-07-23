@@ -78,6 +78,7 @@
   .match-item:hover{ border-color: #6d5a99; }
   .match-item.selected{ border-color: var(--indigo); background: var(--indigo-bg); font-weight:600; }
   .match-item.solved{ border-color: var(--good); background: var(--good-bg); color: var(--good); font-weight:600; cursor:default; }
+  .match-item.wrong{ border-color: var(--bad); background: var(--bad-bg); color: var(--bad); cursor:default; }
   .match-item.flash-wrong{ animation: flashred .4s ease; }
   @keyframes flashred{ 0%,100%{ background: var(--panel); } 50%{ background: var(--bad-bg); border-color: var(--bad); } }
 
@@ -137,6 +138,7 @@
     <div class="links">
       <a href="../index.html">Головна</a>
       <a href="index.html" class="active">10 клас</a>
+      <a href="../pidruchnyk.html">Підручник</a>
       <a href="../submit.html">Здати роботу</a>
     </div>
   </div>
@@ -404,8 +406,6 @@
 
 <script>
   const TOTAL_POINTS = 19;
-  const matchedPairs = new Set();
-  let selectedLeft = null;
   let studentInfo = null;
   let missionLocked = false;
 
@@ -431,39 +431,120 @@
     });
   }
 
-  /* ---------- MATCHING ---------- */
+  /* ---------- MATCHING (можна перепризначати пари скільки завгодно, але без миттєвого "правильно/неправильно" — розкриття лише після "Завершити місію") ---------- */
+  const matchAssignment = {}; // lid -> обраний учнем DOM-елемент справа
+  let selectedLeftEl = null;
+  const leftItemsList = Array.from(document.querySelectorAll('#matchLeft .match-item'));
+  const PAIR_COLORS = [
+    { border: 'var(--indigo)', bg: 'var(--indigo-bg)' },
+    { border: 'var(--teal)',   bg: 'var(--teal-bg)'   },
+    { border: 'var(--rust)',   bg: 'var(--rust-bg)'   },
+    { border: 'var(--amber)',  bg: 'var(--amber-bg)'  }
+  ];
+
+  function pairColorFor(lid){
+    const idx = leftItemsList.findIndex(el => el.dataset.id === lid);
+    return PAIR_COLORS[idx] || PAIR_COLORS[0];
+  }
+
+  function paintPair(lid){
+    const leftEl = document.querySelector(`#matchLeft [data-id="${lid}"]`);
+    const rightEl = matchAssignment[lid];
+    const color = pairColorFor(lid);
+    [leftEl, rightEl].forEach(el => {
+      if (!el) return;
+      el.style.borderColor = color.border;
+      el.style.background = color.bg;
+    });
+  }
+
+  function clearPairPaint(lid, extraEl){
+    const leftEl = document.querySelector(`#matchLeft [data-id="${lid}"]`);
+    [leftEl, extraEl].forEach(el => {
+      if (!el) return;
+      el.style.borderColor = '';
+      el.style.background = '';
+    });
+  }
+
   function clearLeftSelection(){
     document.querySelectorAll('#matchLeft .match-item').forEach(el => el.classList.remove('selected'));
-    selectedLeft = null;
+    selectedLeftEl = null;
   }
 
   document.querySelectorAll('#matchLeft .match-item').forEach(el => {
     el.addEventListener('click', () => {
-      const id = el.dataset.id;
-      if (matchedPairs.has(id)) return;
+      if (missionLocked) return;
+      if (selectedLeftEl === el) { clearLeftSelection(); return; }
       clearLeftSelection();
       el.classList.add('selected');
-      selectedLeft = id;
+      selectedLeftEl = el;
     });
   });
 
   document.querySelectorAll('#matchRight .match-item').forEach(el => {
     el.addEventListener('click', () => {
-      const id = el.dataset.id;
-      if (matchedPairs.has(id) || !selectedLeft) return;
-      if (id === selectedLeft) {
-        matchedPairs.add(id);
-        document.querySelectorAll(`#matchLeft [data-id="${id}"]`).forEach(x => { x.classList.remove('selected'); x.classList.add('solved'); });
-        document.querySelectorAll(`#matchRight [data-id="${id}"]`).forEach(x => x.classList.add('solved'));
-        selectedLeft = null;
-      } else {
-        el.classList.add('flash-wrong');
-        setTimeout(() => el.classList.remove('flash-wrong'), 400);
-        clearLeftSelection();
+      if (missionLocked) return;
+
+      if (!selectedLeftEl) {
+        // клік по вже призначеному правому елементу без вибраного лівого — скасувати цю пару
+        const ownerLid = Object.keys(matchAssignment).find(lid => matchAssignment[lid] === el);
+        if (ownerLid) {
+          delete matchAssignment[ownerLid];
+          clearPairPaint(ownerLid, el);
+          scoreAll();
+        }
+        return;
       }
+
+      const lid = selectedLeftEl.dataset.id;
+
+      // звільнити цей правий елемент від попереднього власника (якщо він уже комусь призначений)
+      Object.keys(matchAssignment).forEach(otherLid => {
+        if (otherLid !== lid && matchAssignment[otherLid] === el) {
+          delete matchAssignment[otherLid];
+          clearPairPaint(otherLid, el);
+        }
+      });
+
+      // звільнити попереднє призначення цього лівого елемента
+      if (matchAssignment[lid] && matchAssignment[lid] !== el) {
+        clearPairPaint(lid, matchAssignment[lid]);
+      }
+
+      matchAssignment[lid] = el;
+      paintPair(lid);
+      clearLeftSelection();
       scoreAll();
     });
   });
+
+  function revealMatching(){
+    clearLeftSelection();
+    leftItemsList.forEach(leftEl => {
+      const lid = leftEl.dataset.id;
+      const correctRightEl = document.querySelector(`#matchRight [data-id="${lid}"]`);
+      const assignedRightEl = matchAssignment[lid];
+      const correct = assignedRightEl === correctRightEl;
+
+      leftEl.style.borderColor = ''; leftEl.style.background = '';
+      correctRightEl.style.borderColor = ''; correctRightEl.style.background = '';
+
+      if (correct) {
+        leftEl.classList.add('solved');
+      } else if (assignedRightEl) {
+        leftEl.classList.add('wrong');
+      }
+      // правильний правий варіант завжди підсвічуємо зеленим, навіть якщо учень
+      // призначив його іншій (неправильній) парі чи не відповів узагалі
+      correctRightEl.classList.add('solved');
+
+      if (assignedRightEl && assignedRightEl !== correctRightEl) {
+        assignedRightEl.style.borderColor = '';
+        assignedRightEl.style.background = '';
+      }
+    });
+  }
 
   /* ---------- SHORT ANSWER ---------- */
   function norm(s){ return (s || '').toString().trim().toLowerCase().replace(/[.,!?]/g,''); }
@@ -514,7 +595,11 @@
       if (checked && checked.value === correct) mcqScore++;
     });
 
-    const matchScore = matchedPairs.size;
+    const matchScore = leftItemsList.filter(l => {
+      const lid = l.dataset.id;
+      const correctRightEl = document.querySelector(`#matchRight [data-id="${lid}"]`);
+      return matchAssignment[lid] === correctRightEl;
+    }).length;
 
     let shortScore = 0;
     Object.keys(shortAnswers).forEach(id => {
@@ -586,6 +671,7 @@
     missionLocked = true;
 
     document.querySelectorAll('.mcq').forEach(revealMCQ);
+    revealMatching();
     Object.keys(shortAnswers).forEach(revealShortAnswer);
     lockAll();
 

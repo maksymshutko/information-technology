@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>10 клас · Інформатика</title>
 <link rel="stylesheet" href="../assets/style.css">
+<style>
+  .topic-toggle{ cursor:pointer; user-select:none; }
+  .topic-toggle .chevron{ margin-left:auto; font-size:14px; color: var(--muted); transition: transform .2s ease; }
+  .topic-toggle[aria-expanded="false"] .chevron{ transform: rotate(-90deg); }
+  .topic-toggle:hover h2{ color: var(--purple-dark); }
+  .topic-toggle:focus-visible{ outline: 2px solid var(--purple); outline-offset: 4px; border-radius: 8px; }
+  .topic-body.collapsed{ display:none; }
+</style>
 </head>
 <body>
 
@@ -29,6 +37,7 @@
       <a href="../index.html">Головна</a>
       <a href="index.html" class="active">10 клас</a>
       <a href="../11-klas/index.html">11 клас</a>
+      <a href="../pidruchnyk.html">Підручник</a>
       <a href="../submit.html">Здати роботу</a>
     </div>
   </div>
@@ -45,7 +54,11 @@
   </p>
 
   <section>
-    <div class="section-title"><h2>Тема 1. Інформаційні технології в суспільстві</h2><span class="tag">уроки 1–9</span></div>
+    <div class="section-title topic-toggle" role="button" tabindex="0" aria-expanded="true"
+         onclick="toggleTopic(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleTopic(this);}">
+      <h2>Тема 1. Інформаційні технології в суспільстві</h2><span class="tag">уроки 1–9</span><span class="chevron">▾</span>
+    </div>
+    <div class="topic-body">
     <div class="hr-comment">основи інформаційної безпеки, ІТ-суспільство, сучасні технології</div>
 
     <div class="file-list">
@@ -99,15 +112,20 @@
       </div>
       <div class="file-row">
         <span class="fname"><span class="num">09</span> Урок 9</span>
-        <span class="fdesc">Тематичне оцінювання — Тема 1</span>
-        <span class="fbadge badge badge-soon">скоро</span>
-        <a class="rowlink" href="soon.html?n=09"></a>
+        <span class="fdesc">Тематичне оцінювання — Тема 1 · «Операція «Інфоагент»» (інтерактивна)</span>
+        <span class="fbadge badge badge-done">готово</span>
+        <a class="rowlink" href="urok-09.html"></a>
       </div>
+    </div>
     </div>
   </section>
 
   <section>
-    <div class="section-title"><h2>Тема 2. Моделі і моделювання. Аналіз та візуалізація даних</h2><span class="tag">уроки 10–15</span></div>
+    <div class="section-title topic-toggle" role="button" tabindex="0" aria-expanded="true"
+         onclick="toggleTopic(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleTopic(this);}">
+      <h2>Тема 2. Моделі і моделювання. Аналіз та візуалізація даних</h2><span class="tag">уроки 10–15</span><span class="chevron">▾</span>
+    </div>
+    <div class="topic-body">
     <div class="hr-comment">моделювання, статистика, тренди, оптимізація</div>
 
     <div class="file-list">
@@ -148,12 +166,22 @@
         <a class="rowlink" href="urok-15.html"></a>
       </div>
     </div>
+    </div>
   </section>
 
   <footer>
     Статуси оновлюються по мірі готовності матеріалів. Порожні уроки можна перетворити на такі самі сторінки за запитом.
   </footer>
 </div>
+
+<script>
+  function toggleTopic(headerEl){
+    const body = headerEl.nextElementSibling;
+    const expanded = headerEl.getAttribute('aria-expanded') === 'true';
+    headerEl.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+    body.classList.toggle('collapsed', expanded);
+  }
+</script>
 
 </body>
 </html>

@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Операція «Інфоагент» — Тематичне оцінювання</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/config.js"></script>
+<style>
+  :root{
+    --bg: #1a1330;
+    --panel: #241b38;
+    --ink: #f1ecff;
+    --muted: #a99cc9;
+    --line: #3c2f5a;
+
+    --teal: #f9a8d4;   --teal-bg: rgba(244,114,182,.15);
+    --rust: #fb7185;   --rust-bg: rgba(251,113,133,.15);
+    --indigo: #c4b5fd; --indigo-bg: rgba(139,92,246,.18);
+    --amber: #fbbf24;  --amber-bg: rgba(251,191,36,.15);
+
+    --good: #34d399; --good-bg: rgba(52,211,153,.15);
+    --bad: #fb7185;  --bad-bg: rgba(251,113,133,.15);
+
+    --font-display: 'Baloo 2', 'Nunito', "Segoe UI", Arial, sans-serif;
+    --font-mono: 'JetBrains Mono', "SFMono-Regular", "Courier New", monospace;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background: var(--bg); color: var(--ink); font-family: 'Nunito', "Segoe UI", Arial, sans-serif;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(159,117,255,0.08) 0px, rgba(159,117,255,0.08) 1px, transparent 1px, transparent 28px),
+      repeating-linear-gradient(90deg, rgba(159,117,255,0.08) 0px, rgba(159,117,255,0.08) 1px, transparent 1px, transparent 28px);
+  }
+  .wrap{ max-width: 900px; margin:0 auto; padding: 0 20px 80px; }
+
+  /* ---------- STICKY SCORE BAR ---------- */
+  .scorebar{
+    position: sticky; top:0; z-index: 50; background: rgba(26,19,48,0.92); backdrop-filter: blur(3px);
+    padding: 14px 20px; border-bottom: 1px solid var(--line);
+  }
+  .scorebar-inner{ max-width: 900px; margin:0 auto; display:flex; align-items:center; gap: 16px; }
+  .scorebar .name{ font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); white-space:nowrap; }
+  .scorebar .track{ flex:1; height: 10px; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid var(--line); overflow:hidden; }
+  .scorebar .fill{ height:100%; background: linear-gradient(90deg, var(--indigo), var(--teal), var(--rust), var(--amber)); width:0%; transition: width .3s ease; }
+  .scorebar .score{ font-family: var(--font-mono); font-size: 13.5px; font-weight: 700; white-space:nowrap; }
+
+  /* ---------- HERO ---------- */
+  .hero{ padding: 36px 0 28px; }
+  .eyebrow{ font-family: var(--font-mono); font-size: 12px; letter-spacing: 1.4px; color: var(--muted); text-transform: uppercase; margin-bottom: 12px; }
+  h1{ font-family: var(--font-display); font-weight: 800; font-size: clamp(24px,4vw,36px); margin: 0 0 10px; letter-spacing: -0.4px; }
+  .hero p{ color: var(--muted); font-size: 15.5px; line-height: 1.6; max-width: 640px; margin: 0 0 20px; }
+  .stage-pips{ display:flex; gap: 10px; flex-wrap: wrap; }
+  .pip{ font-family: var(--font-mono); font-size: 12px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+
+  /* ---------- STAGE SECTIONS ---------- */
+  .stage{ margin-bottom: 46px; }
+  .stage-head{ display:flex; align-items:center; gap: 12px; margin-bottom: 18px; }
+  .stage-badge{ font-family: var(--font-mono); font-weight: 800; font-size: 15px; width: 38px; height:38px; border-radius: 9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .stage-head h2{ font-family: var(--font-display); font-size: 20px; margin:0; font-weight: 750; }
+  .stage-head .stage-points{ margin-left:auto; font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+
+  .q-card{ background: var(--panel); border: 2px solid var(--line); border-radius: 18px; padding: 18px 20px; margin-bottom: 14px; }
+  .q-card .q-text{ font-size: 14.5px; margin: 0 0 12px; line-height: 1.5; font-weight:700; }
+  .q-card .q-points{ font-family: var(--font-mono); font-size: 11.5px; color: var(--muted); font-weight:600; margin: -6px 0 12px; }
+  .opt{ display:flex; align-items:center; gap: 10px; padding: 9px 12px; border-radius: 12px; border: 2px solid var(--line); margin-bottom: 8px; cursor:pointer; font-size: 13.8px; font-weight:600; transition: all .15s ease; }
+  .opt:hover{ border-color: #6d5a99; }
+  .opt input{ accent-color: var(--indigo); flex-shrink:0; }
+  .opt.correct{ background: var(--good-bg); border-color: var(--good); color: var(--good); font-weight: 600; }
+  .opt.wrong{ background: var(--bad-bg); border-color: var(--bad); color: var(--bad); }
+  .opt.selected{ border-color: var(--indigo); background: var(--indigo-bg); }
+  .finish-btn:disabled{ opacity: .55; cursor: not-allowed; }
+  .intro-error{ color: var(--bad); font-size: 13px; font-weight: 700; margin: 4px 0 0; display:none; }
+
+  /* matching (генерична — використовується декілька разів) */
+  .match-wrap{ display:grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width:640px){ .match-wrap{ grid-template-columns: 1fr; } }
+  .match-item{ padding: 10px 13px; border-radius: 12px; border: 2px solid var(--line); margin-bottom: 9px; font-size: 13.5px; font-weight:600; cursor:pointer; transition: all .15s ease; background: var(--panel); }
+  .match-item:hover{ border-color: #6d5a99; }
+  .match-item.selected{ border-color: var(--indigo); background: var(--indigo-bg); font-weight:600; }
+  .match-item.solved{ border-color: var(--good); background: var(--good-bg); color: var(--good); font-weight:600; cursor:default; }
+  .match-item.wrong{ border-color: var(--bad); background: var(--bad-bg); color: var(--bad); cursor:default; }
+
+  .caption{ font-size: 12.8px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+
+  /* finish */
+  .finish-zone{ text-align:center; padding: 30px 0 10px; }
+  .finish-btn{
+    background: linear-gradient(135deg, #8b5cf6, #f472b6); color: #fff; border:none; padding: 14px 34px; border-radius: 999px; font-size: 15px; font-weight: 800; cursor:pointer;
+    font-family: var(--font-display); box-shadow: 0 6px 0 rgba(109,63,214,.35);
+  }
+  .finish-btn:active{ transform: translateY(4px); box-shadow: 0 2px 0 rgba(109,63,214,.35); }
+
+  .result-panel{ display:none; background: var(--panel); border: 2px solid var(--line); border-radius: 22px; padding: 34px 30px; text-align:center; margin-top: 20px; }
+  .result-panel.show{ display:block; }
+  .result-panel .rank{ font-family: var(--font-mono); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; }
+  .result-panel .rank-title{ font-family: var(--font-display); font-size: 26px; font-weight: 800; margin-bottom: 12px; }
+  .result-panel .final-score{ font-family: var(--font-mono); font-size: 42px; font-weight: 800; margin-bottom: 16px; }
+  .result-breakdown{ display:flex; justify-content:center; gap: 14px; flex-wrap: wrap; margin-top: 10px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+  .result-breakdown b{ color: var(--ink); }
+
+  footer{ margin-top: 50px; padding-top: 22px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); font-family: var(--font-mono); }
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="logo">
+      <svg class="mascot-nav" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="gNavU09" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs>
+        <line x1="60" y1="6" x2="60" y2="20" stroke="#c084fc" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="60" cy="6" r="7" fill="#f472b6"/>
+        <rect x="14" y="20" width="92" height="82" rx="28" fill="url(#gNavU09)"/>
+        <circle cx="10" cy="58" r="9" fill="#f472b6"/><circle cx="110" cy="58" r="9" fill="#f472b6"/>
+        <ellipse cx="42" cy="60" rx="13" ry="16" fill="#fff"/><ellipse cx="78" cy="60" rx="13" ry="16" fill="#fff"/>
+        <circle cx="45" cy="64" r="6.5" fill="#362a52"/><circle cx="81" cy="64" r="6.5" fill="#362a52"/>
+        <circle cx="41" cy="58" r="2.4" fill="#fff"/><circle cx="77" cy="58" r="2.4" fill="#fff"/>
+        <circle cx="28" cy="82" r="6" fill="#fbcfe8" opacity=".85"/><circle cx="92" cy="82" r="6" fill="#fbcfe8" opacity=".85"/>
+        <path d="M48 88 Q60 97 72 88" stroke="#362a52" stroke-width="4" fill="none" stroke-linecap="round"/>
+      </svg>
+      Інформатика
+    </div>
+    <div class="links">
+      <a href="../index.html">Головна</a>
+      <a href="index.html" class="active">10 клас</a>
+      <a href="../pidruchnyk.html">Підручник</a>
+      <a href="../submit.html">Здати роботу</a>
+    </div>
+  </div>
+</nav>
+
+<div class="scorebar" id="scoreBar" style="display:none;">
+  <div class="scorebar-inner">
+    <span class="name">БАЛИ ОПЕРАЦІЇ</span>
+    <div class="track"><div class="fill" id="scoreFill"></div></div>
+    <span class="score" id="scoreLabel">0 / 12</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow">Тематичне оцінювання · Тема 1</div>
+    <h1>Операція «Інфоагент»</h1>
+    <p>Штаб доручив тобі 4 досьє — кожне перевіряє свою частину теми «Інформаційні технології в суспільстві». Операцію можна пройти лише один раз: правильні й неправильні відповіді підсвітяться тільки після кнопки «Завершити операцію», і тоді ж рапорт автоматично піде керівнику (вчителю).</p>
+    <div class="stage-pips">
+      <span class="pip">01 · Процеси та системи</span>
+      <span class="pip">02 · Джерело сигналу</span>
+      <span class="pip">03 · Класифікація і загрози</span>
+      <span class="pip">04 · План операції</span>
+    </div>
+  </div>
+
+  <div class="result-panel show" id="alreadyDonePanel" style="display:none;">
+    <div class="rank">Операцію вже завершено</div>
+    <div class="rank-title" id="alreadyRank"></div>
+    <div class="final-score" id="alreadyScore"></div>
+    <p style="color:var(--muted); font-size:13.5px; max-width:480px; margin:0 auto;">Цю операцію можна пройти лише один раз. Рапорт уже надіслано вчителю — повторно пройти тест на цьому пристрої не можна.</p>
+  </div>
+
+  <div class="q-card" id="introGate" style="max-width:560px;">
+    <p class="q-text">Перш ніж почати — вкажи, хто здає роботу. Операцію можна пройти лише один раз: після кнопки «Завершити операцію» відповіді заблокуються і рапорт одразу піде вчителю.</p>
+    <div class="fill-row" style="display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
+      <label style="flex:0 0 110px; font-size:13.8px;">Прізвище</label>
+      <input type="text" id="studentLastname" style="flex:1 1 220px; padding:8px 10px; border-radius:10px; border:2px solid var(--line); font-size:13.5px;" placeholder="Шевченко">
+    </div>
+    <div class="fill-row" style="display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
+      <label style="flex:0 0 110px; font-size:13.8px;">Ім'я</label>
+      <input type="text" id="studentFirstname" style="flex:1 1 220px; padding:8px 10px; border-radius:10px; border:2px solid var(--line); font-size:13.5px;" placeholder="Тарас">
+    </div>
+    <div class="fill-row" style="display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
+      <label style="flex:0 0 110px; font-size:13.8px;">Клас</label>
+      <input type="text" id="studentKlass" style="flex:1 1 220px; padding:8px 10px; border-radius:10px; border:2px solid var(--line); font-size:13.5px;" placeholder="10-А">
+    </div>
+    <p class="intro-error" id="introError">Заповни, будь ласка, всі три поля.</p>
+    <button class="finish-btn" onclick="startMission()" style="margin-top:10px;">Розпочати операцію</button>
+  </div>
+
+  <div id="missionContent" style="display:none;">
+
+  <!-- ============ ДОСЬЄ 01 — Частина 1: тести закритого типу ============ -->
+  <div class="stage">
+    <div class="stage-head">
+      <div class="stage-badge" style="background:var(--indigo-bg); color:var(--indigo);">01</div>
+      <h2>Досьє: Процеси та системи</h2>
+      <span class="stage-points">7 балів</span>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">1. Інформаційний процес, що полягає у фіксуванні інформації на певному носії, називається:</p>
+      <p class="q-points">0,5 бала</p>
+      <div class="mcq" data-qid="q1" data-correct="b" data-points="0.5">
+        <label class="opt" data-val="a"><input type="radio" name="q1" value="a">передаванням</label>
+        <label class="opt" data-val="b"><input type="radio" name="q1" value="b">зберіганням</label>
+        <label class="opt" data-val="c"><input type="radio" name="q1" value="c">опрацюванням</label>
+        <label class="opt" data-val="d"><input type="radio" name="q1" value="d">використанням</label>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">2. Форма подання інформації, призначена для передавання від джерела до приймача, — це:</p>
+      <p class="q-points">0,5 бала</p>
+      <div class="mcq" data-qid="q2" data-correct="b" data-points="0.5">
+        <label class="opt" data-val="a"><input type="radio" name="q2" value="a">дані</label>
+        <label class="opt" data-val="b"><input type="radio" name="q2" value="b">повідомлення</label>
+        <label class="opt" data-val="c"><input type="radio" name="q2" value="c">інформаційна система</label>
+        <label class="opt" data-val="d"><input type="radio" name="q2" value="d">інформаційна технологія</label>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">3. До складників інформаційної системи НЕ належить:</p>
+      <div class="mcq" data-qid="q3" data-correct="d">
+        <label class="opt" data-val="a"><input type="radio" name="q3" value="a">апаратне забезпечення</label>
+        <label class="opt" data-val="b"><input type="radio" name="q3" value="b">користувачі</label>
+        <label class="opt" data-val="c"><input type="radio" name="q3" value="c">інформаційні ресурси</label>
+        <label class="opt" data-val="d"><input type="radio" name="q3" value="d">інтернет-провайдер</label>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">4. Шахрайські повідомлення чи сайти, що імітують надійні джерела з метою виманити особисті дані, називаються:</p>
+      <div class="mcq" data-qid="q4" data-correct="b">
+        <label class="opt" data-val="a"><input type="radio" name="q4" value="a">кібербулінгом</label>
+        <label class="opt" data-val="b"><input type="radio" name="q4" value="b">фішингом</label>
+        <label class="opt" data-val="c"><input type="radio" name="q4" value="c">спамом</label>
+        <label class="opt" data-val="d"><input type="radio" name="q4" value="d">хмарними технологіями</label>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">5. Портал «Дія» є прикладом системи:</p>
+      <div class="mcq" data-qid="q5" data-correct="c">
+        <label class="opt" data-val="a"><input type="radio" name="q5" value="a">інтернет-банкінгу</label>
+        <label class="opt" data-val="b"><input type="radio" name="q5" value="b">інтернет-маркетингу</label>
+        <label class="opt" data-val="c"><input type="radio" name="q5" value="c">електронного урядування</label>
+        <label class="opt" data-val="d"><input type="radio" name="q5" value="d">колективного інтелекту</label>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">6. Мережа фізичних пристроїв, оснащених датчиками й підключенням до мережі для обміну даними без участі людини, — це:</p>
+      <div class="mcq" data-qid="q6" data-correct="b">
+        <label class="opt" data-val="a"><input type="radio" name="q6" value="a">штучний інтелект</label>
+        <label class="opt" data-val="b"><input type="radio" name="q6" value="b">Інтернет речей</label>
+        <label class="opt" data-val="c"><input type="radio" name="q6" value="c">Smart-технології</label>
+        <label class="opt" data-val="d"><input type="radio" name="q6" value="d">колективний інтелект</label>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">7. Спільне створення й редагування статей у Вікіпедії є прикладом технології:</p>
+      <div class="mcq" data-qid="q7" data-correct="c">
+        <label class="opt" data-val="a"><input type="radio" name="q7" value="a">штучного інтелекту</label>
+        <label class="opt" data-val="b"><input type="radio" name="q7" value="b">Інтернет речей</label>
+        <label class="opt" data-val="c"><input type="radio" name="q7" value="c">колективного інтелекту</label>
+        <label class="opt" data-val="d"><input type="radio" name="q7" value="d">інтернет-банкінгу</label>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">8. Текстова інструкція, яку користувач надає системі штучного інтелекту для отримання результату, називається:</p>
+      <div class="mcq" data-qid="q8" data-correct="b">
+        <label class="opt" data-val="a"><input type="radio" name="q8" value="a">алгоритмом</label>
+        <label class="opt" data-val="b"><input type="radio" name="q8" value="b">промтом</label>
+        <label class="opt" data-val="c"><input type="radio" name="q8" value="c">протоколом</label>
+        <label class="opt" data-val="d"><input type="radio" name="q8" value="d">кодом</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ДОСЬЄ 02 — Частина 2: відповідність ============ -->
+  <div class="stage">
+    <div class="stage-head">
+      <div class="stage-badge" style="background:var(--teal-bg); color:var(--teal);">02</div>
+      <h2>Досьє: Джерело сигналу</h2>
+      <span class="stage-points">1 бал</span>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">9. Установи відповідність між ситуацією та видом інформаційного процесу.</p>
+      <p class="q-points">1 бал — 0,5 бала за 3 правильні пари з 4, повний бал за всі чотири</p>
+      <div class="match-wrap" data-match-id="m2" data-points="1">
+        <div class="match-col match-left">
+          <div class="match-item" data-id="s1">Запис лекції в зошит</div>
+          <div class="match-item" data-id="s2">Телефонна розмова</div>
+          <div class="match-item" data-id="s3">Розв'язування задачі на основі даних</div>
+          <div class="match-item" data-id="s4">Пошук інформації для реферату</div>
+        </div>
+        <div class="match-col match-right">
+          <div class="match-item" data-id="s3">Використання</div>
+          <div class="match-item" data-id="s1">Зберігання</div>
+          <div class="match-item" data-id="s4">Збирання</div>
+          <div class="match-item" data-id="s2">Передавання</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ДОСЬЄ 03 — Частина 3: класифікація та загрози (інтерактивні заміни відкритих питань) ============ -->
+  <div class="stage">
+    <div class="stage-head">
+      <div class="stage-badge" style="background:var(--rust-bg); color:var(--rust);">03</div>
+      <h2>Досьє: Класифікація і загрози</h2>
+      <span class="stage-points">3 бали</span>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">10. Установи відповідність між прикладом і поняттям — інформація, повідомлення чи дані.</p>
+      <p class="q-points">1 бал — 0,5 бала за 2 правильні пари з 3, повний бал за всі три</p>
+      <div class="match-wrap" data-match-id="m3a" data-points="1">
+        <div class="match-col match-left">
+          <div class="match-item" data-id="c1">Інформація</div>
+          <div class="match-item" data-id="c2">Повідомлення</div>
+          <div class="match-item" data-id="c3">Дані</div>
+        </div>
+        <div class="match-col match-right">
+          <div class="match-item" data-id="c3">Число 37, записане в таблиці температур</div>
+          <div class="match-item" data-id="c1">Те, що учень зрозумів і запам'ятав після пояснення вчителя</div>
+          <div class="match-item" data-id="c2">Оголошення в шкільному чаті: «Завтра урок фізики скасовано»</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">11. Онови список: постав позначку біля кожного варіанту, що є реальною загрозою інформаційній безпеці в Інтернеті.</p>
+      <p class="q-points">1 бал</p>
+      <div class="check-group" data-qid="p3q2" data-points="1">
+        <label class="opt"><input type="checkbox" data-correct="true">Фішингові листи чи сайти, що виманюють паролі й особисті дані</label>
+        <label class="opt"><input type="checkbox" data-correct="true">Зараження пристрою шкідливим ПЗ через підозрілий файл із невідомого джерела</label>
+        <label class="opt"><input type="checkbox" data-correct="true">Витік персональних даних через слабкий чи однаковий пароль на всіх сайтах</label>
+        <label class="opt"><input type="checkbox" data-correct="false">Двофакторна автентифікація облікового запису</label>
+        <label class="opt"><input type="checkbox" data-correct="false">Регулярне оновлення антивірусного програмного забезпечення</label>
+        <label class="opt"><input type="checkbox" data-correct="false">Резервне копіювання важливих файлів на хмарний диск</label>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">12. Онови список: постав позначку біля кожного прикладу застосування штучного інтелекту чи Smart-технологій у повсякденному житті.</p>
+      <p class="q-points">1 бал</p>
+      <div class="check-group" data-qid="p3q3" data-points="1">
+        <label class="opt"><input type="checkbox" data-correct="true">Розпізнавання обличчя для розблокування смартфона</label>
+        <label class="opt"><input type="checkbox" data-correct="true">Голосовий помічник (Siri, Google Асистент, Alexa)</label>
+        <label class="opt"><input type="checkbox" data-correct="true">Розумний термостат, що сам регулює температуру в оселі</label>
+        <label class="opt"><input type="checkbox" data-correct="false">Звичайний паперовий щоденник для нотаток</label>
+        <label class="opt"><input type="checkbox" data-correct="false">Друкований підручник</label>
+        <label class="opt"><input type="checkbox" data-correct="false">Механічний будильник без підключення до мережі</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ДОСЬЄ 04 — Частина 4: практико-орієнтоване завдання ============ -->
+  <div class="stage">
+    <div class="stage-head">
+      <div class="stage-badge" style="background:var(--amber-bg); color:var(--amber);">04</div>
+      <h2>Досьє: План операції</h2>
+      <span class="stage-points">1 бал</span>
+    </div>
+
+    <div class="q-card">
+      <p class="q-text">13. Тобі потрібно спланувати підготовку до шкільного проєкту. Установи відповідність між засобом планування та тим, як саме він допоможе відстежити прогрес і спрогнозувати результат.</p>
+      <p class="q-points">1 бал — 0,5 бала за 2 правильні пари з 3, повний бал за всі три</p>
+      <div class="match-wrap" data-match-id="m4" data-points="1">
+        <div class="match-col match-left">
+          <div class="match-item" data-id="t1">Застосунок-планувальник задач (напр. Google Tasks, Todoist)</div>
+          <div class="match-item" data-id="t2">Таблиця з датами та етапами (напр. Google Sheets, діаграма Ганта)</div>
+          <div class="match-item" data-id="t3">Спільний документ чи дошка задач (напр. Google Docs, Trello)</div>
+        </div>
+        <div class="match-col match-right">
+          <div class="match-item" data-id="t2">Візуалізує терміни виконання й дає змогу відстежити прогрес на кожному етапі</div>
+          <div class="match-item" data-id="t1">Нагадує про дедлайни й розбиває проєкт на конкретні кроки</div>
+          <div class="match-item" data-id="t3">Дає змогу розподілити завдання між учасниками команди й бачити статус кожного</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="finish-zone">
+    <button class="finish-btn" id="finishBtn" onclick="finishMission()">Завершити операцію</button>
+  </div>
+
+  <div class="result-panel" id="resultPanel">
+    <div class="rank">Результат операції</div>
+    <div class="rank-title" id="rankTitle"></div>
+    <div class="final-score" id="finalScore"></div>
+    <p style="color:var(--muted); font-size:13.5px; max-width:480px; margin:0 auto;">Це і є твоя оцінка за 12-бальною шкалою. Рапорт уже надіслано вчителю автоматично.</p>
+    <div class="result-breakdown" id="resultBreakdown"></div>
+  </div>
+
+  </div>
+
+  <footer>
+    Руденко В.Д. «Інформатика. 10 (11) клас» (рівень стандарту) · Тема 1. Інформаційні технології в суспільстві · Тематичне оцінювання
+  </footer>
+</div>
+
+<script>
+  const TOTAL_POINTS = 12;
+  let studentInfo = null;
+  let missionLocked = false;
+
+  /* округлення до 0,5 і українська кома замість крапки — усі бали в цьому тесті можуть бути дробовими (0,5) */
+  function fmt(n){
+    const rounded = Math.round(n * 2) / 2;
+    return rounded.toString().replace('.', ',');
+  }
+
+  /* ---------- MCQ (нейтральне виділення під час спроби, розкриття лише після завершення) ---------- */
+  document.querySelectorAll('.mcq').forEach(group => {
+    group.addEventListener('change', () => {
+      group.querySelectorAll('.opt').forEach(opt => {
+        opt.classList.remove('selected');
+        const input = opt.querySelector('input');
+        if (input.checked) opt.classList.add('selected');
+      });
+      scoreAll();
+    });
+  });
+
+  function revealMCQ(group){
+    const correct = group.dataset.correct;
+    const checked = group.querySelector('input:checked');
+    group.querySelectorAll('.opt').forEach(opt => {
+      opt.classList.remove('selected');
+      if (opt.dataset.val === correct) opt.classList.add('correct');
+      else if (checked && opt.dataset.val === checked.value) opt.classList.add('wrong');
+    });
+  }
+
+  /* ---------- CHECKLIST (множинний вибір) ---------- */
+  document.querySelectorAll('.check-group').forEach(group => {
+    group.querySelectorAll('input[type=checkbox]').forEach(cb => {
+      cb.addEventListener('change', () => {
+        cb.closest('.opt').classList.toggle('selected', cb.checked);
+        scoreAll();
+      });
+    });
+  });
+
+  function checklistScoreFor(group){
+    const boxes = Array.from(group.querySelectorAll('input[type=checkbox]'));
+    const correctTotal = boxes.filter(b => b.dataset.correct === 'true').length;
+    let tp = 0, fp = 0;
+    boxes.forEach(b => {
+      if (b.dataset.correct === 'true' && b.checked) tp++;
+      if (b.dataset.correct === 'false' && b.checked) fp++;
+    });
+    const net = Math.max(0, tp - fp);
+    const max = parseFloat(group.dataset.points);
+    let points = 0;
+    if (net >= correctTotal) points = max;
+    else if (net >= correctTotal - 1) points = max / 2;
+    return { points, max };
+  }
+
+  function revealChecklist(group){
+    group.querySelectorAll('input[type=checkbox]').forEach(cb => {
+      const opt = cb.closest('.opt');
+      opt.classList.remove('selected');
+      const isCorrectItem = cb.dataset.correct === 'true';
+      const rightCall = (isCorrectItem && cb.checked) || (!isCorrectItem && !cb.checked);
+      opt.classList.add(rightCall ? 'correct' : 'wrong');
+      cb.disabled = true;
+    });
+  }
+
+  /* ---------- MATCHING (генерична, кілька незалежних блоків на сторінці) ---------- */
+  const PAIR_COLORS = [
+    { border: 'var(--indigo)', bg: 'var(--indigo-bg)' },
+    { border: 'var(--teal)',   bg: 'var(--teal-bg)'   },
+    { border: 'var(--rust)',   bg: 'var(--rust-bg)'   },
+    { border: 'var(--amber)',  bg: 'var(--amber-bg)'  }
+  ];
+  const matchState = {};
+
+  function clearLeftSel(id){
+    const st = matchState[id];
+    st.leftItems.forEach(el => el.classList.remove('selected'));
+    st.selectedLeftEl = null;
+  }
+
+  function pairColorFor(id, lid){
+    const st = matchState[id];
+    const idx = st.leftItems.findIndex(el => el.dataset.id === lid);
+    return PAIR_COLORS[idx % PAIR_COLORS.length];
+  }
+
+  function paintPair(wrap, lid){
+    const id = wrap.dataset.matchId;
+    const leftEl = wrap.querySelector(`.match-left [data-id="${lid}"]`);
+    const rightEl = matchState[id].assignment[lid];
+    const color = pairColorFor(id, lid);
+    [leftEl, rightEl].forEach(el => { if (el) { el.style.borderColor = color.border; el.style.background = color.bg; } });
+  }
+
+  function clearPairPaint(wrap, lid, extraEl){
+    const leftEl = wrap.querySelector(`.match-left [data-id="${lid}"]`);
+    [leftEl, extraEl].forEach(el => { if (el) { el.style.borderColor = ''; el.style.background = ''; } });
+  }
+
+  function initMatchWrap(wrap){
+    const id = wrap.dataset.matchId;
+    const leftItems = Array.from(wrap.querySelectorAll('.match-left .match-item'));
+    matchState[id] = { assignment: {}, leftItems, selectedLeftEl: null };
+
+    leftItems.forEach(el => {
+      el.addEventListener('click', () => {
+        if (missionLocked) return;
+        const st = matchState[id];
+        if (st.selectedLeftEl === el) { clearLeftSel(id); return; }
+        clearLeftSel(id);
+        el.classList.add('selected');
+        st.selectedLeftEl = el;
+      });
+    });
+
+    wrap.querySelectorAll('.match-right .match-item').forEach(el => {
+      el.addEventListener('click', () => {
+        if (missionLocked) return;
+        const st = matchState[id];
+
+        if (!st.selectedLeftEl) {
+          const ownerLid = Object.keys(st.assignment).find(lid => st.assignment[lid] === el);
+          if (ownerLid) {
+            delete st.assignment[ownerLid];
+            clearPairPaint(wrap, ownerLid, el);
+            scoreAll();
+          }
+          return;
+        }
+
+        const lid = st.selectedLeftEl.dataset.id;
+
+        Object.keys(st.assignment).forEach(otherLid => {
+          if (otherLid !== lid && st.assignment[otherLid] === el) {
+            delete st.assignment[otherLid];
+            clearPairPaint(wrap, otherLid, el);
+          }
+        });
+
+        if (st.assignment[lid] && st.assignment[lid] !== el) {
+          clearPairPaint(wrap, lid, st.assignment[lid]);
+        }
+
+        st.assignment[lid] = el;
+        paintPair(wrap, lid);
+        clearLeftSel(id);
+        scoreAll();
+      });
+    });
+  }
+
+  function matchScoreFor(wrap){
+    const id = wrap.dataset.matchId;
+    const st = matchState[id];
+    const correctCount = st.leftItems.filter(l => {
+      const lid = l.dataset.id;
+      const correctRight = wrap.querySelector(`.match-right [data-id="${lid}"]`);
+      return st.assignment[lid] === correctRight;
+    }).length;
+    const total = st.leftItems.length;
+    const max = parseFloat(wrap.dataset.points);
+
+    let points = 0;
+    if (correctCount === total) points = max;
+    else if (correctCount === total - 1) points = max / 2;
+    return { correctCount, total, points, max };
+  }
+
+  function revealMatchWrap(wrap){
+    const id = wrap.dataset.matchId;
+    const st = matchState[id];
+    clearLeftSel(id);
+    st.leftItems.forEach(leftEl => {
+      const lid = leftEl.dataset.id;
+      const correctRight = wrap.querySelector(`.match-right [data-id="${lid}"]`);
+      const assigned = st.assignment[lid];
+      const correct = assigned === correctRight;
+
+      leftEl.style.borderColor = ''; leftEl.style.background = '';
+      correctRight.style.borderColor = ''; correctRight.style.background = '';
+
+      if (correct) leftEl.classList.add('solved');
+      else if (assigned) leftEl.classList.add('wrong');
+      correctRight.classList.add('solved');
+
+      if (assigned && assigned !== correctRight) {
+        assigned.style.borderColor = '';
+        assigned.style.background = '';
+      }
+    });
+  }
+
+  document.querySelectorAll('.match-wrap').forEach(initMatchWrap);
+
+  /* ---------- ЗАГАЛЬНИЙ ПІДРАХУНОК БАЛІВ ---------- */
+  function scoreAll(){
+    let mcqScore = 0;
+    document.querySelectorAll('.mcq').forEach(group => {
+      const correct = group.dataset.correct;
+      const checked = group.querySelector('input:checked');
+      const pts = parseFloat(group.dataset.points || '1');
+      if (checked && checked.value === correct) mcqScore += pts;
+    });
+
+    const wraps = Array.from(document.querySelectorAll('.match-wrap'));
+    const matchResults = {};
+    wraps.forEach(w => { matchResults[w.dataset.matchId] = matchScoreFor(w); });
+
+    const checkResults = {};
+    document.querySelectorAll('.check-group').forEach(g => { checkResults[g.dataset.qid] = checklistScoreFor(g); });
+
+    const part2  = matchResults['m2'].points;
+    const part3a = matchResults['m3a'].points;
+    const part3b = checkResults['p3q2'].points;
+    const part3c = checkResults['p3q3'].points;
+    const part4  = matchResults['m4'].points;
+
+    const total = mcqScore + part2 + part3a + part3b + part3c + part4;
+
+    document.getElementById('scoreLabel').textContent = fmt(total) + ' / ' + TOTAL_POINTS;
+    document.getElementById('scoreFill').style.width = Math.round((total / TOTAL_POINTS) * 100) + '%';
+
+    return { total, mcqScore, part2, part3a, part3b, part3c, part4 };
+  }
+
+  /* ---------- СТАРТ ОПЕРАЦІЇ (форма з іменем) ---------- */
+  function startMission(){
+    const lastname = document.getElementById('studentLastname').value.trim();
+    const firstname = document.getElementById('studentFirstname').value.trim();
+    const klass = document.getElementById('studentKlass').value.trim();
+    const err = document.getElementById('introError');
+
+    if (!lastname || !firstname || !klass) {
+      err.style.display = 'block';
+      return;
+    }
+    err.style.display = 'none';
+
+    studentInfo = { lastname, firstname, klass };
+    document.getElementById('introGate').style.display = 'none';
+    document.getElementById('missionContent').style.display = 'block';
+    document.getElementById('scoreBar').style.display = '';
+    scoreAll();
+  }
+
+  /* ---------- БЛОКУВАННЯ ПІСЛЯ ЗАВЕРШЕННЯ ---------- */
+  function lockAll(){
+    document.querySelectorAll('.mcq input').forEach(i => { i.disabled = true; });
+    document.querySelectorAll('.check-group input').forEach(i => { i.disabled = true; });
+    document.querySelectorAll('.match-item').forEach(el => { el.style.pointerEvents = 'none'; });
+    document.getElementById('finishBtn').disabled = true;
+  }
+
+  /* ---------- ВІДПРАВКА РЕЗУЛЬТАТУ ВЧИТЕЛЮ ---------- */
+  function sendResult(result, rank){
+    if (typeof SCRIPT_URL === 'undefined' || SCRIPT_URL.indexOf('ВСТАВ_СЮДИ') !== -1) return;
+
+    const data = new URLSearchParams({
+      lastname: studentInfo.lastname,
+      firstname: studentInfo.firstname,
+      klass: studentInfo.klass,
+      lesson: "Урок 9 — Тематичне оцінювання (Операція «Інфоагент»)",
+      worktype: "Тематичне оцінювання (авто)",
+      link: '',
+      answer: fmt(result.total) + '/' + TOTAL_POINTS + ' балів — ' + rank +
+        ' (тести ' + fmt(result.mcqScore) + '/7, відповідність ' + fmt(result.part2) + '/1, класифікація ' + fmt(result.part3a) + '/1, ' +
+        'загрози ' + fmt(result.part3b) + '/1, технології ' + fmt(result.part3c) + '/1, планування ' + fmt(result.part4) + '/1)',
+      timestamp: new Date().toLocaleString('uk-UA')
+    });
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: data.toString()
+    }).catch(function(){ /* результат уже показано учню й збережено локально, мовчки ігноруємо збій мережі */ });
+  }
+
+  function finishMission(){
+    if (missionLocked) return;
+    const confirmed = confirm('Завершити операцію? Після цього відповіді заблокуються, а рапорт буде надіслано вчителю. Пройти тест повторно не можна.');
+    if (!confirmed) return;
+    missionLocked = true;
+
+    document.querySelectorAll('.mcq').forEach(revealMCQ);
+    document.querySelectorAll('.match-wrap').forEach(revealMatchWrap);
+    document.querySelectorAll('.check-group').forEach(revealChecklist);
+    lockAll();
+
+    const result = scoreAll();
+    const panel = document.getElementById('resultPanel');
+    panel.classList.add('show');
+
+    let rank, level, color;
+    if (result.total >= 10) { rank = 'Головний інфоагент'; level = 'Високий рівень'; color = 'var(--good)'; }
+    else if (result.total >= 7) { rank = 'Інфоагент'; level = 'Достатній рівень'; color = 'var(--indigo)'; }
+    else if (result.total >= 4)  { rank = 'Агент-новачок'; level = 'Середній рівень'; color = 'var(--amber)'; }
+    else { rank = 'Потрібно ще потренуватися'; level = 'Початковий рівень'; color = 'var(--bad)'; }
+
+    document.getElementById('rankTitle').textContent = rank + ' · ' + level;
+    document.getElementById('rankTitle').style.color = color;
+    document.getElementById('finalScore').textContent = fmt(result.total) + ' / ' + TOTAL_POINTS;
+    document.getElementById('resultBreakdown').innerHTML =
+      '<span>Тести: <b>' + fmt(result.mcqScore) + ' / 7</b></span>' +
+      '<span>Відповідність: <b>' + fmt(result.part2) + ' / 1</b></span>' +
+      '<span>Класифікація: <b>' + fmt(result.part3a) + ' / 1</b></span>' +
+      '<span>Загрози: <b>' + fmt(result.part3b) + ' / 1</b></span>' +
+      '<span>Технології: <b>' + fmt(result.part3c) + ' / 1</b></span>' +
+      '<span>Планування: <b>' + fmt(result.part4) + ' / 1</b></span>';
+
+    sendResult(result, rank);
+    localStorage.setItem('urok09_done', JSON.stringify({ total: result.total, rank: rank, level: level }));
+
+    panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  /* ---------- ПЕРЕВІРКА ПРИ ЗАВАНТАЖЕННІ: чи вже здано з цього браузера ---------- */
+  (function initMission(){
+    const saved = localStorage.getItem('urok09_done');
+    if (!saved) return;
+    let info;
+    try { info = JSON.parse(saved); } catch (e) { return; }
+
+    document.getElementById('introGate').style.display = 'none';
+    const panel = document.getElementById('alreadyDonePanel');
+    panel.style.display = 'block';
+    document.getElementById('alreadyRank').textContent = info.rank + (info.level ? ' · ' + info.level : '');
+    document.getElementById('alreadyScore').textContent = fmt(info.total) + ' / ' + TOTAL_POINTS;
+  })();
+</script>
+</body>
+</html>
