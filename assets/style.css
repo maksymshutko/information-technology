@@ -511,3 +511,44 @@ details.topic.done .t-done .btn{ background: var(--mint-soft); color: var(--mint
   .fc-result{ justify-content:center; text-align:center; }
   .fc-result-actions{ justify-content:center; }
 }
+
+/* ==========================================================
+   ІЛЮСТРАЦІЇ (unDraw, перефарбовані під тему: assets/illu/)
+   ========================================================== */
+a.eyebrow:hover{ color: #9ff5dc; border-color: rgba(62,230,181,.5); }
+.hero-side .hero-illu{ width: 100%; max-height: 230px; object-fit: contain; margin: -6px 0 2px; }
+.teacher-card .who a{ display:block; color: var(--muted); font-size: 13px; font-weight: 600; }
+.teacher-card .who a:hover{ color: var(--mint); }
+.how-grid{ display:grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.how-step{ display:flex; flex-direction:column; gap: 6px; padding: 18px 18px 16px; background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); }
+.how-step img{ width: 100%; height: 120px; object-fit: contain; margin-bottom: 8px; }
+.how-step b{ display:flex; align-items:center; gap: 8px; font-family: var(--font-display); font-size: 15px; font-weight: 600; }
+.how-step b i{ font-style: normal; display:inline-grid; place-items:center; width: 26px; height: 26px; border-radius: 8px; background: var(--mint); color: #061a15; font-family: var(--font-mono); font-size: 13px; }
+.how-step span{ color: var(--muted); font-size: 13.3px; font-weight: 500; line-height: 1.6; }
+.t-intro{ display:flex; gap: 22px; align-items:flex-start; }
+.t-intro .t-text{ flex: 1; }
+.t-intro .t-illu{ width: 220px; max-height: 170px; object-fit: contain; flex-shrink: 0; margin-top: 2px; }
+.cta-card{ display:flex; align-items:center; gap: 28px; margin-top: 30px; padding: 24px 30px; }
+.cta-card img{ width: 210px; max-height: 150px; object-fit: contain; flex-shrink: 0; }
+.cta-card h2{ margin: 0 0 6px; font-family: var(--font-display); font-size: 20px; font-weight: 700; }
+.cta-card p{ margin: 0 0 14px; color: var(--muted); font-weight: 500; }
+.s-results .s-empty{ display:flex; align-items:center; gap: 14px; }
+.s-results .s-empty img{ width: 90px; height: 70px; object-fit: contain; }
+.fc-pick-head{ display:flex; align-items:center; gap: 24px; }
+.fc-pick-head > div{ flex: 1; }
+.fc-pick-illu{ width: 260px; max-height: 190px; object-fit: contain; flex-shrink: 0; }
+.fc-result-illu{ width: 170px; max-height: 140px; object-fit: contain; }
+.page-illu{ float: right; width: 210px; max-height: 170px; object-fit: contain; margin: 0 0 10px 20px; }
+@media (max-width: 960px){ .how-grid{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px){
+  .how-grid{ grid-template-columns: 1fr 1fr; gap: 10px; }
+  .how-step{ padding: 14px; } .how-step img{ height: 90px; }
+  .t-intro{ flex-direction: column-reverse; gap: 10px; }
+  .t-intro .t-illu{ width: 100%; max-height: 140px; }
+  .cta-card{ flex-direction: column; text-align: center; padding: 22px 18px; }
+  .fc-pick-illu, .page-illu, .hero-side .hero-illu{ display:none; }
+  .fc-result-illu{ width: 120px; }
+}
+
+.site-footer .sf-credits{ flex-basis: 100%; font-size: 11.5px; color: #6f7aa0; font-weight: 600; }
+.site-footer .sf-credits a{ color: #8f9cc8; font-weight: 700; }

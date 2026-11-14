@@ -7,7 +7,7 @@
 <title>Інформатика · КПЛТ</title>
 <meta name="description" content="Сайт курсу «Інформатика» Київського професійного ліцею транспорту: 11 розділів, конспекти, ресурси, інтерактиви.">
 <link rel="icon" href="assets/logo.png">
-<link rel="stylesheet" href="assets/style.css?v=2b101cca">
+<link rel="stylesheet" href="assets/style.css?v=48dcc7e8">
 </head>
 <body>
 
@@ -29,15 +29,16 @@
 <main class="wrap">
   <div class="home-hero">
     <div class="hero-main">
-      <div class="eyebrow">Київський професійний ліцей транспорту</div>
+      <a class="eyebrow" href="https://kplt.in.ua/" target="_blank" rel="noopener">Київський професійний ліцей транспорту ↗</a>
       <h1>Інформатика, <span class="grad">яка знадобиться</span> в професії</h1>
       <p class="lead">Короткі конспекти, ключові поняття, корисні ресурси й інструменти до кожної теми, інтерактивні вправи та тести. Обери розділ, який зараз вивчає твоя група.</p>
       <div class="hero-cta"><a class="btn" href="#rozdily">До розділів ↓</a><a class="btn btn-ghost" href="kartky">🃏 Картки для повторення</a><a class="btn btn-ghost" href="submit">Здати роботу</a></div>
     </div>
     <div class="hero-side">
+      <img class="hero-illu" src="assets/illu/teacher.svg" alt="">
       <div class="card-glass teacher-card">
         <div class="avatar">МШ</div>
-        <div class="who"><small>Викладач інформатики</small><b>Шутько Максим Олександрович</b><span>Київський професійний ліцей транспорту</span></div>
+        <div class="who"><small>Викладач інформатики</small><b>Шутько Максим Олександрович</b><a href="https://kplt.in.ua/" target="_blank" rel="noopener">Київський професійний ліцей транспорту ↗</a></div>
       </div>
       <div class="stats">
         <div class="stat"><b>11</b><span>розділів</span></div>
@@ -53,6 +54,16 @@
     <span class="s-kbd">/</span>
     <div class="s-results" id="qRes"></div>
   </div>
+
+  <section class="how">
+    <div class="section-title"><h2>Як вчитися з сайтом</h2></div>
+    <div class="how-grid">
+      <div class="how-step"><img src="assets/illu/navigation.svg" alt=""><b><i>1</i> Обери розділ</b><span>Той, який зараз вивчає твоя група — порядок у групах різний.</span></div>
+      <div class="how-step"><img src="assets/illu/open-book.svg" alt=""><b><i>2</i> Читай і дивись</b><span>Короткий конспект, ключові поняття, презентація й корисні ресурси.</span></div>
+      <div class="how-step"><img src="assets/illu/puzzle-solved.svg" alt=""><b><i>3</i> Повторюй картками</b><span>10 випадкових понять — і одразу видно, що варто повторити.</span></div>
+      <div class="how-step"><img src="assets/illu/mail-sent.svg" alt=""><b><i>4</i> Здавай роботи</b><span>Посилання на роботу або відповідь — через форму, без реєстрації.</span></div>
+    </div>
+  </section>
 
   <section id="rozdily">
     <div class="section-title"><h2>Розділи курсу</h2><span class="tag">у кожної групи свій порядок</span></div>
@@ -153,6 +164,12 @@
         <a class="rowlink" href="qr-quest/"></a>
       </div>
       <div class="file-row">
+        <span class="fname"><span class="num">🏫</span> Сайт ліцею</span>
+        <span class="fdesc">Київський професійний ліцей транспорту — новини, розклад, вступ</span>
+        <span class="fbadge badge badge-note">kplt.in.ua ↗</span>
+        <a class="rowlink" href="https://kplt.in.ua/" target="_blank" rel="noopener"></a>
+      </div>
+      <div class="file-row">
         <span class="fname"><span class="num">📗</span> Підручник</span>
         <span class="fdesc">Руденко В.Д. «Інформатика» (рівень стандарту) — перегляд у браузері</span>
         <span class="fbadge badge badge-note">PDF</span>
@@ -166,7 +183,8 @@
   <div class="sf-inner">
     <div class="sf-brand"><img src="assets/logo.png" alt=""><div><b>Інформатика</b><small>Київський професійний ліцей транспорту</small></div></div>
     <div class="sf-teacher">Викладач інформатики — <b>Шутько Максим Олександрович</b></div>
-    <div class="sf-links"><a href="./#rozdily">Розділи</a><a href="submit">Здати роботу</a><a href="qr-quest/">QR-квест</a></div>
+    <div class="sf-links"><a href="./#rozdily">Розділи</a><a href="submit">Здати роботу</a><a href="qr-quest/">QR-квест</a><a href="https://kplt.in.ua/" target="_blank" rel="noopener">Сайт ліцею ↗</a></div>
+    <div class="sf-credits">Ілюстрації: <a href="https://storyset.com/" target="_blank" rel="noopener">Storyset</a>, <a href="https://undraw.co/" target="_blank" rel="noopener">unDraw</a></div>
   </div>
 </footer>
 
@@ -198,7 +216,7 @@
     }).slice(0, 12);
     box.innerHTML = hits.length ? hits.map(function(t){
       return '<a href="' + t.u + '"><small>Розділ ' + t.s + '</small><span>' + esc(t.t) + (t.k ? '<em>' + esc(t.k) + '</em>' : '') + '</span></a>';
-    }).join('') : '<div class="s-empty">Нічого не знайдено — спробуй інше слово.</div>';
+    }).join('') : '<div class="s-empty"><img src="assets/illu/search-results.svg" alt="">Нічого не знайдено — спробуй інше слово.</div>';
     box.classList.add('show');
   }
   q.addEventListener('input', search);

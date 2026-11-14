@@ -7,7 +7,7 @@
 <title>Картки для повторення · Інформатика КПЛТ</title>
 <meta name="description" content="Картки для повторення понять курсу «Інформатика»: обери розділ і перевір себе на 10 випадкових картках.">
 <link rel="icon" href="assets/logo.png">
-<link rel="stylesheet" href="assets/style.css?v=2b101cca">
+<link rel="stylesheet" href="assets/style.css?v=48dcc7e8">
 </head>
 <body>
 
@@ -30,8 +30,10 @@
   <!-- 1. Вибір розділу -->
   <div id="vPick">
     <div class="eyebrow">Повторення</div>
+    <div class="fc-pick-head"><div>
     <h1>Картки <span class="grad">для повторення</span></h1>
     <p class="lead">Обери розділ — і отримаєш 10 випадкових карток з його понять. Спершу випадають ті, які ти ще не позначив як «знаю». Позначки зберігаються в цьому браузері.</p>
+    </div><img class="fc-pick-illu" src="assets/illu/next-task.svg" alt=""></div>
     <div class="fc-grid" id="fcGrid"></div>
   </div>
 
@@ -69,6 +71,7 @@
   <!-- 3. Результат -->
   <div id="vDone" hidden>
     <div class="fc-result card-glass">
+      <img class="fc-result-illu" id="fcIllu" src="assets/illu/ss-success-factors-bro.svg" alt="">
       <div class="fc-score"><b id="fcScore"></b><span>з 10</span></div>
       <div>
         <h2 id="fcVerdict"></h2>
@@ -91,7 +94,8 @@
   <div class="sf-inner">
     <div class="sf-brand"><img src="assets/logo.png" alt=""><div><b>Інформатика</b><small>Київський професійний ліцей транспорту</small></div></div>
     <div class="sf-teacher">Викладач інформатики — <b>Шутько Максим Олександрович</b></div>
-    <div class="sf-links"><a href="./#rozdily">Розділи</a><a href="submit">Здати роботу</a><a href="qr-quest/">QR-квест</a></div>
+    <div class="sf-links"><a href="./#rozdily">Розділи</a><a href="submit">Здати роботу</a><a href="qr-quest/">QR-квест</a><a href="https://kplt.in.ua/" target="_blank" rel="noopener">Сайт ліцею ↗</a></div>
+    <div class="sf-credits">Ілюстрації: <a href="https://storyset.com/" target="_blank" rel="noopener">Storyset</a>, <a href="https://undraw.co/" target="_blank" rel="noopener">unDraw</a></div>
   </div>
 </footer>
 
@@ -170,6 +174,7 @@
     var all = secCards(sec), k = all.filter(function(c){ return known[c.k]; }).length;
     $('fcScore').textContent = good;
     $('fcScore').parentNode.lastChild.textContent = 'з ' + deck.length;
+    $('fcIllu').src = 'assets/illu/' + (good >= deck.length * 0.7 ? 'ss-success-factors-bro' : 'meditation') + '.svg';
     $('fcVerdict').textContent = good === deck.length ? 'Бездоганно! 🎉' : good >= deck.length * 0.7 ? 'Чудовий результат! 💪' : good >= deck.length * 0.4 ? 'Непогано — ще трохи практики 🙂' : 'Варто повторити тему 📘';
     $('fcSecProgress').textContent = 'У розділі ти вже знаєш ' + k + ' з ' + all.length + ' понять';
     $('fcRetry').hidden = !miss.length;
