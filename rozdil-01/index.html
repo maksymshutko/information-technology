@@ -2,36 +2,39 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
+<script>/*clean-url*/(function(){if(location.protocol==="file:")return;var p=location.pathname,q=p.replace(/\/index\.html$/,"/").replace(/\.html$/,"");if(q!==p)history.replaceState(null,"",q+location.search+location.hash);})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Розділ 1. Інформаційні технології в суспільстві · Інформатика КПЛТ</title>
 <meta name="description" content="Як інформація стала головним ресурсом суспільства, які інформаційні системи нас оточують, як безпечно навчатися й працювати в цифровому світі та що таке штучний інтелект.">
 <link rel="icon" href="../assets/logo.png">
-<link rel="stylesheet" href="../assets/style.css?v=71a0ed06">
+<link rel="stylesheet" href="../assets/style.css?v=2b101cca">
 </head>
 <body data-sec="rozdil-01">
 
 <nav class="topnav">
   <div class="topnav-inner">
-    <a class="logo" href="../index.html">
+    <a class="logo" href="../">
       <img src="../assets/logo.png" alt="Логотип КПЛТ">
       <span class="brand"><b>Інформатика</b><small>КПЛТ</small></span>
     </a>
     <div class="links">
-      <a href="../index.html">Головна</a>
-      <a href="../index.html#rozdily" class="active">Розділи</a>
-      <a href="../pidruchnyk.html">Підручник</a>
-      <a href="../submit.html">Здати роботу</a>
+      <a href="../">Головна</a>
+      <a href="../#rozdily" class="active">Розділи</a>
+      <a href="../pidruchnyk">Підручник</a>
+      <a href="../submit">Здати роботу</a>
     </div>
   </div>
 </nav>
 
 <main class="wrap">
+  <div class="sec-banner has-cover" style="--cover:url(../assets/img/rozdil-01.webp)">
   <div class="eyebrow">Розділ 01</div>
   <div class="sec-hero"><div class="sec-ico-big">🌐</div><div>
     <h1>Інформаційні технології в суспільстві</h1>
     <p class="lead">Як інформація стала головним ресурсом суспільства, які інформаційні системи нас оточують, як безпечно навчатися й працювати в цифровому світі та що таке штучний інтелект.</p>
   </div></div>
-  <div class="sec-meta"><span class="tag-pill">12 тем</span><span class="tag-pill tag-green">6 з матеріалами</span><div class="progress"><i id="secBar"></i></div><span class="progress-label" id="secPct"></span><span class="sec-actions"><a class="btn btn-sm" href="../kartky.html?r=1">🃏 Картки розділу</a><button class="btn btn-ghost btn-sm" onclick="setAll(true)">Розгорнути все</button><button class="btn btn-ghost btn-sm" onclick="setAll(false)">Згорнути все</button></span></div>
+  </div>
+  <div class="sec-meta"><span class="tag-pill">12 тем</span><span class="tag-pill tag-green">6 з матеріалами</span><div class="progress"><i id="secBar"></i></div><span class="progress-label" id="secPct"></span><span class="sec-actions"><a class="btn btn-sm" href="../kartky?r=1">🃏 Картки розділу</a><button class="btn btn-ghost btn-sm" onclick="setAll(true)">Розгорнути все</button><button class="btn btn-ghost btn-sm" onclick="setAll(false)">Згорнути все</button></span></div>
   <section class="topics">
 <details class="topic" id="tema-01" data-i="1">
   <summary><span class="num"><span>01</span></span><span class="t-title">Вступний інструктаж з БЖД. Інформація, повідомлення, дані, інформаційні процеси</span><span class="t-badges"><span class="badge badge-done">є матеріали</span></span><span class="chev">▼</span></summary>
@@ -46,14 +49,14 @@
       <div><dt>Правило 20-20-20</dt><dd>кожні 20 хв дивитися 20 секунд на об’єкт за 6 м (20 футів)</dd></div>
     </dl></div>
     <div class="t-block"><h4>Матеріали на сайті</h4><div class="t-mat">
-      <a class="btn btn-ghost" href="bzhd-informatsiia.html">📘 Конспект уроку</a>
+      <a class="btn btn-ghost" href="bzhd-informatsiia">📘 Конспект уроку</a>
     </div></div>
     <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
       <li><a class="" href="https://zakon.rada.gov.ua/laws/show/2657-12" target="_blank" rel="noopener">Закон України «Про інформацію»</a> — офіційне визначення інформації та прав на неї</li>
       <li><a class="" href="https://uk.wikipedia.org/wiki/Інформація" target="_blank" rel="noopener">Вікіпедія: Інформація</a> — історія поняття та види інформації</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://docs.google.com/" target="_blank" rel="noopener">Google Документи</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-02" data-i="2">
@@ -68,14 +71,14 @@
       <div><dt>Е-урядування</dt><dd>надання державних послуг онлайн</dd></div>
     </dl></div>
     <div class="t-block"><h4>Матеріали на сайті</h4><div class="t-mat">
-      <a class="btn btn-ghost" href="informatsiini-systemy.html">📘 Конспект уроку</a>
+      <a class="btn btn-ghost" href="informatsiini-systemy">📘 Конспект уроку</a>
     </div></div>
     <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
       <li><a class="" href="https://diia.gov.ua/" target="_blank" rel="noopener">Портал Дія</a> — приклад державної ІС: понад сотню послуг онлайн</li>
       <li><a class="" href="https://prozorro.gov.ua/" target="_blank" rel="noopener">Prozorro</a> — відкрита система публічних закупівель</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.google.com/maps" target="_blank" rel="noopener">Google Карти</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-03" data-i="3">
@@ -90,14 +93,14 @@
       <div><dt>Автоматизована система</dt><dd>система, де частину дій замість людини виконує комп’ютер</dd></div>
     </dl></div>
     <div class="t-block"><h4>Матеріали на сайті</h4><div class="t-mat">
-      <a class="btn btn-ghost" href="informatsiini-systemy.html">📘 Конспект уроку (разом із попередньою темою)</a>
+      <a class="btn btn-ghost" href="informatsiini-systemy">📘 Конспект уроку (разом із попередньою темою)</a>
     </div></div>
     <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
       <li><a class="" href="https://artsandculture.google.com/" target="_blank" rel="noopener">Google Arts &amp; Culture</a> — приклад того, як ІТ змінюють доступ до культури</li>
       <li><a class="" href="https://www.openstreetmap.org/" target="_blank" rel="noopener">OpenStreetMap</a> — відкрита ГІС, яку створюють волонтери</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://drive.google.com/" target="_blank" rel="noopener">Google Диск</a><a class="chip" href="https://www.google.com/maps" target="_blank" rel="noopener">Google Карти</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-04" data-i="4">
@@ -116,7 +119,7 @@
       <li><a class="" href="https://www.stopfake.org/" target="_blank" rel="noopener">StopFake</a> — розбір реальних фейків</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://lens.google/" target="_blank" rel="noopener">Пошук за зображенням Google Lens</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-05" data-i="5">
@@ -132,14 +135,14 @@
       <div><dt>Двофакторна автентифікація</dt><dd>вхід за паролем + кодом із телефону</dd></div>
     </dl></div>
     <div class="t-block"><h4>Матеріали на сайті</h4><div class="t-mat">
-      <a class="btn btn-ghost" href="pr-informatsiina-bezpeka.html">🧩 Практична робота + вправа «Злам слабкого пароля»</a>
+      <a class="btn btn-ghost" href="pr-informatsiina-bezpeka">🧩 Практична робота + вправа «Злам слабкого пароля»</a>
     </div></div>
     <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
       <li><a class="" href="https://myaccount.google.com/security-checkup" target="_blank" rel="noopener">Перевірка безпеки Google-акаунта</a> — покроковий аудит свого акаунта</li>
       <li><a class="" href="https://haveibeenpwned.com/" target="_blank" rel="noopener">Have I Been Pwned</a> — чи потрапляла твоя пошта у витоки даних</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://bitwarden.com/" target="_blank" rel="noopener">Bitwarden — менеджер паролів</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-06" data-i="6">
@@ -154,7 +157,7 @@
       <div><dt>Соціальна інженерія</dt><dd>маніпулювання людиною, щоб вона сама віддала дані</dd></div>
     </dl></div>
     <div class="t-block"><h4>Матеріали на сайті</h4><div class="t-mat">
-      <a class="btn btn-ghost" href="rozpiznai-zahrozu.html">🧩 Інтерактивна вправа «Розпізнай загрозу»</a>
+      <a class="btn btn-ghost" href="rozpiznai-zahrozu">🧩 Інтерактивна вправа «Розпізнай загрозу»</a>
     </div></div>
     <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
       <li><a class="" href="https://phishingquiz.withgoogle.com/" target="_blank" rel="noopener">Google Phishing Quiz</a> — тренажер: розпізнай фішинговий лист</li>
@@ -162,7 +165,7 @@
       <li><a class="" href="https://beinternetawesome.withgoogle.com/" target="_blank" rel="noopener">Be Internet Awesome (Interland)</a> — гра про безпечну поведінку онлайн</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.virustotal.com/" target="_blank" rel="noopener">VirusTotal</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-07" data-i="7">
@@ -183,7 +186,7 @@
       <li><a class="" href="https://www.khanacademy.org/" target="_blank" rel="noopener">Khan Academy</a> — математика, інформатика, науки</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://classroom.google.com/" target="_blank" rel="noopener">Google Classroom</a><a class="chip" href="https://www.duolingo.com/" target="_blank" rel="noopener">Duolingo</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-08" data-i="8">
@@ -203,7 +206,7 @@
       <li><a class="" href="https://www.weforum.org/" target="_blank" rel="noopener">Всесвітній економічний форум</a> — щорічні звіти «Future of Jobs»</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-09" data-i="9">
@@ -221,7 +224,7 @@
       <li><a class="" href="https://osvita.diia.gov.ua/" target="_blank" rel="noopener">Дія.Освіта: цифрова грамотність</a> — тест і курси цифрових навичок</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://calendar.google.com/" target="_blank" rel="noopener">Google Календар</a><a class="chip" href="https://trello.com/" target="_blank" rel="noopener">Trello</a><a class="chip" href="https://www.notion.so/" target="_blank" rel="noopener">Notion</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-10" data-i="10">
@@ -241,7 +244,7 @@
       <li><a class="" href="https://quickdraw.withgoogle.com/" target="_blank" rel="noopener">Quick, Draw!</a> — гра: нейромережа вгадує твій малюнок</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://teachablemachine.withgoogle.com/" target="_blank" rel="noopener">Teachable Machine</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-11" data-i="11">
@@ -260,7 +263,7 @@
       <li><a class="" href="https://uk.wikipedia.org/wiki/Інтернет_речей" target="_blank" rel="noopener">Вікіпедія: Інтернет речей</a> — огляд технології</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.openstreetmap.org/" target="_blank" rel="noopener">OpenStreetMap</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-12" data-i="12">
@@ -270,21 +273,21 @@
     <!-- ПРЕЗЕНТАЦІЯ: встав код вбудовування з Google Slides (iframe) всередину блоку slides нижче -->
     <div class="slides"></div>
     <div class="t-block"><h4>Матеріали на сайті</h4><div class="t-mat">
-      <a class="btn btn-ghost" href="povtorennia-it-v-suspilstvi.html">🔁 Повторення «ІТ в суспільстві»</a>
-      <a class="btn btn-ghost" href="atestatsiia-infoagent.html">📝 Тематичне оцінювання «Операція Інфоагент»</a>
+      <a class="btn btn-ghost" href="povtorennia-it-v-suspilstvi">🔁 Повторення «ІТ в суспільстві»</a>
+      <a class="btn btn-ghost" href="atestatsiia-infoagent">📝 Тематичне оцінювання «Операція Інфоагент»</a>
     </div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
   </section>
-  <div class="sec-nav"><a class="btn btn-ghost" href="../index.html#rozdily">← усі розділи</a><span class="spacer"></span><a class="btn btn-ghost" href="../rozdil-02/index.html">Розділ 2 ›</a></div>
+  <div class="sec-nav"><a class="btn btn-ghost" href="../#rozdily">← усі розділи</a><span class="spacer"></span><a class="btn btn-ghost" href="../rozdil-02/">Розділ 2 ›</a></div>
 </main>
 
 <footer class="site-footer">
   <div class="sf-inner">
     <div class="sf-brand"><img src="../assets/logo.png" alt=""><div><b>Інформатика</b><small>Київський професійний ліцей транспорту</small></div></div>
     <div class="sf-teacher">Викладач інформатики — <b>Шутько Максим Олександрович</b></div>
-    <div class="sf-links"><a href="../index.html#rozdily">Розділи</a><a href="../submit.html">Здати роботу</a><a href="../qr-quest/index.html">QR-квест</a></div>
+    <div class="sf-links"><a href="../#rozdily">Розділи</a><a href="../submit">Здати роботу</a><a href="../qr-quest/">QR-квест</a></div>
   </div>
 </footer>
 
@@ -310,6 +313,13 @@
       '<a class="slides-open" href="' + openUrl(e) + '" target="_blank" rel="noopener">відкрити на весь екран ↗</a>';
     box.classList.add('has-slides');
   });
+  // посилання на конкретну тему: …/rozdil-NN/#tema-MM (тема відкривається сама)
+  function copyLink(btn){
+    var url = location.origin + location.pathname.replace(/index\.html$/, '') + '#' + btn.closest('details.topic').id;
+    function ok(){ var t = btn.textContent; btn.textContent = '✓ Скопійовано'; setTimeout(function(){ btn.textContent = t; }, 1800); }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(url).then(ok, function(){ prompt('Скопіюй посилання:', url); });
+    else prompt('Скопіюй посилання:', url);
+  }
   function setAll(open){ document.querySelectorAll('details.topic').forEach(function(d){ d.open = open; }); }
   if (location.hash){ var d = document.querySelector(location.hash); if (d && d.tagName === 'DETAILS') d.open = true; }
 

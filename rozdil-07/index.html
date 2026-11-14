@@ -2,36 +2,39 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
+<script>/*clean-url*/(function(){if(location.protocol==="file:")return;var p=location.pathname,q=p.replace(/\/index\.html$/,"/").replace(/\.html$/,"");if(q!==p)history.replaceState(null,"",q+location.search+location.hash);})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Розділ 7. Растрова графіка · Інформатика КПЛТ</title>
 <meta name="description" content="Як влаштоване растрове зображення, які програми й онлайн-сервіси для нього є та як в Adobe Photoshop змінювати розмір, колір, робити колажі й банери.">
 <link rel="icon" href="../assets/logo.png">
-<link rel="stylesheet" href="../assets/style.css?v=71a0ed06">
+<link rel="stylesheet" href="../assets/style.css?v=2b101cca">
 </head>
 <body data-sec="rozdil-07">
 
 <nav class="topnav">
   <div class="topnav-inner">
-    <a class="logo" href="../index.html">
+    <a class="logo" href="../">
       <img src="../assets/logo.png" alt="Логотип КПЛТ">
       <span class="brand"><b>Інформатика</b><small>КПЛТ</small></span>
     </a>
     <div class="links">
-      <a href="../index.html">Головна</a>
-      <a href="../index.html#rozdily" class="active">Розділи</a>
-      <a href="../pidruchnyk.html">Підручник</a>
-      <a href="../submit.html">Здати роботу</a>
+      <a href="../">Головна</a>
+      <a href="../#rozdily" class="active">Розділи</a>
+      <a href="../pidruchnyk">Підручник</a>
+      <a href="../submit">Здати роботу</a>
     </div>
   </div>
 </nav>
 
 <main class="wrap">
+  <div class="sec-banner has-cover" style="--cover:url(../assets/img/rozdil-07.webp)">
   <div class="eyebrow">Розділ 07</div>
   <div class="sec-hero"><div class="sec-ico-big">🖼️</div><div>
     <h1>Растрова графіка</h1>
     <p class="lead">Як влаштоване растрове зображення, які програми й онлайн-сервіси для нього є та як в Adobe Photoshop змінювати розмір, колір, робити колажі й банери.</p>
   </div></div>
-  <div class="sec-meta"><span class="tag-pill">9 тем</span><div class="progress"><i id="secBar"></i></div><span class="progress-label" id="secPct"></span><span class="sec-actions"><a class="btn btn-sm" href="../kartky.html?r=7">🃏 Картки розділу</a><button class="btn btn-ghost btn-sm" onclick="setAll(true)">Розгорнути все</button><button class="btn btn-ghost btn-sm" onclick="setAll(false)">Згорнути все</button></span></div>
+  </div>
+  <div class="sec-meta"><span class="tag-pill">9 тем</span><div class="progress"><i id="secBar"></i></div><span class="progress-label" id="secPct"></span><span class="sec-actions"><a class="btn btn-sm" href="../kartky?r=7">🃏 Картки розділу</a><button class="btn btn-ghost btn-sm" onclick="setAll(true)">Розгорнути все</button><button class="btn btn-ghost btn-sm" onclick="setAll(false)">Згорнути все</button></span></div>
   <section class="topics">
 <details class="topic" id="tema-01" data-i="1">
   <summary><span class="num"><span>01</span></span><span class="t-title">Суть растрового малюнка і його особливості</span><span class="t-badges"></span><span class="chev">▼</span></summary>
@@ -48,7 +51,7 @@
       <li><a class="" href="https://squoosh.app/" target="_blank" rel="noopener">Squoosh</a> — порівняй формати та якість стиснення</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.gimp.org/" target="_blank" rel="noopener">GIMP</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-02" data-i="2">
@@ -65,7 +68,7 @@
       <li><a class="" href="https://www.adobe.com/products/photoshop.html" target="_blank" rel="noopener">Adobe Photoshop</a> — сторінка програми</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.gimp.org/" target="_blank" rel="noopener">GIMP</a><a class="chip" href="https://krita.org/" target="_blank" rel="noopener">Krita</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-03" data-i="3">
@@ -79,7 +82,7 @@
       <div><dt>Фільтр</dt><dd>автоматична зміна вигляду зображення</dd></div>
     </dl></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.photopea.com/" target="_blank" rel="noopener">Photopea</a><a class="chip" href="https://pixlr.com/" target="_blank" rel="noopener">Pixlr</a><a class="chip" href="https://www.canva.com/" target="_blank" rel="noopener">Canva</a><a class="chip" href="https://www.remove.bg/" target="_blank" rel="noopener">remove.bg — видалення фону</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-04" data-i="4">
@@ -97,7 +100,7 @@
       <li><a class="" href="https://helpx.adobe.com/photoshop.html" target="_blank" rel="noopener">Довідка Adobe Photoshop</a> — офіційні уроки та інструкції</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.adobe.com/products/photoshop.html" target="_blank" rel="noopener">Adobe Photoshop</a><a class="chip" href="https://www.photopea.com/" target="_blank" rel="noopener">Photopea</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-05" data-i="5">
@@ -110,7 +113,7 @@
       <div><dt>Маска шару</dt><dd>прихована частина шару без видалення пікселів</dd></div>
     </dl></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.adobe.com/products/photoshop.html" target="_blank" rel="noopener">Adobe Photoshop</a><a class="chip" href="https://www.photopea.com/" target="_blank" rel="noopener">Photopea</a><a class="chip" href="https://unsplash.com/" target="_blank" rel="noopener">Unsplash</a><a class="chip" href="https://www.pexels.com/" target="_blank" rel="noopener">Pexels</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-06" data-i="6">
@@ -129,7 +132,7 @@
       <li><a class="" href="https://color.method.ac/" target="_blank" rel="noopener">Color Game</a> — потренуй відчуття кольору</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.adobe.com/products/photoshop.html" target="_blank" rel="noopener">Adobe Photoshop</a><a class="chip" href="https://www.photopea.com/" target="_blank" rel="noopener">Photopea</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-07" data-i="7">
@@ -144,7 +147,7 @@
       <div><dt>Ретуш</dt><dd>виправлення дефектів зображення</dd></div>
     </dl></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.adobe.com/products/photoshop.html" target="_blank" rel="noopener">Adobe Photoshop</a><a class="chip" href="https://www.photopea.com/" target="_blank" rel="noopener">Photopea</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-08" data-i="8">
@@ -154,7 +157,7 @@
     <!-- ПРЕЗЕНТАЦІЯ: встав код вбудовування з Google Slides (iframe) всередину блоку slides нижче -->
     <div class="slides"></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.adobe.com/products/photoshop.html" target="_blank" rel="noopener">Adobe Photoshop</a><a class="chip" href="https://www.photopea.com/" target="_blank" rel="noopener">Photopea</a><a class="chip" href="https://www.canva.com/" target="_blank" rel="noopener">Canva</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-09" data-i="9">
@@ -163,18 +166,18 @@
     <p class="t-text">Повтори: піксель і роздільну здатність, растрові формати, програми та онлайн-сервіси, розмір зображення й полотна, шари, виділення, колірну корекцію.</p>
     <!-- ПРЕЗЕНТАЦІЯ: встав код вбудовування з Google Slides (iframe) всередину блоку slides нижче -->
     <div class="slides"></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
   </section>
-  <div class="sec-nav"><a class="btn btn-ghost" href="../index.html#rozdily">← усі розділи</a><span class="spacer"></span><a class="btn btn-ghost" href="../rozdil-06/index.html">‹ Розділ 6</a><a class="btn btn-ghost" href="../rozdil-08/index.html">Розділ 8 ›</a></div>
+  <div class="sec-nav"><a class="btn btn-ghost" href="../#rozdily">← усі розділи</a><span class="spacer"></span><a class="btn btn-ghost" href="../rozdil-06/">‹ Розділ 6</a><a class="btn btn-ghost" href="../rozdil-08/">Розділ 8 ›</a></div>
 </main>
 
 <footer class="site-footer">
   <div class="sf-inner">
     <div class="sf-brand"><img src="../assets/logo.png" alt=""><div><b>Інформатика</b><small>Київський професійний ліцей транспорту</small></div></div>
     <div class="sf-teacher">Викладач інформатики — <b>Шутько Максим Олександрович</b></div>
-    <div class="sf-links"><a href="../index.html#rozdily">Розділи</a><a href="../submit.html">Здати роботу</a><a href="../qr-quest/index.html">QR-квест</a></div>
+    <div class="sf-links"><a href="../#rozdily">Розділи</a><a href="../submit">Здати роботу</a><a href="../qr-quest/">QR-квест</a></div>
   </div>
 </footer>
 
@@ -200,6 +203,13 @@
       '<a class="slides-open" href="' + openUrl(e) + '" target="_blank" rel="noopener">відкрити на весь екран ↗</a>';
     box.classList.add('has-slides');
   });
+  // посилання на конкретну тему: …/rozdil-NN/#tema-MM (тема відкривається сама)
+  function copyLink(btn){
+    var url = location.origin + location.pathname.replace(/index\.html$/, '') + '#' + btn.closest('details.topic').id;
+    function ok(){ var t = btn.textContent; btn.textContent = '✓ Скопійовано'; setTimeout(function(){ btn.textContent = t; }, 1800); }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(url).then(ok, function(){ prompt('Скопіюй посилання:', url); });
+    else prompt('Скопіюй посилання:', url);
+  }
   function setAll(open){ document.querySelectorAll('details.topic').forEach(function(d){ d.open = open; }); }
   if (location.hash){ var d = document.querySelector(location.hash); if (d && d.tagName === 'DETAILS') d.open = true; }
 

@@ -313,7 +313,7 @@ footer{ margin-top: 54px; padding-top: 20px; border-top: 1px dashed var(--border
 .sec-meta .progress{ width: 180px; }
 .sec-actions{ margin-left:auto; display:flex; gap: 8px; flex-wrap: wrap; }
 .topics{ display:flex; flex-direction:column; gap: 10px; }
-details.topic{ background: var(--panel); border: 1px solid var(--border); border-radius: 18px; transition: border-color .15s ease, background .15s ease; }
+details.topic{ scroll-margin-top: 96px; background: var(--panel); border: 1px solid var(--border); border-radius: 18px; transition: border-color .15s ease, background .15s ease; }
 details.topic:hover{ border-color: var(--border-strong); }
 details.topic[open]{ border-color: rgba(62,230,181,.45); background: linear-gradient(180deg, rgba(62,230,181,.04), transparent 160px), var(--panel); box-shadow: var(--shadow-md); }
 details.topic > summary{ list-style: none; cursor: pointer; display:flex; align-items:center; gap: 14px; padding: 15px 18px; font-weight: 800; font-size: 15px; color: var(--ink); }
@@ -377,6 +377,39 @@ details.topic.done .t-done .btn{ background: var(--mint-soft); color: var(--mint
   details.topic > summary{ flex-wrap: wrap; padding: 13px 14px; }
   details.topic > summary .t-badges{ order: 3; width: 100%; justify-content:flex-start; padding-left: 48px; }
   .sec-actions{ margin-left: 0; }
+}
+
+/* ---------- обкладинки розділів (фото) ---------- */
+.sec-cover{ position: relative; display:block; margin: -20px -20px 0; height: 150px; overflow: hidden; border-radius: 21px 21px 0 0; }
+.sec-cover img{ width: 100%; height: 100%; object-fit: cover; display:block; transition: transform .5s ease; }
+.sec-cover::after{ content:""; position:absolute; inset:0; background: linear-gradient(180deg, rgba(16,23,46,0) 35%, var(--panel) 100%); }
+.sec-card:hover .sec-cover img, .fc-tile:hover .sec-cover img{ transform: scale(1.05); }
+.sec-card .sec-cover + .sec-top{ margin-top: -30px; position: relative; z-index: 1; }
+.sec-card .sec-cover + .sec-top .sec-ico{ background: var(--panel); box-shadow: 0 6px 16px rgba(0,0,0,.4); }
+.sec-card .sec-cover + .sec-top .sec-num{ align-self: flex-end; }
+.sec-card.wide .sec-cover{ height: 170px; }
+.fc-tile .sec-cover{ margin: -18px -18px 0; height: 120px; border-radius: 19px 19px 0 0; }
+.fc-tile .sec-cover + .sec-top{ margin-top: -28px; position: relative; z-index: 1; }
+.fc-tile .sec-cover + .sec-top .sec-ico{ background: var(--panel); box-shadow: 0 6px 16px rgba(0,0,0,.4); }
+.fc-tile .sec-cover + .sec-top .sec-num{ align-self: flex-end; }
+.fc-tile{ overflow: hidden; }
+.sec-banner.has-cover{
+  position: relative; overflow: hidden; border-radius: 28px; padding: 30px 32px 26px; margin-bottom: 22px;
+  border: 1px solid var(--border-strong); box-shadow: var(--shadow-md);
+  background:
+    linear-gradient(90deg, rgba(7,11,24,.93) 0%, rgba(7,11,24,.72) 45%, rgba(7,11,24,.12) 100%),
+    linear-gradient(0deg, rgba(7,11,24,.7), transparent 55%),
+    var(--cover) center / cover no-repeat;
+  min-height: 300px; display:flex; flex-direction:column; justify-content:flex-end;
+}
+.sec-banner.has-cover .eyebrow{ align-self: flex-start; }
+.sec-banner.has-cover .lead{ color: #c6cdea; margin-bottom: 0; }
+.sec-banner.has-cover .sec-ico-big{ background: rgba(10,15,32,.7); backdrop-filter: blur(6px); }
+.sec-banner.has-cover h1{ text-shadow: 0 2px 18px rgba(0,0,0,.5); }
+@media (max-width: 640px){
+  .sec-banner.has-cover{ padding: 22px 18px 20px; min-height: 0; border-radius: 22px;
+    background: linear-gradient(180deg, rgba(7,11,24,.55) 0%, rgba(7,11,24,.93) 55%), var(--cover) center top / cover no-repeat; }
+  .sec-cover{ height: 160px; }
 }
 
 /* ---------- розширений конспект теми ---------- */

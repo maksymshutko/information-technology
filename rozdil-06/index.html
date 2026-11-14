@@ -2,36 +2,39 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
+<script>/*clean-url*/(function(){if(location.protocol==="file:")return;var p=location.pathname,q=p.replace(/\/index\.html$/,"/").replace(/\.html$/,"");if(q!==p)history.replaceState(null,"",q+location.search+location.hash);})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Розділ 6. Векторна графіка · Інформатика КПЛТ</title>
 <meta name="description" content="Чим векторне зображення відрізняється від растрового, які програми для нього є та як в Adobe Illustrator малювати й редагувати об’єкти.">
 <link rel="icon" href="../assets/logo.png">
-<link rel="stylesheet" href="../assets/style.css?v=71a0ed06">
+<link rel="stylesheet" href="../assets/style.css?v=2b101cca">
 </head>
 <body data-sec="rozdil-06">
 
 <nav class="topnav">
   <div class="topnav-inner">
-    <a class="logo" href="../index.html">
+    <a class="logo" href="../">
       <img src="../assets/logo.png" alt="Логотип КПЛТ">
       <span class="brand"><b>Інформатика</b><small>КПЛТ</small></span>
     </a>
     <div class="links">
-      <a href="../index.html">Головна</a>
-      <a href="../index.html#rozdily" class="active">Розділи</a>
-      <a href="../pidruchnyk.html">Підручник</a>
-      <a href="../submit.html">Здати роботу</a>
+      <a href="../">Головна</a>
+      <a href="../#rozdily" class="active">Розділи</a>
+      <a href="../pidruchnyk">Підручник</a>
+      <a href="../submit">Здати роботу</a>
     </div>
   </div>
 </nav>
 
 <main class="wrap">
+  <div class="sec-banner has-cover" style="--cover:url(../assets/img/rozdil-06.webp)">
   <div class="eyebrow">Розділ 06</div>
   <div class="sec-hero"><div class="sec-ico-big">✒️</div><div>
     <h1>Векторна графіка</h1>
     <p class="lead">Чим векторне зображення відрізняється від растрового, які програми для нього є та як в Adobe Illustrator малювати й редагувати об’єкти.</p>
   </div></div>
-  <div class="sec-meta"><span class="tag-pill">7 тем</span><div class="progress"><i id="secBar"></i></div><span class="progress-label" id="secPct"></span><span class="sec-actions"><a class="btn btn-sm" href="../kartky.html?r=6">🃏 Картки розділу</a><button class="btn btn-ghost btn-sm" onclick="setAll(true)">Розгорнути все</button><button class="btn btn-ghost btn-sm" onclick="setAll(false)">Згорнути все</button></span></div>
+  </div>
+  <div class="sec-meta"><span class="tag-pill">7 тем</span><div class="progress"><i id="secBar"></i></div><span class="progress-label" id="secPct"></span><span class="sec-actions"><a class="btn btn-sm" href="../kartky?r=6">🃏 Картки розділу</a><button class="btn btn-ghost btn-sm" onclick="setAll(true)">Розгорнути все</button><button class="btn btn-ghost btn-sm" onclick="setAll(false)">Згорнути все</button></span></div>
   <section class="topics">
 <details class="topic" id="tema-01" data-i="1">
   <summary><span class="num"><span>01</span></span><span class="t-title">Суть векторного малюнка і його особливості</span><span class="t-badges"></span><span class="chev">▼</span></summary>
@@ -48,7 +51,7 @@
       <li><a class="" href="https://bezier.method.ac/" target="_blank" rel="noopener">The Bézier Game</a> — гра: навчись працювати з кривими Безьє</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://inkscape.org/" target="_blank" rel="noopener">Inkscape</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-02" data-i="2">
@@ -65,7 +68,7 @@
       <li><a class="" href="https://www.adobe.com/products/illustrator.html" target="_blank" rel="noopener">Adobe Illustrator</a> — сторінка програми</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://inkscape.org/" target="_blank" rel="noopener">Inkscape</a><a class="chip" href="https://www.figma.com/" target="_blank" rel="noopener">Figma</a><a class="chip" href="https://www.canva.com/" target="_blank" rel="noopener">Canva</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-03" data-i="3">
@@ -83,7 +86,7 @@
       <li><a class="" href="https://helpx.adobe.com/illustrator.html" target="_blank" rel="noopener">Довідка Adobe Illustrator</a> — офіційні уроки та інструкції</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.adobe.com/products/illustrator.html" target="_blank" rel="noopener">Adobe Illustrator</a><a class="chip" href="https://inkscape.org/" target="_blank" rel="noopener">Inkscape</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-04" data-i="4">
@@ -93,7 +96,7 @@
     <!-- ПРЕЗЕНТАЦІЯ: встав код вбудовування з Google Slides (iframe) всередину блоку slides нижче -->
     <div class="slides"></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.adobe.com/products/illustrator.html" target="_blank" rel="noopener">Adobe Illustrator</a><a class="chip" href="https://inkscape.org/" target="_blank" rel="noopener">Inkscape</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-05" data-i="5">
@@ -113,7 +116,7 @@
       <li><a class="" href="https://color.method.ac/" target="_blank" rel="noopener">Color Game</a> — тренажер відчуття кольору</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.adobe.com/products/illustrator.html" target="_blank" rel="noopener">Adobe Illustrator</a><a class="chip" href="https://inkscape.org/" target="_blank" rel="noopener">Inkscape</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-06" data-i="6">
@@ -129,7 +132,7 @@
       <li><a class="" href="https://thenounproject.com/" target="_blank" rel="noopener">The Noun Project</a> — приклади стильних наборів іконок</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.adobe.com/products/illustrator.html" target="_blank" rel="noopener">Adobe Illustrator</a><a class="chip" href="https://www.figma.com/" target="_blank" rel="noopener">Figma</a></div></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
 <details class="topic" id="tema-07" data-i="7">
@@ -138,18 +141,18 @@
     <p class="t-text">Повтори: відмінність вектора від растра, формати, програми, налаштування документа, інструменти малювання, заливку й обведення, Pathfinder.</p>
     <!-- ПРЕЗЕНТАЦІЯ: встав код вбудовування з Google Slides (iframe) всередину блоку slides нижче -->
     <div class="slides"></div>
-    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button><button class="btn btn-ghost btn-sm" type="button" onclick="copyLink(this)">🔗 Посилання на тему</button></div>
   </div>
 </details>
   </section>
-  <div class="sec-nav"><a class="btn btn-ghost" href="../index.html#rozdily">← усі розділи</a><span class="spacer"></span><a class="btn btn-ghost" href="../rozdil-05/index.html">‹ Розділ 5</a><a class="btn btn-ghost" href="../rozdil-07/index.html">Розділ 7 ›</a></div>
+  <div class="sec-nav"><a class="btn btn-ghost" href="../#rozdily">← усі розділи</a><span class="spacer"></span><a class="btn btn-ghost" href="../rozdil-05/">‹ Розділ 5</a><a class="btn btn-ghost" href="../rozdil-07/">Розділ 7 ›</a></div>
 </main>
 
 <footer class="site-footer">
   <div class="sf-inner">
     <div class="sf-brand"><img src="../assets/logo.png" alt=""><div><b>Інформатика</b><small>Київський професійний ліцей транспорту</small></div></div>
     <div class="sf-teacher">Викладач інформатики — <b>Шутько Максим Олександрович</b></div>
-    <div class="sf-links"><a href="../index.html#rozdily">Розділи</a><a href="../submit.html">Здати роботу</a><a href="../qr-quest/index.html">QR-квест</a></div>
+    <div class="sf-links"><a href="../#rozdily">Розділи</a><a href="../submit">Здати роботу</a><a href="../qr-quest/">QR-квест</a></div>
   </div>
 </footer>
 
@@ -175,6 +178,13 @@
       '<a class="slides-open" href="' + openUrl(e) + '" target="_blank" rel="noopener">відкрити на весь екран ↗</a>';
     box.classList.add('has-slides');
   });
+  // посилання на конкретну тему: …/rozdil-NN/#tema-MM (тема відкривається сама)
+  function copyLink(btn){
+    var url = location.origin + location.pathname.replace(/index\.html$/, '') + '#' + btn.closest('details.topic').id;
+    function ok(){ var t = btn.textContent; btn.textContent = '✓ Скопійовано'; setTimeout(function(){ btn.textContent = t; }, 1800); }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(url).then(ok, function(){ prompt('Скопіюй посилання:', url); });
+    else prompt('Скопіюй посилання:', url);
+  }
   function setAll(open){ document.querySelectorAll('details.topic').forEach(function(d){ d.open = open; }); }
   if (location.hash){ var d = document.querySelector(location.hash); if (d && d.tagName === 'DETAILS') d.open = true; }
 
