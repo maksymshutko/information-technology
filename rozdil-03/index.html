@@ -6,7 +6,7 @@
 <title>Розділ 3. Системи керування базами даних · Інформатика КПЛТ</title>
 <meta name="description" content="Як влаштовані бази даних, чому таблиці зв’язують між собою та як у СКБД Microsoft Access створювати таблиці, форми, шукати й фільтрувати записи.">
 <link rel="icon" href="../assets/logo.png">
-<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/style.css?v=71a0ed06">
 </head>
 <body data-sec="rozdil-03">
 
@@ -37,13 +37,13 @@
   <summary><span class="num"><span>01</span></span><span class="t-title">Система управління базами даних Microsoft Office Access</span><span class="t-badges"></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Microsoft Access — настільна СКБД, яка входить до пакета Microsoft 365. Файл бази (.accdb) містить усі об’єкти: таблиці, запити, форми та звіти. Вікно Access складається зі стрічки інструментів, області переходів (список об’єктів) і робочої області.</p>
+    <!-- ПРЕЗЕНТАЦІЯ: встав код вбудовування з Google Slides (iframe) всередину блоку slides нижче -->
+    <div class="slides"></div>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
       <div><dt>СКБД</dt><dd>програма для створення баз даних і роботи з ними</dd></div>
       <div><dt>Область переходів</dt><dd>панель зі списком об’єктів бази</dd></div>
       <div><dt>.accdb</dt><dd>формат файлу бази даних Access</dd></div>
     </dl></div>
-    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
-    <div class="slides" data-src=""></div>
     <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
       <li><a class="" href="https://www.microsoft.com/microsoft-365/access" target="_blank" rel="noopener">Microsoft Access</a> — сторінка продукту та навчальні матеріали</li>
     </ul></div>
@@ -55,13 +55,13 @@
   <summary><span class="num"><span>02</span></span><span class="t-title">Системи керування базами даних, їх призначення</span><span class="t-badges"></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">База даних — це впорядкований набір даних про певну предметну область: клієнти СТО, склад запчастин, розклад рейсів. СКБД дозволяє створювати структуру бази, вводити й змінювати дані, шукати потрібне та захищати дані від втрат. Бази даних працюють за майже кожним сайтом і застосунком — від інтернет-магазину до Нової пошти.</p>
+    <!-- ПРЕЗЕНТАЦІЯ: встав код вбудовування з Google Slides (iframe) всередину блоку slides нижче -->
+    <div class="slides"></div>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
       <div><dt>База даних</dt><dd>організована сукупність даних про предметну область</dd></div>
       <div><dt>Предметна область</dt><dd>частина реального світу, яку описує база</dd></div>
       <div><dt>Настільна / серверна СКБД</dt><dd>Access, LibreOffice Base / MySQL, PostgreSQL</dd></div>
     </dl></div>
-    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
-    <div class="slides" data-src=""></div>
     <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
       <li><a class="" href="https://uk.wikipedia.org/wiki/Система_керування_базами_даних" target="_blank" rel="noopener">Вікіпедія: Система керування базами даних</a> — види СКБД і приклади</li>
     </ul></div>
@@ -73,14 +73,14 @@
   <summary><span class="num"><span>03</span></span><span class="t-title">Реляційні бази даних, їхні об’єкти</span><span class="t-badges"></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">У реляційній базі дані зберігаються в таблицях, пов’язаних між собою. Рядок таблиці — запис (один об’єкт), стовпець — поле (одна властивість). Первинний ключ однозначно визначає запис, а зовнішній ключ зв’язує таблиці. Основні об’єкти Access: таблиці, запити, форми, звіти.</p>
+    <!-- ПРЕЗЕНТАЦІЯ: встав код вбудовування з Google Slides (iframe) всередину блоку slides нижче -->
+    <div class="slides"></div>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
       <div><dt>Запис</dt><dd>рядок таблиці — дані про один об’єкт</dd></div>
       <div><dt>Поле</dt><dd>стовпець таблиці — одна властивість</dd></div>
       <div><dt>Первинний ключ</dt><dd>поле з унікальними значеннями для кожного запису</dd></div>
       <div><dt>Зв’язок «один-до-багатьох»</dt><dd>одному запису першої таблиці відповідає багато записів другої</dd></div>
     </dl></div>
-    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
-    <div class="slides" data-src=""></div>
     <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
       <li><a class="" href="https://www.w3schools.com/sql/" target="_blank" rel="noopener">W3Schools SQL</a> — інтерактивний підручник мови запитів SQL</li>
     </ul></div>
@@ -92,13 +92,13 @@
   <summary><span class="num"><span>04</span></span><span class="t-title">Створення таблиць бази даних</span><span class="t-badges"></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Таблицю зручно створювати в режимі конструктора: задаємо ім’я поля, тип даних і властивості (розмір, формат, обов’язковість). Правильно підібраний тип даних (короткий текст, число, дата/час, грошовий, так/ні) захищає від помилок введення. Не забудь призначити первинний ключ.</p>
+    <!-- ПРЕЗЕНТАЦІЯ: встав код вбудовування з Google Slides (iframe) всередину блоку slides нижче -->
+    <div class="slides"></div>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
       <div><dt>Режим конструктора</dt><dd>режим налаштування структури таблиці</dd></div>
       <div><dt>Тип даних</dt><dd>вид значень, які можна зберігати в полі</dd></div>
       <div><dt>Лічильник</dt><dd>тип поля, що автоматично нумерує записи</dd></div>
     </dl></div>
-    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
-    <div class="slides" data-src=""></div>
     <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
       <li><a class="" href="https://support.microsoft.com/access" target="_blank" rel="noopener">Довідка Microsoft Access</a> — офіційні інструкції зі створення таблиць</li>
     </ul></div>
@@ -110,11 +110,11 @@
   <summary><span class="num"><span>05</span></span><span class="t-title">Практична робота. Робота з об’єктами бази даних</span><span class="t-badges"><span class="badge badge-warn">практична</span></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Створи базу даних для своєї професії (наприклад, «Автосервіс» або «Кафе»): дві-три таблиці, первинні ключі, зв’язки між таблицями. Перевір, що кожна таблиця відкривається, а зв’язки показано у схемі даних.</p>
+    <!-- ПРЕЗЕНТАЦІЯ: встав код вбудовування з Google Slides (iframe) всередину блоку slides нижче -->
+    <div class="slides"></div>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
       <div><dt>Схема даних</dt><dd>вікно Access, де видно таблиці та зв’язки між ними</dd></div>
     </dl></div>
-    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
-    <div class="slides" data-src=""></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.microsoft.com/microsoft-365/access" target="_blank" rel="noopener">Microsoft Access</a></div></div>
     <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
@@ -123,13 +123,13 @@
   <summary><span class="num"><span>06</span></span><span class="t-title">Ведення і редагування даних різних типів</span><span class="t-badges"></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Дані вводять у режимі таблиці або через форму. Під час редагування можна додавати, змінювати й видаляти записи, копіювати значення. Маска введення та умова на значення допомагають уникнути помилок (наприклад, номер телефону в правильному форматі). Видалення записів у базі незворотне — будь уважним.</p>
+    <!-- ПРЕЗЕНТАЦІЯ: встав код вбудовування з Google Slides (iframe) всередину блоку slides нижче -->
+    <div class="slides"></div>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
       <div><dt>Маска введення</dt><dd>шаблон, за яким вводяться дані (телефон, дата)</dd></div>
       <div><dt>Умова на значення</dt><dd>правило, яке перевіряє введені дані</dd></div>
       <div><dt>Підстановка</dt><dd>вибір значення зі списку замість ручного введення</dd></div>
     </dl></div>
-    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
-    <div class="slides" data-src=""></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.microsoft.com/microsoft-365/access" target="_blank" rel="noopener">Microsoft Access</a></div></div>
     <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
@@ -138,12 +138,12 @@
   <summary><span class="num"><span>07</span></span><span class="t-title">Практична робота. Створення бази даних у середовищі СУБД, створення форм і введення даних</span><span class="t-badges"><span class="badge badge-warn">практична</span></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Створи форму для зручного введення даних у свою таблицю за допомогою майстра форм, налаштуй її вигляд і внеси щонайменше 10 записів.</p>
+    <!-- ПРЕЗЕНТАЦІЯ: встав код вбудовування з Google Slides (iframe) всередину блоку slides нижче -->
+    <div class="slides"></div>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
       <div><dt>Форма</dt><dd>об’єкт для зручного введення та перегляду записів по одному</dd></div>
       <div><dt>Майстер форм</dt><dd>покроковий помічник створення форми</dd></div>
     </dl></div>
-    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
-    <div class="slides" data-src=""></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.microsoft.com/microsoft-365/access" target="_blank" rel="noopener">Microsoft Access</a></div></div>
     <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
@@ -152,13 +152,13 @@
   <summary><span class="num"><span>08</span></span><span class="t-title">Впорядкування, пошук і фільтрування даних</span><span class="t-badges"></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Сортування впорядковує записи за зростанням або спаданням значень поля. Пошук знаходить потрібний запис, а фільтр показує лише записи, що відповідають умові (наприклад, усі авто марки «Renault»). Для складних і повторюваних відборів створюють запити.</p>
+    <!-- ПРЕЗЕНТАЦІЯ: встав код вбудовування з Google Slides (iframe) всередину блоку slides нижче -->
+    <div class="slides"></div>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
       <div><dt>Сортування</dt><dd>впорядкування записів за значенням поля</dd></div>
       <div><dt>Фільтр</dt><dd>тимчасове приховування записів, що не відповідають умові</dd></div>
       <div><dt>Запит</dt><dd>збережене правило відбору й обчислення даних</dd></div>
     </dl></div>
-    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
-    <div class="slides" data-src=""></div>
     <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
       <li><a class="" href="https://www.w3schools.com/sql/sql_where.asp" target="_blank" rel="noopener">W3Schools SQL: WHERE та ORDER BY</a> — як фільтрують дані мовою SQL</li>
     </ul></div>
@@ -170,8 +170,8 @@
   <summary><span class="num"><span>09</span></span><span class="t-title">Тематична атестація</span><span class="t-badges"><span class="badge badge-note">атестація</span></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Повтори: призначення СКБД, поняття таблиці, запису, поля, ключа, типи даних, створення таблиць і форм, сортування та фільтрування.</p>
-    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
-    <div class="slides" data-src=""></div>
+    <!-- ПРЕЗЕНТАЦІЯ: встав код вбудовування з Google Slides (iframe) всередину блоку slides нижче -->
+    <div class="slides"></div>
     <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
 </details>
@@ -188,20 +188,25 @@
 </footer>
 
 <script>
-  // Вбудовування презентацій: у data-src блоку .slides вставити посилання з Google Диска / Google Slides
+  // Презентації: усередині блоку .slides може бути код вбудовування (iframe) з Google Slides
+  // (Файл → Поділитися → Опублікувати в інтернеті → Вбудувати) або посилання в data-src.
   function embedUrl(u){
+    u = u.replace(/&amp;/g, '&');
+    if (/\/presentation\/d\/e\//.test(u)) return u.replace(/\/pub(html)?(?=[?#]|$)/, '/pubembed');
     var m = u.match(/drive\.google\.com\/file\/d\/([^\/?#]+)/);
     if (m) return 'https://drive.google.com/file/d/' + m[1] + '/preview';
     m = u.match(/docs\.google\.com\/presentation\/d\/([^\/?#]+)/);
     if (m) return 'https://docs.google.com/presentation/d/' + m[1] + '/embed';
     return u;
   }
+  function openUrl(u){ return u.replace('/pubembed', '/pub').replace(/\/preview$/, '/view').replace(/\/embed$/, '/present'); }
   document.querySelectorAll('.slides').forEach(function(box){
-    var src = (box.getAttribute('data-src') || '').trim();
+    var fr = box.querySelector('iframe'), src = ((fr && fr.getAttribute('src')) || box.getAttribute('data-src') || '').trim();
     if (!src) return;
-    box.innerHTML = '<h4>Презентація</h4><div class="slides-frame"><iframe src="' + embedUrl(src) +
+    var e = embedUrl(src);
+    box.innerHTML = '<h4>Презентація</h4><div class="slides-frame"><iframe src="' + e +
       '" allowfullscreen loading="lazy" title="Презентація до теми"></iframe></div>' +
-      '<a class="slides-open" href="' + src + '" target="_blank" rel="noopener">відкрити окремо ↗</a>';
+      '<a class="slides-open" href="' + openUrl(e) + '" target="_blank" rel="noopener">відкрити на весь екран ↗</a>';
     box.classList.add('has-slides');
   });
   function setAll(open){ document.querySelectorAll('details.topic').forEach(function(d){ d.open = open; }); }
