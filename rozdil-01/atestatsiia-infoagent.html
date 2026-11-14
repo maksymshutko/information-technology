@@ -122,7 +122,7 @@
     </div>
     <div class="links">
       <a href="../index.html">Головна</a>
-      <a href="index.html" class="active">10 клас</a>
+      <a href="../index.html#rozdily" class="active">Розділи</a>
       <a href="../pidruchnyk.html">Підручник</a>
       <a href="../submit.html">Здати роботу</a>
     </div>
@@ -140,7 +140,7 @@
 <div class="wrap">
 
   <div class="hero">
-    <div class="eyebrow">Тематичне оцінювання · Тема 1</div>
+    <div class="eyebrow">Тематичне оцінювання · Розділ 1</div>
     <h1>Операція «Інфоагент»</h1>
     <p>Штаб доручив тобі 4 досьє — кожне перевіряє свою частину теми «Інформаційні технології в суспільстві». Операцію можна пройти лише один раз: правильні й неправильні відповіді підсвітяться тільки після кнопки «Завершити операцію», і тоді ж рапорт автоматично піде керівнику (вчителю).</p>
     <div class="stage-pips">
@@ -169,8 +169,8 @@
       <input type="text" id="studentFirstname" style="flex:1 1 220px; padding:8px 10px; border-radius:10px; border:2px solid var(--line); font-size:13.5px;" placeholder="Тарас">
     </div>
     <div class="fill-row" style="display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
-      <label style="flex:0 0 110px; font-size:13.8px;">Клас</label>
-      <input type="text" id="studentKlass" style="flex:1 1 220px; padding:8px 10px; border-radius:10px; border:2px solid var(--line); font-size:13.5px;" placeholder="10-А">
+      <label style="flex:0 0 110px; font-size:13.8px;">Група</label>
+      <select id="studentKlass" style="flex:1 1 220px; padding:8px 10px; border-radius:10px; border:2px solid var(--line); font-size:13.5px;"><option value="" disabled selected>Обери групу</option><option>102</option><option>105</option><option>109</option><option>110</option><option>201</option><option>202</option><option>205</option><option>209</option><option>210</option><option>301</option><option>310</option></select>
     </div>
     <p class="intro-error" id="introError">Заповни, будь ласка, всі три поля.</p>
     <button class="finish-btn" onclick="startMission()" style="margin-top:10px;">Розпочати операцію</button>
@@ -390,7 +390,7 @@
   </div>
 
   <footer>
-    Руденко В.Д. «Інформатика. 10 (11) клас» (рівень стандарту) · Тема 1. Інформаційні технології в суспільстві · Тематичне оцінювання
+    Інформатика · Розділ 1. Інформаційні технології в суспільстві · Тематичне оцінювання
   </footer>
 </div>
 
@@ -660,7 +660,7 @@
       lastname: studentInfo.lastname,
       firstname: studentInfo.firstname,
       klass: studentInfo.klass,
-      lesson: "Урок 9 — Тематичне оцінювання (Операція «Інфоагент»)",
+      lesson: "Розділ 1 — Тематичне оцінювання (Операція «Інфоагент»)",
       worktype: "Тематичне оцінювання (авто)",
       link: '',
       answer: fmt(result.total) + '/' + TOTAL_POINTS + ' балів — ' + rank +

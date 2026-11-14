@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Урок 3 · Розпізнай загрозу</title>
-<link rel="stylesheet" href="../../assets/style.css">
-<script src="../../assets/config.js"></script>
+<title>Розділ 1 · Розпізнай загрозу</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/config.js"></script>
 <style>
   .case-card{ background: var(--panel); border: 2px solid var(--border); border-radius: 18px; padding: 18px 20px; margin-bottom: 14px; }
   .case-msg{
@@ -73,11 +73,10 @@
       Інформатика
     </div>
     <div class="links">
-      <a href="../../index.html">Головна</a>
-      <a href="../../10-klas/index.html">10 клас</a>
-      <a href="../index.html" class="active">11 клас</a>
-      <a href="../../pidruchnyk.html">Підручник</a>
-      <a href="../../submit.html">Здати роботу</a>
+      <a href="../index.html">Головна</a>
+      <a href="../index.html#rozdily" class="active">Розділи</a>
+      <a href="../pidruchnyk.html">Підручник</a>
+      <a href="../submit.html">Здати роботу</a>
     </div>
   </div>
 </nav>
@@ -92,8 +91,8 @@
 
 <div class="wrap narrow">
 
-  <div class="eyebrow"><span class="green">✦</span> Інформаційна безпека · Урок 3</div>
-  <h1>Урок 3. Розпізнай <span class="green">загрозу</span></h1>
+  <div class="eyebrow"><span class="green">✦</span> Розділ 1 · Загрози при роботі в Інтернеті</div>
+  <h1>Розпізнай <span class="green">загрозу</span></h1>
   <p class="lead">Шкідливе ПЗ, інтернет-шахрайство, спам-розсилки — і випадки, де насправді все гаразд. Для кожної з 15 ситуацій визнач, що це. Вправу можна пройти лише один раз: кожна відповідь одразу підсвічується (зелений/червоний) і після цього її вже не змінити, а фінальний результат автоматично піде вчителю.</p>
 
   <div class="result-panel show" id="alreadyDonePanel" style="display:none;">
@@ -114,8 +113,8 @@
       <input type="text" id="studentFirstname" style="flex:1 1 220px; padding:8px 10px; border-radius:10px; border:2px solid var(--border); font-size:13.5px;" placeholder="Тарас">
     </div>
     <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
-      <label style="flex:0 0 110px; font-size:13.8px;">Клас</label>
-      <input type="text" id="studentKlass" style="flex:1 1 220px; padding:8px 10px; border-radius:10px; border:2px solid var(--border); font-size:13.5px;" placeholder="11-А">
+      <label style="flex:0 0 110px; font-size:13.8px;">Група</label>
+      <select id="studentKlass" style="flex:1 1 220px; padding:8px 10px; border-radius:10px; border:2px solid var(--border); font-size:13.5px;"><option value="" disabled selected>Обери групу</option><option>102</option><option>105</option><option>109</option><option>110</option><option>201</option><option>202</option><option>205</option><option>209</option><option>210</option><option>301</option><option>310</option></select>
     </div>
     <p class="intro-error" id="introError">Заповни, будь ласка, всі три поля.</p>
     <button class="finish-btn" onclick="startExercise()" style="margin-top:10px;">Розпочати вправу</button>
@@ -136,9 +135,9 @@
     </div>
   </div>
 
-  <a class="btn btn-ghost" href="index.html">← до модуля</a>
+  <a class="btn btn-ghost" href="index.html">← до розділу</a>
 
-  <footer>Вибірковий модуль «Інформаційна безпека» · Тема 1, Урок 3</footer>
+  <footer>Інформатика · Розділ 1. Інформаційні технології в суспільстві</footer>
 </div>
 
 <script>
@@ -171,7 +170,7 @@
     {
       msg: "Ти відкрив файл «Прайс_2026.xlsx.exe», надісланий нібито постачальником запчастин. Файл виглядав як таблиця Excel, але після відкриття запустилась чорна консоль і зникла.",
       correct: "malware",
-      explain: "Шкідливе ПЗ: подвійне розширення (.xlsx.exe) — класична маскування виконуваного файлу під документ."
+      explain: "Шкідливе ПЗ: подвійне розширення (.xlsx.exe) — класичне маскування виконуваного файлу під документ."
     },
     {
       msg: "Лист від Нової Пошти на офіційну адресу no-reply@novaposhta.ua з реальним номером ТТН, який справді збігається з номером у твоєму СМС від магазину. Посилання веде на novaposhta.ua.",
@@ -310,7 +309,7 @@
       lastname: studentInfo.lastname,
       firstname: studentInfo.firstname,
       klass: studentInfo.klass,
-      lesson: "Урок 3 — Розпізнай загрозу (Інформаційна безпека)",
+      lesson: "Розділ 1 — Розпізнай загрозу",
       worktype: "Практична вправа (авто)",
       link: '',
       answer: sc + '/' + total + ' — ' + verdict,

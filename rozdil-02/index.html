@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Розділ 2. Моделі та моделювання. Аналіз та візуалізація даних · Інформатика</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="logo">
+      <svg class="mascot-nav" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <defs><linearGradient id="gNavIdx" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs>
+              <line x1="60" y1="6" x2="60" y2="20" stroke="#c084fc" stroke-width="6" stroke-linecap="round"/>
+              <circle cx="60" cy="6" r="7" fill="#f472b6"/>
+              <rect x="14" y="20" width="92" height="82" rx="28" fill="url(#gNavIdx)"/>
+              <circle cx="10" cy="58" r="9" fill="#f472b6"/><circle cx="110" cy="58" r="9" fill="#f472b6"/>
+              <ellipse cx="42" cy="60" rx="13" ry="16" fill="#fff"/><ellipse cx="78" cy="60" rx="13" ry="16" fill="#fff"/>
+              <circle cx="45" cy="64" r="6.5" fill="#362a52"/><circle cx="81" cy="64" r="6.5" fill="#362a52"/>
+              <circle cx="41" cy="58" r="2.4" fill="#fff"/><circle cx="77" cy="58" r="2.4" fill="#fff"/>
+              <circle cx="28" cy="82" r="6" fill="#fbcfe8" opacity=".85"/><circle cx="92" cy="82" r="6" fill="#fbcfe8" opacity=".85"/>
+              <path d="M48 88 Q60 97 72 88" stroke="#362a52" stroke-width="4" fill="none" stroke-linecap="round"/>
+            </svg>
+      Інформатика
+    </div>
+    <div class="links">
+      <a href="../index.html">Головна</a>
+      <a href="../index.html#rozdily" class="active">Розділи</a>
+      <a href="../pidruchnyk.html">Підручник</a>
+      <a href="../submit.html">Здати роботу</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="eyebrow"><span class="green">✦</span> Розділ 2</div>
+  <h1>Моделі та моделювання. Аналіз та візуалізація даних</h1>
+  <p class="lead">Як за допомогою моделей вивчати об’єкти й процеси, рахувати статистичні характеристики та перетворювати таблиці чисел на зрозумілі діаграми й інфографіку.</p>
+  <div class="sec-meta"><span class="tag-pill">5 тем</span><span class="tag-pill">4 з матеріалами</span><span class="sec-actions"><button class="btn btn-ghost btn-sm" onclick="setAll(true)">Розгорнути все</button><button class="btn btn-ghost btn-sm" onclick="setAll(false)">Згорнути все</button></span></div>
+  <section class="topics">
+<details class="topic" id="tema-01">
+  <summary><span class="num">01</span><span class="t-title">Комп’ютерне моделювання об’єктів і процесів</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+  <div class="topic-body">
+    <p class="t-text">Модель — це спрощена копія об’єкта, яка зберігає його важливі для нас властивості. Комп’ютерна модель дозволяє провести експеримент, який у реальному житті дорогий, небезпечний або неможливий: краш-тест авто, рух транспорту на перехресті, розрахунок витрати пального. Етапи моделювання: постановка задачі → побудова моделі → комп’ютерний експеримент → аналіз результатів.</p>
+    <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
+      <div><dt>Модель</dt><dd>спрощене подання об’єкта або процесу</dd></div>
+      <div><dt>Комп’ютерний експеримент</dt><dd>дослідження моделі зміною вхідних параметрів</dd></div>
+      <div><dt>Імітаційне моделювання</dt><dd>відтворення процесу в часі на комп’ютері</dd></div>
+    </dl></div>
+    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
+    <div class="slides" data-src=""></div>
+    <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
+      <li><a class="" href="https://phet.colorado.edu/uk/" target="_blank" rel="noopener">PhET — інтерактивні симуляції</a> — сотні готових моделей з фізики та математики</li>
+      <li><a class="" href="https://www.netlogoweb.org/" target="_blank" rel="noopener">NetLogo Web</a> — моделі трафіку, епідемій, екосистем у браузері</li>
+    </ul></div>
+    <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://sheets.google.com/" target="_blank" rel="noopener">Google Таблиці</a><a class="chip" href="https://www.geogebra.org/" target="_blank" rel="noopener">GeoGebra</a></div></div>
+  </div>
+</details>
+<details class="topic" id="tema-02">
+  <summary><span class="num">02</span><span class="t-title">Основи статистичного аналізу даних. Ряди даних</span><span class="t-badges"><span class="badge badge-done">є матеріали</span></span><span class="chev">▾</span></summary>
+  <div class="topic-body">
+    <p class="t-text">Статистика допомагає робити висновки з великої кількості даних. Ряд даних — це послідовність значень однієї величини: температура за тиждень, оцінки групи, кількість пасажирів за днями. Перш ніж аналізувати, дані треба зібрати, очистити від помилок і впорядкувати.</p>
+    <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
+      <div><dt>Ряд даних</dt><dd>набір значень однієї величини</dd></div>
+      <div><dt>Генеральна сукупність</dt><dd>усі об’єкти, які досліджуються</dd></div>
+      <div><dt>Вибірка</dt><dd>частина сукупності, яку реально вивчаємо</dd></div>
+    </dl></div>
+    <div class="t-block"><h4>Матеріали на сайті</h4><div class="t-mat">
+      <a class="btn btn-ghost" href="statystychnyi-analiz.html">🧩 Інтерактивний урок «Статистичний аналіз»</a>
+    </div></div>
+    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
+    <div class="slides" data-src=""></div>
+    <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
+      <li><a class="" href="https://www.ukrstat.gov.ua/" target="_blank" rel="noopener">Державна служба статистики</a> — офіційні статистичні дані України</li>
+      <li><a class="" href="https://data.gov.ua/" target="_blank" rel="noopener">Портал відкритих даних</a> — державні набори даних для власних досліджень</li>
+    </ul></div>
+    <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://sheets.google.com/" target="_blank" rel="noopener">Google Таблиці</a></div></div>
+  </div>
+</details>
+<details class="topic" id="tema-03">
+  <summary><span class="num">03</span><span class="t-title">Обчислення основних статистичних характеристик вибірки</span><span class="t-badges"><span class="badge badge-done">є матеріали</span></span><span class="chev">▾</span></summary>
+  <div class="topic-body">
+    <p class="t-text">Щоб коротко описати вибірку, рахують кілька характеристик. Середнє показує «типове» значення, медіана — середину впорядкованого ряду, мода — найчастіше значення. Розмах і стандартне відхилення показують, наскільки дані розкидані. У таблицях усе це рахують функції: СРЗНАЧ/AVERAGE, МЕДИАНА/MEDIAN, МОДА/MODE, СТАНДОТКЛОН/STDEV.</p>
+    <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
+      <div><dt>Середнє арифметичне</dt><dd>сума значень ÷ кількість</dd></div>
+      <div><dt>Медіана</dt><dd>значення посередині впорядкованого ряду</dd></div>
+      <div><dt>Мода</dt><dd>значення, що трапляється найчастіше</dd></div>
+      <div><dt>Розмах</dt><dd>різниця між найбільшим і найменшим значенням</dd></div>
+    </dl></div>
+    <div class="t-block"><h4>Матеріали на сайті</h4><div class="t-mat">
+      <a class="btn btn-ghost" href="statystychnyi-analiz.html">🧩 Інтерактивний урок «Статистичний аналіз»</a>
+    </div></div>
+    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
+    <div class="slides" data-src=""></div>
+    <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
+      <li><a class="" href="https://support.google.com/docs/table/25273" target="_blank" rel="noopener">Довідка функцій Google Таблиць</a> — повний перелік функцій із прикладами</li>
+      <li><a class="" href="https://www.calculator.net/standard-deviation-calculator.html" target="_blank" rel="noopener">Калькулятор стандартного відхилення</a> — перевірка обчислень</li>
+    </ul></div>
+    <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://sheets.google.com/" target="_blank" rel="noopener">Google Таблиці</a><a class="chip" href="https://www.office.com/" target="_blank" rel="noopener">Microsoft Excel онлайн</a></div></div>
+  </div>
+</details>
+<details class="topic" id="tema-04">
+  <summary><span class="num">04</span><span class="t-title">Візуалізація рядів і трендів даних. Інфографіка</span><span class="t-badges"><span class="badge badge-done">є матеріали</span></span><span class="chev">▾</span></summary>
+  <div class="topic-body">
+    <p class="t-text">Діаграма робить дані зрозумілими з першого погляду. Тип обирають під задачу: лінійна — зміна в часі, стовпчикова — порівняння, кругова — частки цілого, точкова — зв’язок двох величин. Лінія тренду показує загальний напрямок зміни й допомагає зробити прогноз. Інфографіка поєднує дані, текст і зображення в одну історію.</p>
+    <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
+      <div><dt>Тренд</dt><dd>загальна тенденція зміни даних</dd></div>
+      <div><dt>Лінія тренду</dt><dd>лінія, що наближує дані й дає прогноз</dd></div>
+      <div><dt>Інфографіка</dt><dd>візуальне подання інформації: дані + графіка + короткий текст</dd></div>
+    </dl></div>
+    <div class="t-block"><h4>Матеріали на сайті</h4><div class="t-mat">
+      <a class="btn btn-ghost" href="vizualizatsiia-danykh.html">🧩 Інтерактивний урок «Візуалізація даних»</a>
+    </div></div>
+    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
+    <div class="slides" data-src=""></div>
+    <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
+      <li><a class="" href="https://www.gapminder.org/tools/" target="_blank" rel="noopener">Gapminder Tools</a> — анімовані діаграми світових даних</li>
+      <li><a class="" href="https://ourworldindata.org/" target="_blank" rel="noopener">Our World in Data</a> — тисячі готових графіків із поясненнями</li>
+      <li><a class="" href="https://www.informationisbeautiful.net/" target="_blank" rel="noopener">Information is Beautiful</a> — приклади майстерної візуалізації</li>
+    </ul></div>
+    <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.datawrapper.de/" target="_blank" rel="noopener">Datawrapper</a><a class="chip" href="https://flourish.studio/" target="_blank" rel="noopener">Flourish</a><a class="chip" href="https://www.canva.com/" target="_blank" rel="noopener">Canva</a></div></div>
+  </div>
+</details>
+<details class="topic" id="tema-05">
+  <summary><span class="num">05</span><span class="t-title">Тематичне оцінювання</span><span class="t-badges"><span class="badge badge-warn">атестація</span><span class="badge badge-done">є матеріали</span></span><span class="chev">▾</span></summary>
+  <div class="topic-body">
+    <p class="t-text">Повтори: поняття моделі й етапи моделювання, ряди даних, середнє/медіану/моду, вибір типу діаграми, тренди та інфографіку.</p>
+    <div class="t-block"><h4>Матеріали на сайті</h4><div class="t-mat">
+      <a class="btn btn-ghost" href="misiia-analityka.html">📝 Тематичне оцінювання «Місія аналітика даних»</a>
+    </div></div>
+    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
+    <div class="slides" data-src=""></div>
+  </div>
+</details>
+  </section>
+  <div class="sec-nav"><a class="btn btn-ghost" href="../index.html#rozdily">← усі розділи</a><a class="btn btn-ghost" href="../rozdil-01/index.html">‹ Розділ 1</a><a class="btn btn-ghost" href="../rozdil-03/index.html">Розділ 3 ›</a></div>
+  <footer>Інформатика · Київський професійний ліцей транспорту · Розділ 2</footer>
+</div>
+
+<script>
+  // Вбудовування презентацій: data-src="посилання з Google Диска / Google Slides"
+  function embedUrl(u){
+    var m = u.match(/drive\.google\.com\/file\/d\/([^\/?#]+)/);
+    if (m) return 'https://drive.google.com/file/d/' + m[1] + '/preview';
+    m = u.match(/docs\.google\.com\/presentation\/d\/([^\/?#]+)/);
+    if (m) return 'https://docs.google.com/presentation/d/' + m[1] + '/embed';
+    return u;
+  }
+  document.querySelectorAll('.slides').forEach(function(box){
+    var src = (box.getAttribute('data-src') || '').trim();
+    if (!src) return;
+    box.innerHTML = '<h4>Презентація</h4><div class="slides-frame"><iframe src="' + embedUrl(src) +
+      '" allowfullscreen loading="lazy" title="Презентація до теми"></iframe></div>' +
+      '<a class="slides-open" href="' + src + '" target="_blank" rel="noopener">відкрити окремо ↗</a>';
+    box.classList.add('has-slides');
+  });
+  function setAll(open){ document.querySelectorAll('details.topic').forEach(function(d){ d.open = open; }); }
+  if (location.hash){ var d = document.querySelector(location.hash); if (d && d.tagName === 'DETAILS') d.open = true; }
+</script>
+
+</body>
+</html>

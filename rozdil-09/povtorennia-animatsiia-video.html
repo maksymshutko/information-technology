@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Повторення: Основи анімації та відео</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1b1340; --bg:#fff7e8; --muted:#6b6590; --white:#fff;
+  --ok:#17b26a; --bad:#f04438;
+  --font:"Rubik","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:92px}
+body{margin:0;font-family:var(--font);font-size:19px;line-height:1.5;color:var(--ink);background:var(--bg);
+  background-image:radial-gradient(circle at 12% 8%,#ffd9e4 0,transparent 26%),radial-gradient(circle at 92% 18%,#d6f0ff 0,transparent 24%),radial-gradient(circle at 80% 70%,#e5ffd9 0,transparent 22%);
+  background-attachment:fixed}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+
+/* --- шапка --- */
+.hero{padding:34px 0 22px}
+.hero-card{background:var(--ink);color:#fff;border-radius:32px;padding:38px 40px;position:relative;overflow:hidden;box-shadow:8px 8px 0 #ff3e6c}
+.hero-card:before,.hero-card:after{content:"";position:absolute;border-radius:50%;opacity:.9}
+.hero-card:before{width:260px;height:260px;right:-60px;top:-80px;background:#6c4ce0}
+.hero-card:after{width:150px;height:150px;right:230px;bottom:-80px;background:#ffc94a}
+.hero .tag{display:inline-block;background:#ffc94a;color:var(--ink);font-weight:800;border-radius:99px;padding:6px 16px;font-size:15px;letter-spacing:.04em;text-transform:uppercase}
+.hero h1{font-size:clamp(32px,5vw,54px);line-height:1.1;margin:16px 0 10px;font-weight:800;position:relative}
+.hero p{font-size:21px;max-width:640px;margin:0;color:#e3dcff;position:relative}
+.hero-art{position:absolute;right:46px;bottom:26px;width:190px;z-index:2}
+.clap{transform-origin:12px 44px;animation:clap 2.6s ease-in-out infinite}
+@keyframes clap{0%,55%,100%{transform:rotate(-24deg)}68%{transform:rotate(0deg)}80%{transform:rotate(-24deg)}}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+.step{background:#fff;border:3px solid var(--ink);border-radius:20px;padding:14px 18px;box-shadow:4px 4px 0 var(--ink);display:flex;gap:12px;align-items:center;font-weight:600}
+.step b{display:grid;place-items:center;flex:none;width:42px;height:42px;border-radius:50%;background:#00b8a9;color:#fff;font-size:20px}
+.step:nth-child(2) b{background:#ff3e6c}.step:nth-child(3) b{background:#6c4ce0}
+
+/* --- навігація --- */
+.bar{position:sticky;top:0;z-index:20;background:rgba(255,247,232,.94);backdrop-filter:blur(8px);border-bottom:3px solid var(--ink)}
+.bar-in{display:flex;gap:14px;align-items:center;padding:10px 20px;max-width:1120px;margin:0 auto}
+.score{flex:none;background:var(--ink);color:#ffc94a;border-radius:16px;padding:6px 16px;font-weight:800;font-size:20px;white-space:nowrap}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 2px;scrollbar-width:thin;flex:1}
+.chip{flex:none;display:grid;place-items:center;width:46px;height:46px;border-radius:50%;border:3px solid var(--ink);background:#fff;font-size:22px;text-decoration:none;position:relative;transition:transform .15s}
+.chip:hover{transform:translateY(-3px) rotate(-6deg)}
+.chip.on{background:var(--c);box-shadow:3px 3px 0 var(--ink)}
+.chip.done:after{content:"✓";position:absolute;right:-6px;top:-8px;width:22px;height:22px;border-radius:50%;background:var(--ok);color:#fff;font-size:13px;font-weight:800;display:grid;place-items:center;border:2px solid var(--ink)}
+.prog{height:8px;background:#eadfc9}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff3e6c,#ffc94a,#00b8a9);transition:width .4s}
+
+/* --- словничок --- */
+.gloss{margin:26px 0 6px}
+.gloss h2{font-size:clamp(26px,3.4vw,36px);margin:0 0 4px;font-weight:800}
+.gloss>p{margin:0;color:var(--muted);font-size:18px}
+.gl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:18px;margin-top:16px}
+.gl{background:#fff;border:3px solid var(--ink);border-radius:22px;padding:10px 12px 14px;box-shadow:5px 5px 0 var(--g);display:flex;flex-direction:column;text-decoration:none;color:inherit;transition:transform .15s}
+.gl:hover{transform:translateY(-4px) rotate(-.6deg)}
+.gl svg{display:block;width:100%;height:auto;background:color-mix(in srgb,var(--g) 12%,#fff);border-radius:14px}
+.gl b{font-size:18px;margin:10px 0 2px;line-height:1.2}
+.gl span{font-size:15px;color:#4a4470;line-height:1.35}
+
+/* --- розділи-теми --- */
+.topic{margin:34px 0;background:#fff;border:4px solid var(--ink);border-radius:32px;box-shadow:10px 10px 0 var(--c);overflow:hidden}
+.t-head{background:var(--c);color:#fff;padding:22px 30px;display:flex;align-items:center;gap:18px;border-bottom:4px solid var(--ink)}
+.t-emoji{flex:none;width:76px;height:76px;border-radius:24px;background:#fff;border:4px solid var(--ink);display:grid;place-items:center;font-size:42px;transform:rotate(-5deg)}
+.t-num{font-weight:800;font-size:15px;letter-spacing:.08em;text-transform:uppercase;opacity:.95}
+.t-head h2{margin:0;font-size:clamp(24px,3.2vw,34px);line-height:1.15;font-weight:800;text-shadow:2px 2px 0 rgba(27,19,64,.35)}
+.t-score{margin-left:auto;flex:none;background:#fff;color:var(--ink);border:3px solid var(--ink);border-radius:16px;padding:6px 14px;font-weight:800;font-size:18px;white-space:nowrap}
+.t-body{padding:26px 30px 32px}
+.recap{background:color-mix(in srgb,var(--c) 12%,#fff);border:3px dashed var(--c);border-radius:22px;padding:18px 24px 14px;margin-bottom:26px}
+.recap h3{margin:0 0 8px;font-size:21px}
+.recap ul{margin:0;padding-left:0;list-style:none}
+.recap li{position:relative;padding:5px 0 5px 32px}
+.recap li:before{content:"★";position:absolute;left:4px;top:5px;color:var(--c);font-size:20px}
+
+/* --- ілюстрації --- */
+.viz{border:3px solid var(--ink);border-radius:24px;background:#fff;padding:16px 18px 18px;margin:0 0 22px;box-shadow:5px 5px 0 var(--c)}
+.viz h4{margin:0 0 10px;font-size:20px;line-height:1.25}
+.viz svg{display:block;width:100%;height:auto}
+.viz .cap{font-size:16.5px;color:#4a4470;margin:10px 0 0;min-height:1.5em}
+.ctl{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin-top:12px;font-weight:600;font-size:17px}
+.pill{border:3px solid var(--ink);border-radius:99px;background:#fff;padding:4px 16px;font-weight:700;font-size:16px;transition:transform .12s}
+.pill:hover{transform:translateY(-2px);background:color-mix(in srgb,var(--c) 14%,#fff)}
+.pill.on{background:var(--c);color:#fff}
+input[type=range]{accent-color:var(--c);width:min(240px,100%);height:28px}
+.ctl label{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.types{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.ty{border:3px solid var(--ink);border-radius:18px;padding:8px 10px 12px;background:color-mix(in srgb,var(--c) 7%,#fff)}
+.ty svg{background:#fff;border-radius:12px}
+.ty b{display:block;margin-top:8px;font-size:17px;line-height:1.2}
+.ty span{font-size:15px;color:#4a4470;line-height:1.35;display:block;margin-top:2px}
+.rvgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.rvcol{text-align:center}
+.rvbox{aspect-ratio:1;overflow:hidden;border:3px solid var(--ink);border-radius:16px;background:#fff}
+.rvbox>*{width:100%;height:100%;display:block;transform-origin:27% 44%;transition:transform .12s}
+.rvbox canvas{image-rendering:pixelated}
+.rvcol b{display:block;margin-top:8px}
+.rvcol small{color:var(--muted);font-size:15px}
+.pipe{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;counter-reset:p}
+.pp{position:relative;border:3px solid var(--ink);border-radius:18px;padding:8px 8px 10px;text-align:center;background:color-mix(in srgb,var(--c) 8%,#fff);font-weight:600;font-size:15px;line-height:1.2}
+.pp svg{width:64px;height:64px;margin:0 auto 4px}
+.pp:before{counter-increment:p;content:counter(p);position:absolute;left:-8px;top:-10px;width:28px;height:28px;border-radius:50%;background:var(--c);color:#fff;border:3px solid var(--ink);display:grid;place-items:center;font-size:14px;font-weight:800}
+.pp i{display:block;font-style:normal;font-weight:400;font-size:13px;color:#4a4470;margin-top:3px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;align-items:center}
+.rt{display:grid;grid-template-columns:minmax(220px,300px) 1fr;gap:20px;align-items:center}
+.rt-use{font-size:17px;margin-top:10px;background:color-mix(in srgb,var(--c) 10%,#fff);border:3px dashed var(--c);border-radius:16px;padding:10px 14px;min-height:3.2em}
+.chiprow{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.fp{border:3px solid var(--ink);border-radius:14px;padding:4px 12px;font-size:15.5px;background:#fff}
+.fp b{color:var(--c);font-size:18px}
+.pack{margin-top:16px;border:4px solid var(--ink);border-radius:18px;padding:12px 14px 14px;background:#f3efff;position:relative}
+.pack>em{position:absolute;top:-16px;left:14px;background:var(--ink);color:#ffc94a;font-style:normal;font-weight:800;border-radius:10px;padding:2px 12px;font-size:16px}
+.pk{border:3px solid var(--ink);border-radius:12px;padding:8px 12px;margin-top:10px;font-weight:600;font-size:16px;display:flex;gap:10px;align-items:center}
+.pk small{font-weight:400;color:#2f2a55;font-size:14.5px;display:block}
+.pk:nth-of-type(1){background:#d9ecff}.pk:nth-of-type(2){background:#ffe3d6}.pk:nth-of-type(3){background:#e5ffd9}
+.phrow{display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:center}
+.cmp{display:grid;gap:10px}
+.cm{border:3px solid var(--ink);border-radius:16px;padding:8px 14px;background:color-mix(in srgb,var(--cc) 12%,#fff)}
+.cm b{font-size:17px}
+.cm div{font-size:15.5px;line-height:1.4;margin-top:2px}
+#hand{cursor:grab;touch-action:none}
+#hand:active{cursor:grabbing}
+.pulse{animation:pulse 1.6s ease-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes pulse{0%{transform:scale(.8);opacity:.9}100%{transform:scale(1.7);opacity:0}}
+.v-bones .skin{opacity:.1}
+.v-skin .bones{opacity:0}
+
+/* --- завдання --- */
+.task{border:3px solid var(--ink);border-radius:24px;padding:20px 24px 22px;margin-top:20px;background:#fff;box-shadow:5px 5px 0 var(--ink)}
+.task-h{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-weight:800;font-size:20px}
+.task-h .badge{background:var(--c);color:#fff;border:3px solid var(--ink);border-radius:12px;padding:2px 12px;font-size:15px;text-transform:uppercase;letter-spacing:.04em}
+.q{font-size:21px;font-weight:600;margin:0 0 14px}
+.opts{display:grid;gap:12px}
+button{font:inherit;color:inherit;cursor:pointer}
+.opt{text-align:left;background:#fff;border:3px solid var(--ink);border-radius:18px;padding:12px 18px;font-weight:500;transition:transform .12s,background .12s;display:flex;gap:12px;align-items:center}
+.opt:hover:not(:disabled){transform:translateX(5px);background:color-mix(in srgb,var(--c) 14%,#fff)}
+.opt .l{flex:none;width:34px;height:34px;border-radius:50%;background:var(--c);color:#fff;font-weight:800;display:grid;place-items:center;border:2px solid var(--ink)}
+.opt.good{background:#d6f7e5;border-color:var(--ok)}
+.opt.good .l{background:var(--ok)}
+.opt.wrong{background:#ffe0dd;border-color:var(--bad);animation:shake .4s}
+.opt.wrong .l{background:var(--bad)}
+.opt:disabled{cursor:default}
+.fb{margin-top:12px;border-radius:16px;padding:10px 16px;font-weight:500;display:none}
+.fb.show{display:block}
+.fb.ok{background:#d6f7e5;border:2px solid var(--ok)}
+.fb.no{background:#fff0d6;border:2px solid #f79009}
+.row{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;border:3px solid var(--ink);border-radius:18px;padding:12px 16px;margin-bottom:12px;background:#fff}
+.row.good{background:#d6f7e5;border-color:var(--ok)}
+.row.shake{animation:shake .4s}
+.row .txt{font-weight:500}
+.row .ex{grid-column:1/-1;font-size:17px;color:#14633c;display:none}
+.row.good .ex{display:block}
+.btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.btns button{border:3px solid var(--ink);border-radius:14px;background:#fff;padding:6px 16px;font-weight:700;transition:transform .12s}
+.btns button:hover:not(:disabled){transform:translateY(-3px);background:color-mix(in srgb,var(--c) 18%,#fff)}
+.btns button.pick{background:var(--ok);color:#fff}
+.btns button.miss{background:var(--bad);color:#fff;animation:shake .4s}
+.btns button:disabled{cursor:default;opacity:.55}
+.btns button.pick:disabled{opacity:1}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:12px 38px}
+.m{border:3px solid var(--ink);border-radius:16px;padding:10px 14px;background:#fff;text-align:left;font-weight:500;transition:transform .12s}
+.m:hover:not(:disabled){transform:scale(1.02)}
+.m.sel{background:#ffc94a;transform:scale(1.03)}
+.m.bad{background:#ffe0dd;animation:shake .4s}
+.m.ok{color:#fff;border-color:var(--ink);background:var(--mc)}
+.m:disabled{cursor:default}
+.hint{font-size:16px;color:var(--muted);margin:0 0 12px}
+.gapline{padding:12px 4px;font-size:21px;font-weight:500}
+.slot{display:inline-block;min-width:130px;border-bottom:4px dashed var(--c);text-align:center;font-weight:800;padding:0 8px;cursor:pointer;color:var(--c)}
+.slot.act{background:#fff2c2;border-radius:8px}
+.slot.done{border-bottom-style:solid;color:var(--ok);cursor:default;background:none}
+.bank{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.word{border:3px solid var(--ink);background:#fff;border-radius:99px;padding:6px 18px;font-weight:700}
+.word:hover:not(:disabled){background:#ffc94a}
+.word.used{opacity:.3}
+.word.shake{animation:shake .4s;background:#ffe0dd}
+.ord{display:grid;gap:10px}
+.o{display:flex;gap:12px;align-items:center;border:3px solid var(--ink);border-radius:16px;padding:10px 14px;background:#fff;text-align:left;font-weight:500}
+.o:hover:not(:disabled){background:color-mix(in srgb,var(--c) 14%,#fff)}
+.o .n{flex:none;min-width:36px;height:36px;border-radius:50%;border:3px dashed var(--muted);display:grid;place-items:center;font-weight:800;color:var(--muted)}
+.o.set{background:#d6f7e5;border-color:var(--ok)}
+.o.set .n{border:3px solid var(--ok);background:var(--ok);color:#fff}
+.o.bad{background:#ffe0dd;animation:shake .4s}
+.o:disabled{cursor:default}
+textarea{width:100%;min-height:96px;border:3px solid var(--ink);border-radius:18px;padding:12px 16px;font:inherit;resize:vertical;background:#fffdf6}
+.reveal{margin-top:10px;border:3px solid var(--ink);background:var(--c);color:#fff;border-radius:14px;padding:8px 18px;font-weight:700}
+.sample{display:none;margin-top:12px;background:#f0ecff;border:3px dashed #6c4ce0;border-radius:18px;padding:12px 18px}
+.sample.show{display:block}
+.ribbon{display:none;margin-top:22px;background:#17b26a;color:#fff;border:3px solid var(--ink);border-radius:18px;padding:12px 20px;font-weight:800;font-size:21px;text-align:center;box-shadow:4px 4px 0 var(--ink)}
+.ribbon.show{display:block;animation:pop .5s}
+
+/* --- фінал --- */
+.final{margin:40px 0 70px;background:var(--ink);color:#fff;border-radius:32px;padding:40px;text-align:center;box-shadow:10px 10px 0 #00b8a9}
+.final h2{font-size:clamp(28px,4vw,42px);margin:0 0 6px}
+.big{font-size:84px;font-weight:800;color:#ffc94a;line-height:1.1}
+.final p{font-size:22px;margin:8px auto;max-width:700px;color:#e3dcff}
+.again{margin-top:18px;border:3px solid #fff;background:#ff3e6c;color:#fff;border-radius:18px;padding:12px 30px;font-weight:800;font-size:20px}
+.again:hover{background:#ff5d85}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+@keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.06)}100%{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){.clap,.pulse{animation:none}}
+@media (max-width:900px){.hero-art{display:none}}
+@media (max-width:760px){
+  body{font-size:17px}
+  .steps{grid-template-columns:1fr}
+  .hero-card{padding:26px 22px}
+  .hero-card:after{display:none}
+  .t-head{padding:16px 18px;flex-wrap:wrap}
+  .t-emoji{width:58px;height:58px;font-size:32px}
+  .t-body{padding:18px 16px 24px}
+  .match{grid-template-columns:1fr}
+  .row{grid-template-columns:1fr}
+  .btns{justify-content:flex-start}
+  .score{font-size:16px;padding:4px 10px}
+  .rt,.phrow{grid-template-columns:1fr}
+  .pipe{grid-template-columns:repeat(2,1fr)}
+  .phrow svg{max-width:200px;margin:0 auto}
+  .viz{padding:12px 12px 14px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero"><div class="wrap">
+  <div class="hero-card">
+    <span class="tag">Розділ 9 · Повторення</span>
+    <h1>Основи анімації та відео</h1>
+    <p>Словничок у малюнках, 7 тем, інтерактивні ілюстрації та міні-завдання. Покрути, потягни, порівняй і назбирай якомога більше зірок!</p>
+    <svg class="hero-art" viewBox="0 -34 150 154" aria-hidden="true">
+      <rect x="12" y="50" width="126" height="64" rx="8" fill="#fff" stroke="#fff" stroke-width="3"/>
+      <rect x="12" y="50" width="126" height="64" rx="8" fill="#fff" stroke="#1b1340" stroke-width="4"/>
+      <circle cx="75" cy="86" r="17" fill="#ff3e6c" stroke="#1b1340" stroke-width="4"/>
+      <polygon points="69,77 69,95 85,86" fill="#fff"/>
+      <g class="clap">
+        <rect x="12" y="24" width="126" height="22" rx="6" fill="#1b1340"/>
+        <polygon points="30,24 46,24 38,46 22,46" fill="#ffc94a"/><polygon points="62,24 78,24 70,46 54,46" fill="#ffc94a"/>
+        <polygon points="94,24 110,24 102,46 86,46" fill="#ffc94a"/><polygon points="126,24 138,24 134,46 118,46" fill="#ffc94a"/>
+      </g>
+    </svg>
+  </div>
+  <div class="steps">
+    <div class="step"><b>1</b>Перегляньте словничок і «Пригадаймо»</div>
+    <div class="step"><b>2</b>Поекспериментуй з ілюстраціями: крути й тягни</div>
+    <div class="step"><b>3</b>Виконай міні-завдання: відповідь з першої спроби дає ⭐</div>
+  </div>
+</div></header>
+
+<nav class="bar" aria-label="Теми">
+  <div class="bar-in">
+    <div class="score">⭐ <span id="sc">0</span> / <span id="tot">0</span></div>
+    <div class="chips" id="chips"></div>
+  </div>
+  <div class="prog"><i id="pg"></i></div>
+</nav>
+
+<main class="wrap" id="app">
+  <section class="gloss" id="gloss">
+    <h2>📖 Словничок у малюнках</h2>
+    <p>Головні поняття розділу. Натисни картку, щоб перейти до теми.</p>
+    <div class="gl-grid" id="glgrid"></div>
+  </section>
+</main>
+
+<script>
+/* ============ ДОПОМІЖНЕ ============ */
+const INK="#1b1340",PINK="#ff3e6c",VIO="#6c4ce0",TEAL="#00b8a9",YEL="#ffc94a",ORG="#ff8a00",BLUE="#1e8fff",GRN="#2bb673",SKIN="#ffc9a3";
+const REDUCE=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+const lerp=(a,b,t)=>a+(b-a)*t;
+const f1=n=>Math.round(n*10)/10;
+const hex2=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+const mix=(a,b,t)=>{const A=hex2(a),B=hex2(b);return "#"+A.map((v,i)=>Math.round(lerp(v,B[i],t)).toString(16).padStart(2,"0")).join("")};
+const SVG=(vb,inner,extra="")=>'<svg viewBox="'+vb+'" xmlns="http://www.w3.org/2000/svg" '+extra+'>'+inner+'</svg>';
+const ST='stroke="'+INK+'" stroke-width="2.5" stroke-linejoin="round"';
+
+/* ізометричний куб: wire / shaded / tex */
+function cube(cx,cy,s,mode){
+  const k=.866*s,P=(x,y)=>f1(cx+x)+","+f1(cy+y);
+  const top=[P(0,-s),P(k,-s/2),P(0,0),P(-k,-s/2)].join(" ");
+  const left=[P(-k,-s/2),P(0,0),P(0,s),P(-k,s/2)].join(" ");
+  const right=[P(0,0),P(k,-s/2),P(k,s/2),P(0,s)].join(" ");
+  const C=mode==="wire"?["none","none","none"]:mode==="tex"?["#7be0d6",TEAL,"#008f83"]:["#ffc27a",ORG,"#c96500"];
+  let o='<polygon points="'+top+'" fill="'+C[0]+'" '+ST+'/><polygon points="'+left+'" fill="'+C[1]+'" '+ST+'/><polygon points="'+right+'" fill="'+C[2]+'" '+ST+'/>';
+  if(mode==="tex"){
+    for(const [x,y] of [[-.35,.35],[-.35,.75],[.35,.35],[.35,.75],[.05,-.55]])
+      o+='<circle cx="'+f1(cx+x*s)+'" cy="'+f1(cy+y*s-(y<0?0:0))+'" r="'+f1(s*.07)+'" fill="#fff" opacity=".8"/>';
+  }
+  return o;
+}
+/* кістки: ланцюжок точок із «шкірою» */
+function bones(pts,skinW,r){
+  const d="M"+pts.map(p=>p.join(" ")).join(" L");
+  return '<path d="'+d+'" fill="none" stroke="'+SKIN+'" stroke-width="'+skinW+'" stroke-linecap="round" stroke-linejoin="round"/>'
+   +'<path d="'+d+'" fill="none" stroke="'+INK+'" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>'
+   +pts.map(p=>'<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+r+'" fill="'+YEL+'" stroke="'+INK+'" stroke-width="2.5"/>').join("");
+}
+function txt(x,y,s,sz,extra){return '<text x="'+x+'" y="'+y+'" font-size="'+(sz||11)+'" font-weight="700" fill="'+INK+'" text-anchor="middle" '+(extra||"")+'>'+s+'</text>'}
+
+/* ============ ІКОНКИ СЛОВНИЧКА (160×100) ============ */
+const GL=[
+{t:"Анімація",d:"Ілюзія руху з послідовності нерухомих зображень, що швидко змінюють одне одного.",c:PINK,to:1,
+ svg:()=>SVG("0 0 160 100",'<line x1="10" y1="86" x2="150" y2="86" stroke="'+INK+'" stroke-width="3" stroke-linecap="round"/><path d="M30 70 Q80 -14 130 70" fill="none" stroke="'+INK+'" stroke-width="2" stroke-dasharray="4 5"/>'
+  +[[30,70,.3],[55,34,.5],[80,24,.7],[105,34,.5],[130,70,1]].map(b=>'<circle cx="'+b[0]+'" cy="'+b[1]+'" r="11" fill="'+PINK+'" opacity="'+b[2]+'" stroke="'+INK+'" stroke-width="2.5"/>').join(""))},
+{t:"Кадр і частота кадрів (fps)",d:"Кадр — одне зображення. fps — скільки кадрів змінюється за секунду: 24 у кіно, 60 для плавності.",c:VIO,to:1,
+ svg:()=>SVG("0 0 160 100",'<rect x="10" y="14" width="140" height="60" rx="6" fill="'+INK+'"/>'
+  +[0,1,2,3,4,5,6,7,8].map(i=>'<rect x="'+(16+i*15)+'" y="17" width="8" height="6" rx="1.5" fill="#fff"/><rect x="'+(16+i*15)+'" y="65" width="8" height="6" rx="1.5" fill="#fff"/>').join("")
+  +[0,1,2].map(i=>'<rect x="'+(20+i*44)+'" y="28" width="38" height="32" rx="3" fill="#fff"/><circle cx="'+(31+i*44+i*6)+'" cy="'+[50,40,50][i]+'" r="6" fill="'+VIO+'"/>').join("")
+  +txt(80,94,"24 кадри / секунду",11))},
+{t:"Роздільна здатність",d:"Кількість пікселів кадру: ширина × висота. Наприклад, Full HD — 1920 × 1080.",c:TEAL,to:5,
+ svg:()=>{let g="";const cols=16,rows=9,cs=8;for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){const dx=i+.5-8,dy=j+.5-4.5,on=dx*dx+dy*dy<=15;g+='<rect x="'+(16+i*cs)+'" y="'+(6+j*cs)+'" width="8" height="8" fill="'+(on?TEAL:"#eadfc9")+'" stroke="#fff" stroke-width=".8"/>'}return SVG("0 0 160 100",g+txt(80,94,"1920 × 1080 пікселів",11))}},
+{t:"Співвідношення сторін",d:"Відношення ширини кадру до висоти: 16:9, 9:16, 1:1, 4:3, 21:9.",c:BLUE,to:5,
+ svg:()=>SVG("0 0 160 100",'<rect x="6" y="20" width="70" height="39.4" rx="3" fill="#bfe0ff" '+ST+'/><rect x="86" y="8" width="38" height="67.6" rx="3" fill="#ffd0dc" '+ST+'/><rect x="132" y="30" width="22" height="22" rx="3" fill="#fff1b8" '+ST+'/>'
+  +txt(41,76,"16:9",12)+txt(105,90,"9:16",12)+txt(143,76,"1:1",12))},
+{t:"Ключові кадри та твінінг",d:"Аніматор задає ключові кадри, а комп'ютер сам малює проміжні — це твінінг.",c:VIO,to:2,
+ svg:()=>{let g='<line x1="28" y1="78" x2="132" y2="78" stroke="'+INK+'" stroke-width="2"/>';
+  [0,.25,.5,.75,1].forEach(u=>{const x=lerp(26,134,u),r=lerp(7,20,u),col=mix(PINK,VIO,u),end=u===0||u===1;
+   g+='<circle cx="'+f1(x)+'" cy="'+(46)+'" r="'+f1(r)+'" fill="'+col+'" opacity="'+(end?1:.45)+'" stroke="'+INK+'" stroke-width="'+(end?3:1.5)+'"/>';
+   g+=end?'<polygon points="'+f1(x)+',72 '+f1(x+6)+',78 '+f1(x)+',84 '+f1(x-6)+',78" fill="'+YEL+'" stroke="'+INK+'" stroke-width="2"/>':'<circle cx="'+f1(x)+'" cy="78" r="3" fill="'+INK+'"/>'});
+  return SVG("0 0 160 100",g+txt(80,97,"◆ ключові · ● проміжні",11))}},
+{t:"Растр і вектор",d:"Растр — кадри з пікселів. Вектор — фігури й криві, описані формулами.",c:TEAL,to:3,
+ svg:()=>{let g="";[[10,62],[18,62],[26,54],[34,54],[42,46],[50,38],[58,38],[66,30]].forEach(p=>g+='<rect x="'+p[0]+'" y="'+p[1]+'" width="8" height="8" fill="'+TEAL+'"/>');
+  return SVG("0 0 160 100",g+'<line x1="80" y1="8" x2="80" y2="80" stroke="'+INK+'" stroke-width="2" stroke-dasharray="4 4"/><path d="M92 66 C112 66 114 30 150 28" fill="none" stroke="'+VIO+'" stroke-width="4" stroke-linecap="round"/><rect x="88" y="62" width="8" height="8" fill="#fff" stroke="'+INK+'" stroke-width="2"/><rect x="146" y="24" width="8" height="8" fill="#fff" stroke="'+INK+'" stroke-width="2"/>'+txt(40,94,"растр",12)+txt(120,94,"вектор",12))}},
+{t:"2D і 3D",d:"2D — плоский простір (осі X, Y). 3D — об'ємний (X, Y, Z): є глибина, камера й світло.",c:ORG,to:4,
+ svg:()=>SVG("0 0 160 100",'<rect x="16" y="22" width="44" height="44" fill="'+YEL+'" '+ST+'/><path d="M10 74V14M10 74H70" stroke="'+INK+'" stroke-width="2" fill="none"/>'+txt(66,68,"X",10)+txt(16,16,"Y",10)
+  +cube(116,42,26,"shaded")+txt(38,94,"2D",12)+txt(116,96,"3D",12))},
+{t:"Цифровий скелет (rig)",d:"Кістки й суглоби, прив'язані до 3D-моделі. Рухаєш кістку, а «шкіра» рухається за нею.",c:PINK,to:4,
+ svg:()=>SVG("0 0 160 100",bones([[30,70],[78,34],[128,64]],26,7)+txt(30,94,"плече",10)+txt(80,22,"лікоть",10)+txt(128,92,"кисть",10))},
+{t:"Рендеринг",d:"Обчислення готового зображення чи відео зі сцени або проєкту монтажу.",c:ORG,to:4,
+ svg:()=>SVG("0 0 160 100",cube(40,48,24,"wire")+'<path d="M76 48h30" stroke="'+INK+'" stroke-width="4" stroke-linecap="round"/><polygon points="104,38 120,48 104,58" fill="'+INK+'"/>'+cube(130,48,22,"shaded")+txt(40,94,"сцена",11)+txt(130,94,"кадр",11))},
+{t:"Етапи створення 3D-сцени",d:"Ідея → моделювання → текстури → ригінг → анімація → світло й камера → рендеринг.",c:BLUE,to:4,
+ svg:()=>{let g='<path d="M18 46H142" stroke="'+INK+'" stroke-width="3"/>';
+  ["1","2","3","4","5","6"].forEach((n,i)=>{const x=18+i*24.8;g+='<circle cx="'+f1(x)+'" cy="46" r="11" fill="'+[PINK,ORG,YEL,TEAL,BLUE,VIO][i]+'" stroke="'+INK+'" stroke-width="2.5"/>'+txt(f1(x),50,n,12)});
+  return SVG("0 0 160 100",g+txt(80,80,"ідея → модель → … → рендер",10))}}
+];
+
+/* ============ ІКОНКИ ЕТАПІВ 3D (64×64) ============ */
+const PIPE=[
+{n:"Ідея й скетч",d:"сюжет, персонажі",svg:()=>SVG("0 0 64 64",'<rect x="12" y="8" width="38" height="46" rx="4" fill="#fff" '+ST+'/><path d="M19 20h24M19 29h24M19 38h14" stroke="'+INK+'" stroke-width="3" stroke-linecap="round"/><path d="M42 44l9-9 5 5-9 9-6 1z" fill="'+YEL+'" '+ST+'/>')},
+{n:"Моделювання",d:"форма з вершин, ребер, граней",svg:()=>SVG("0 0 64 64",cube(32,30,20,"wire"))},
+{n:"Текстури й матеріали",d:"колір, фактура",svg:()=>SVG("0 0 64 64",cube(32,30,20,"tex"))},
+{n:"Ригінг",d:"цифровий скелет",svg:()=>SVG("0 0 64 64",bones([[12,50],[28,20],[52,40]],16,5))},
+{n:"Анімація",d:"ключові кадри руху",svg:()=>SVG("0 0 64 64",'<path d="M10 48Q32 -4 54 48" fill="none" stroke="'+INK+'" stroke-width="2" stroke-dasharray="3 4"/>'+[[12,46,.3],[32,16,.6],[52,46,1]].map(b=>'<circle cx="'+b[0]+'" cy="'+b[1]+'" r="8" fill="'+PINK+'" opacity="'+b[2]+'" stroke="'+INK+'" stroke-width="2.5"/>').join(""))},
+{n:"Світло й камера",d:"освітлення, ракурс",svg:()=>SVG("0 0 64 64",'<circle cx="18" cy="18" r="8" fill="'+YEL+'" '+ST+'/>'+[0,45,90,135,180,225,270,315].map(a=>'<line x1="'+f1(18+12*Math.cos(a*Math.PI/180))+'" y1="'+f1(18+12*Math.sin(a*Math.PI/180))+'" x2="'+f1(18+17*Math.cos(a*Math.PI/180))+'" y2="'+f1(18+17*Math.sin(a*Math.PI/180))+'" stroke="'+INK+'" stroke-width="2.5" stroke-linecap="round"/>').join("")
+  +'<rect x="22" y="34" width="30" height="20" rx="4" fill="'+VIO+'" '+ST+'/><circle cx="37" cy="44" r="6" fill="#fff" '+ST+'/><polygon points="52,40 60,35 60,53 52,48" fill="'+VIO+'" '+ST+'/>')},
+{n:"Рендеринг",d:"розрахунок готових кадрів",svg:()=>SVG("0 0 64 64",'<rect x="8" y="12" width="48" height="40" rx="4" fill="#bfe3ff" '+ST+'/><polygon points="8,52 24,28 35,44 43,35 56,52" fill="'+GRN+'" '+ST+'/><circle cx="44" cy="22" r="5" fill="'+YEL+'" stroke="'+INK+'" stroke-width="2"/>')},
+{n:"Постобробка",d:"колір, ефекти, монтаж, звук",svg:()=>SVG("0 0 64 64",'<rect x="6" y="16" width="52" height="32" rx="4" fill="'+INK+'"/>'+[0,1,2,3,4].map(i=>'<rect x="'+(10+i*10)+'" y="19" width="6" height="4" fill="#fff"/><rect x="'+(10+i*10)+'" y="41" width="6" height="4" fill="#fff"/>').join("")+[0,1,2].map(i=>'<rect x="'+(10+i*16)+'" y="26" width="12" height="12" rx="2" fill="'+[PINK,YEL,TEAL][i]+'"/>').join(""))}
+];
+
+/* ============ ІЛЮСТРАЦІЇ ТЕМ ============ */
+function animate(host,step,startOn){
+  const o={run:startOn&&!REDUCE,vis:false,raf:0};
+  const tick=t=>{if(o.vis){if(o.run)step(t);o.raf=requestAnimationFrame(tick)}};
+  new IntersectionObserver(es=>{o.vis=es[0].isIntersecting;cancelAnimationFrame(o.raf);if(o.vis)o.raf=requestAnimationFrame(tick)}).observe(host);
+  return o;
+}
+const $=(s,r=document)=>r.querySelector(s);
+const el=(tag,cls,html)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e};
+
+const VIZ={
+/* --- Т1: кадри на стрічці --- */
+strip(h){
+  let g='<rect x="0" y="6" width="600" height="108" rx="10" fill="'+INK+'"/>';
+  for(let i=0;i<25;i++)g+='<rect x="'+(8+i*24)+'" y="11" width="12" height="8" rx="2" fill="#fff"/><rect x="'+(8+i*24)+'" y="101" width="12" height="8" rx="2" fill="#fff"/>';
+  for(let i=0;i<6;i++){
+    const fx=14+i*97,p=i/5,bx=fx+16+p*58,by=88-14-4*p*(1-p)*44;
+    g+='<rect x="'+fx+'" y="24" width="86" height="72" rx="6" fill="#fff"/><line x1="'+(fx+6)+'" y1="88" x2="'+(fx+80)+'" y2="88" stroke="#cfc8ee" stroke-width="3"/>'
+     +'<circle cx="'+f1(bx)+'" cy="'+f1(by)+'" r="9" fill="'+PINK+'" stroke="'+INK+'" stroke-width="2.5"/>'
+     +'<text x="'+(fx+8)+'" y="40" font-size="13" font-weight="800" fill="'+VIO+'">'+(i+1)+'</text>';
+  }
+  h.innerHTML='<h4>🎞️ Стрічка кадрів: у кожному кадрі м\'яч трохи зміщений</h4>'+SVG("0 0 600 120",g)
+   +'<p class="cap">Кожен кадр нерухомий. Рух з\'являється, коли кадри швидко змінюють один одного.</p>';
+},
+/* --- Т1: демо fps --- */
+fps(h){
+  h.innerHTML='<h4>🎛️ Спробуй сам: частота кадрів (fps)</h4>'
+   +'<svg viewBox="0 0 600 214" role="img" aria-label="М\'яч, що підстрибує"><rect width="600" height="214" rx="16" fill="#f3efff"/>'
+   +'<line x1="20" y1="190" x2="580" y2="190" stroke="'+INK+'" stroke-width="4" stroke-linecap="round"/>'
+   +'<ellipse id="fsh" cx="50" cy="194" rx="22" ry="5" fill="'+INK+'" opacity=".25"/>'
+   +'<circle id="fb" cx="50" cy="164" r="22" fill="'+PINK+'" stroke="'+INK+'" stroke-width="4"/>'
+   +'<text id="ft2" x="20" y="34" font-size="22" font-weight="800" fill="'+INK+'"></text></svg>'
+   +'<div class="ctl"><span>Кадрів за секунду:</span><span id="fbt"></span><button class="pill" id="fpa">⏸ Пауза</button></div>'
+   +'<p class="cap" id="fn"></p>';
+  const NOTE={2:"2 к/с — слайд-шоу: мозок бачить окремі картинки, а не рух.",6:"6 к/с — дуже різкі ривки, рух ледве читається.",12:"12 к/с — так часто малюють ручну 2D-анімацію («на двійках»): рух читається, але видно ривки.",24:"24 к/с — стандарт кіно й мультфільмів: рух виглядає природно.",60:"60 к/с — дуже плавно: ігри, спортивні трансляції, інтерфейси."};
+  let fps=12,last=-1,curT=0;
+  const ball=$("#fb",h),sh=$("#fsh",h),lab=$("#ft2",h);
+  function draw(t){
+    curT=t;const u=(t%3)/3,p=(u*4)%1,x=50+500*(u<.5?2*u:2-2*u),hgt=4*p*(1-p),y=164-130*hgt;
+    ball.setAttribute("cx",f1(x));ball.setAttribute("cy",f1(y));
+    sh.setAttribute("cx",f1(x));sh.setAttribute("rx",f1(24-10*hgt));sh.setAttribute("opacity",f1(.28-.18*hgt));
+    lab.textContent=fps+" к/с";
+  }
+  const o=animate(h,now=>{const fi=Math.floor(now/1000*fps);if(fi!==last){last=fi;draw(fi/fps)}},true);
+  const bx=$("#fbt",h);
+  [2,6,12,24,60].forEach(v=>{
+    const b=el("button","pill"+(v===fps?" on":""),v+" к/с");
+    b.onclick=()=>{fps=v;last=-1;[...bx.children].forEach(c=>c.classList.remove("on"));b.classList.add("on");$("#fn",h).textContent=NOTE[v];if(!o.run)draw(curT)};
+    bx.appendChild(b);
+  });
+  bx.style.display="flex";bx.style.gap="8px";bx.style.flexWrap="wrap";
+  $("#fn",h).textContent=NOTE[fps];
+  const pa=$("#fpa",h);
+  const setPa=()=>{pa.textContent=o.run?"⏸ Пауза":"▶ Грати"};
+  pa.onclick=()=>{o.run=!o.run;setPa()};setPa();draw(0);
+},
+/* --- Т1: види анімації --- */
+types(h){
+  const I=[
+   ["Рисована (традиційна)","Кожен кадр малюють вручну на папері чи плівці.",SVG("0 0 100 70",'<rect x="12" y="22" width="52" height="38" rx="3" fill="#fff" '+ST+'/><rect x="18" y="16" width="52" height="38" rx="3" fill="#fff" '+ST+'/><rect x="24" y="10" width="52" height="38" rx="3" fill="#fff" '+ST+'/><circle cx="50" cy="30" r="10" fill="'+YEL+'" '+ST+'/><circle cx="46" cy="28" r="1.8" fill="'+INK+'"/><circle cx="54" cy="28" r="1.8" fill="'+INK+'"/><path d="M45 34q5 4 10 0" fill="none" stroke="'+INK+'" stroke-width="2" stroke-linecap="round"/><g transform="rotate(35 82 36)"><rect x="76" y="14" width="11" height="34" fill="'+PINK+'" '+ST+'/><polygon points="76,48 87,48 81.5,60" fill="#ffd9b0" '+ST+'/></g>')],
+   ["Лялькова (stop-motion)","Фігурки чи пластилін трохи зсувають і знімають кадр за кадром.",SVG("0 0 100 70",'<ellipse cx="32" cy="48" rx="14" ry="16" fill="'+PINK+'" '+ST+'/><circle cx="32" cy="22" r="11" fill="#ff8fab" '+ST+'/><circle cx="28" cy="20" r="1.8" fill="'+INK+'"/><circle cx="36" cy="20" r="1.8" fill="'+INK+'"/><path d="M28 26q4 3 8 0" fill="none" stroke="'+INK+'" stroke-width="2" stroke-linecap="round"/><rect x="62" y="28" width="28" height="20" rx="4" fill="'+VIO+'" '+ST+'/><circle cx="72" cy="38" r="6" fill="#fff" '+ST+'/><path d="M76 48l-6 18M76 48l6 18M76 48v18" stroke="'+INK+'" stroke-width="2.5" stroke-linecap="round"/>')],
+   ["Комп'ютерна 2D","Плоскі малюнки й об'єкти рухаються в програмі.",SVG("0 0 100 70",'<rect x="10" y="6" width="80" height="50" rx="5" fill="#fff" '+ST+'/><path d="M44 56v8M32 64h24" stroke="'+INK+'" stroke-width="3" stroke-linecap="round"/><path d="M22 44C32 12 66 12 78 44" fill="none" stroke="'+VIO+'" stroke-width="3.5"/><path d="M22 44L30 24M78 44L70 24" stroke="'+INK+'" stroke-width="1.5" stroke-dasharray="3 3"/><rect x="18" y="40" width="8" height="8" fill="#fff" '+ST+'/><rect x="74" y="40" width="8" height="8" fill="#fff" '+ST+'/>')],
+   ["Комп'ютерна 3D","Об'ємні моделі у віртуальній сцені з камерою та світлом.",SVG("0 0 100 70",cube(50,34,24,"shaded")+'<path d="M12 62h18M12 62V44" stroke="'+INK+'" stroke-width="2" stroke-linecap="round"/>')]
+  ];
+  h.innerHTML='<h4>🖼️ Чотири основні види анімації</h4><div class="types">'+I.map(i=>'<div class="ty">'+i[2]+'<b>'+i[0]+'</b><span>'+i[1]+'</span></div>').join("")+'</div>';
+},
+/* --- Т2: твінінг --- */
+tween(h){
+  h.innerHTML='<h4>🧩 Твінінг: задай два ключові кадри, а решту намалює комп\'ютер</h4>'
+   +'<svg viewBox="0 0 600 246" role="img" aria-label="Ключові та проміжні кадри"><rect width="600" height="246" rx="16" fill="#f3efff"/>'
+   +'<g id="tg"></g><g id="tl"></g></svg>'
+   +'<div class="ctl"><label>Проміжних кадрів: <b id="tn">4</b> <input type="range" id="tr" min="0" max="9" value="4" aria-label="Кількість проміжних кадрів"></label></div>'
+   +'<div class="ctl"><button class="pill on" data-e="lin">Рівномірно</button><button class="pill" data-e="ease">Плавний старт і фініш (easing)</button><button class="pill" id="tp">⏸ Пауза</button></div>'
+   +'<p class="cap" id="tc"></p>';
+  let n=4,mode="lin",cur=0;
+  const ease=u=>mode==="ease"?u*u*(3-2*u):u;
+  const shape=(u,op,sw,live)=>{
+    const e=ease(u),s=lerp(34,78,e),x=lerp(70,530,e),rot=lerp(0,90,e),col=mix(PINK,VIO,e);
+    return '<rect x="'+f1(-s/2)+'" y="'+f1(-s/2)+'" width="'+f1(s)+'" height="'+f1(s)+'" rx="'+f1(s*.2)+'" fill="'+col+'" opacity="'+op+'" stroke="'+INK+'" stroke-width="'+sw+'" transform="translate('+f1(x)+' 92) rotate('+f1(rot)+')"'+(live?' stroke-dasharray="6 4"':'')+'/>';
+  };
+  function drawStatic(){
+    let g='<line x1="70" y1="92" x2="530" y2="92" stroke="'+INK+'" stroke-width="1.5" stroke-dasharray="3 6" opacity=".4"/>';
+    for(let i=1;i<=n;i++)g+=shape(i/(n+1),.42,2);
+    g+=shape(0,1,4)+shape(1,1,4);
+    g+=txt(70,168,"Ключовий кадр 1",14)+txt(530,168,"Ключовий кадр 2",14);
+    $("#tg",h).innerHTML=g;
+    let l='<line x1="70" y1="212" x2="530" y2="212" stroke="'+INK+'" stroke-width="3"/>'+txt(70,236,"кадр 1",13)+txt(530,236,"кадр "+(n+2),13);
+    for(let i=1;i<=n;i++){const x=lerp(70,530,i/(n+1));l+='<circle cx="'+f1(x)+'" cy="212" r="5" fill="'+INK+'"/>'}
+    [70,530].forEach(x=>l+='<polygon points="'+x+',198 '+(x+12)+',212 '+x+',226 '+(x-12)+',212" fill="'+YEL+'" stroke="'+INK+'" stroke-width="3"/>');
+    $("#tl",h).innerHTML=l+'<g id="tlive"></g>';
+    $("#tc",h).innerHTML="Ти задав <b>2 ключові кадри</b>, а програма сама створила <b>"+n+"</b> "+(n===1?"проміжний кадр":n>=2&&n<=4?"проміжні кадри":"проміжних кадрів")+" (кружечки на шкалі часу)."+(mode==="ease"?" Зверни увагу: з easing проміжні фігури стоять густіше біля початку й кінця — об'єкт повільно стартує й гальмує.":" Проміжні фігури розташовані на однаковій відстані — рух рівномірний, як у робота.");
+  }
+  function drawLive(t){
+    cur=t;const e=ease(t);
+    $("#tlive",h).innerHTML=shape(t,.95,3,true).replace('translate('+f1(lerp(70,530,e))+' 92)','translate('+f1(lerp(70,530,e))+' 92)')
+      +'<line x1="'+f1(lerp(70,530,t))+'" y1="190" x2="'+f1(lerp(70,530,t))+'" y2="224" stroke="'+PINK+'" stroke-width="3"/>';
+  }
+  const o=animate(h,now=>{const ph=(now/3200)%2;drawLive(ph<1?ph:2-ph)},true);
+  $("#tr",h).oninput=e=>{n=+e.target.value;$("#tn",h).textContent=n;drawStatic();drawLive(cur)};
+  h.querySelectorAll("[data-e]").forEach(b=>b.onclick=()=>{mode=b.dataset.e;h.querySelectorAll("[data-e]").forEach(x=>x.classList.toggle("on",x===b));drawStatic();drawLive(cur)});
+  const tp=$("#tp",h),setTp=()=>{tp.textContent=o.run?"⏸ Пауза":"▶ Грати"};
+  tp.onclick=()=>{o.run=!o.run;setTp()};setTp();
+  drawStatic();drawLive(.5);
+},
+/* --- Т3: растр проти вектора --- */
+rv(h){
+  h.innerHTML='<h4>🔍 Збільш кадр і порівняй растр та вектор</h4><div class="rvgrid">'
+   +'<div class="rvcol"><div class="rvbox"><canvas id="rvc" width="80" height="80"></canvas></div><b>Растровий кадр</b><small>сітка 80 × 80 пікселів</small></div>'
+   +'<div class="rvcol"><div class="rvbox"><svg viewBox="0 0 100 100" id="rvs"><circle cx="50" cy="50" r="40" fill="#ffd84a" stroke="'+INK+'" stroke-width="4"/><circle cx="36" cy="40" r="6" fill="'+INK+'"/><circle cx="64" cy="40" r="6" fill="'+INK+'"/><path d="M30 60Q50 86 70 60" fill="none" stroke="'+INK+'" stroke-width="6" stroke-linecap="round"/></svg></div><b>Векторний кадр</b><small>коло й криві за формулами</small></div></div>'
+   +'<div class="ctl"><label>Збільшення: <b id="rz">1×</b> <input type="range" id="rr" min="1" max="8" step="0.5" value="1" aria-label="Збільшення"></label></div>'
+   +'<p class="cap" id="rc">Потягни повзунок: у растрі з\'являться квадратики-пікселі, а вектор залишиться гладким.</p>';
+  const N=80,cv=$("#rvc",h),ctx=cv.getContext("2d"),img=ctx.createImageData(N,N);
+  for(let j=0;j<N;j++)for(let i=0;i<N;i++){
+    const X=(i+.5)*100/N,Y=(j+.5)*100/N,d=Math.hypot(X-50,Y-50);
+    let c=[255,255,255];
+    if(d<=42)c=d>=38?[27,19,64]:[255,216,74];
+    if(Math.hypot(X-36,Y-40)<6||Math.hypot(X-64,Y-40)<6)c=[27,19,64];
+    if(X>=30&&X<=70){const t=(X-30)/40,y=60+52*t*(1-t);if(Math.abs(Y-y)<3.2)c=[27,19,64]}
+    const k=(j*N+i)*4;img.data[k]=c[0];img.data[k+1]=c[1];img.data[k+2]=c[2];img.data[k+3]=255;
+  }
+  ctx.putImageData(img,0,0);
+  $("#rr",h).oninput=e=>{
+    const z=+e.target.value;$("#rz",h).textContent=z+"×";
+    cv.style.transform=$("#rvs",h).style.transform="scale("+z+")";
+    $("#rc",h).textContent=z<2.5?"У звичайному розмірі різниця майже непомітна, але растр має лише 80 × 80 пікселів.":z<5?"У растрі вже помітні сходинки на краях, а вектор залишається гладким.":"Растр розпався на великі квадрати-пікселі. Вектор перераховує форму й лишається чітким на будь-якому розмірі.";
+  };
+},
+/* --- Т4: 2D і 3D + сітка --- */
+d23(h){
+  const cx=150,cy=100,s=64,k=.866*s;
+  const dot=(x,y,l,dx,dy)=>'<circle cx="'+f1(x)+'" cy="'+f1(y)+'" r="6" fill="'+YEL+'" stroke="'+INK+'" stroke-width="2.5"/>'+(l?'<text x="'+(x+dx)+'" y="'+(y+dy)+'" font-size="14" font-weight="700" fill="'+INK+'">'+l+'</text>':"");
+  const left='<g><rect x="40" y="52" width="110" height="110" fill="'+YEL+'" '+ST+'/><path d="M26 180V30M26 180H176" stroke="'+INK+'" stroke-width="3" fill="none"/><polygon points="26,24 20,38 32,38" fill="'+INK+'"/><polygon points="184,180 170,174 170,186" fill="'+INK+'"/>'+txt(190,198,"X",16)+txt(12,34,"Y",16)+txt(95,210,"2D: ширина й висота",15)+'</g>';
+  const right='<g transform="translate(240 0)">'+cube(cx,cy+8,s,"shaded")
+   +'<path d="M'+(cx-k-34)+' '+(cy+s+30)+'L'+(cx-k-34)+' '+(cy-s)+'" stroke="'+INK+'" stroke-width="0"/>'
+   +dot(cx,cy+8-s,"вершина",12,-4)+dot(cx+k,cy+8-s/2+0,"",0,0)
+   +'<path d="M'+f1(cx)+' '+f1(cy+8+s)+'L'+f1(cx+k)+' '+f1(cy+8+s/2)+'" stroke="'+PINK+'" stroke-width="5" stroke-linecap="round"/>'
+   +txt(cx+k+10,cy+8+s/2+24,"ребро",14,'fill="'+PINK+'" text-anchor="start"')
+   +txt(cx-k*.55,cy+8+s*.15,"грань",14,'fill="#fff"')
+   +txt(cx,210,"3D: ширина, висота й глибина (X, Y, Z)",15)+'</g>';
+  h.innerHTML='<h4>🧱 2D і 3D: з чого складається 3D-модель</h4>'+SVG("0 0 600 220",left+right)
+   +'<p class="cap">3D-модель — це сітка (mesh) з <b>вершин</b> (точок), <b>ребер</b> (ліній між ними) і <b>граней</b> (полігонів).</p>';
+},
+/* --- Т4: етапи 3D-сцени --- */
+pipe(h){
+  h.innerHTML='<h4>🛠️ Етапи створення 3D-сцени</h4><div class="pipe">'+PIPE.map(p=>'<div class="pp">'+p.svg()+p.n+'<i>'+p.d+'</i></div>').join("")+'</div>'
+   +'<p class="cap">У різних студіях порядок трохи відрізняється, але моделювання завжди йде перед текстурами, ригінг — перед анімацією, а рендеринг — наприкінці.</p>';
+},
+/* --- Т4: цифровий скелет --- */
+rig(h){
+  const SX=190,SY=112,L1=120,L2=105;
+  h.innerHTML='<h4>🦴 Цифровий скелет: крути суглоби або тягни кисть</h4>'
+   +'<svg viewBox="0 0 600 290" id="rs" class="v-both" role="img" aria-label="Модель руки зі скелетом"><rect width="600" height="290" rx="16" fill="#f3efff"/>'
+   +'<g class="skin"><rect x="108" y="78" width="86" height="190" rx="38" fill="#7bb6ff" '+ST+'/><circle cx="150" cy="48" r="29" fill="'+SKIN+'" '+ST+'/><circle cx="141" cy="44" r="3" fill="'+INK+'"/><circle cx="159" cy="44" r="3" fill="'+INK+'"/><path d="M141 57q9 6 18 0" fill="none" stroke="'+INK+'" stroke-width="3" stroke-linecap="round"/></g>'
+   +'<g class="skin" id="sk1"><rect x="-22" y="-21" width="'+(L1+44)+'" height="42" rx="21" fill="'+SKIN+'" '+ST+'/><g id="sk2"><rect x="-21" y="-19" width="'+(L2+40)+'" height="38" rx="19" fill="#ffb98a" '+ST+'/></g></g>'
+   +'<g class="bones"><path d="M150 84V200" stroke="'+INK+'" stroke-width="6" stroke-linecap="round"/><circle cx="150" cy="200" r="7" fill="'+YEL+'" stroke="'+INK+'" stroke-width="2.5"/>'
+   +'<g id="bn1"><line x1="0" y1="0" x2="'+L1+'" y2="0" stroke="'+INK+'" stroke-width="7" stroke-linecap="round"/><circle r="11" fill="'+YEL+'" stroke="'+INK+'" stroke-width="3"/><g id="bn2"><line x1="0" y1="0" x2="'+L2+'" y2="0" stroke="'+INK+'" stroke-width="7" stroke-linecap="round"/><circle r="11" fill="'+YEL+'" stroke="'+INK+'" stroke-width="3"/>'
+   +'<g id="hand"><circle class="pulse" cx="'+L2+'" cy="0" r="16" fill="'+PINK+'"/><circle cx="'+L2+'" cy="0" r="30" fill="transparent"/><circle cx="'+L2+'" cy="0" r="12" fill="'+PINK+'" stroke="'+INK+'" stroke-width="3"/></g></g></g></g>'
+   +'<g font-size="14" font-weight="700" fill="'+INK+'"><text x="300" y="236">● суглоб — точка обертання</text><text x="300" y="258">— кістка — жорсткий відрізок</text><text x="300" y="280" fill="'+PINK+'">● кисть: тягни, щоб увімкнути IK</text></g></svg>'
+   +'<div class="ctl"><button class="pill" data-v="v-skin">Лише «шкіра»</button><button class="pill on" data-v="v-both">Шкіра + скелет</button><button class="pill" data-v="v-bones">Лише скелет</button></div>'
+   +'<div class="ctl"><label>Плече <input type="range" id="ra" min="-180" max="180" value="10"></label><label>Лікоть <input type="range" id="rb" min="-150" max="150" value="-55"></label><button class="pill" id="rrs">↺ Скинути</button></div>'
+   +'<p class="cap"><b>FK</b> (пряма кінематика): ти повертаєш кожен суглоб окремо. <b>IK</b> (обернена): тягнеш кисть, а положення ліктя програма розраховує сама.</p>';
+  const svg=$("#rs",h),A=$("#ra",h),B=$("#rb",h);
+  const T=(id,tr)=>$(id,h).setAttribute("transform",tr);
+  function pose(a,b){
+    T("#sk1","translate("+SX+" "+SY+") rotate("+f1(a)+")");T("#sk2","translate("+L1+" 0) rotate("+f1(b)+")");
+    T("#bn1","translate("+SX+" "+SY+") rotate("+f1(a)+")");T("#bn2","translate("+L1+" 0) rotate("+f1(b)+")");
+    A.value=Math.round(a);B.value=Math.round(b);
+  }
+  A.oninput=B.oninput=()=>pose(+A.value,+B.value);
+  $("#rrs",h).onclick=()=>pose(10,-55);
+  h.querySelectorAll("[data-v]").forEach(b=>b.onclick=()=>{svg.setAttribute("class",b.dataset.v);h.querySelectorAll("[data-v]").forEach(x=>x.classList.toggle("on",x===b))});
+  let drag=false;
+  const pt=e=>{const m=svg.getScreenCTM().inverse(),p=new DOMPoint(e.clientX,e.clientY).matrixTransform(m);return [p.x-SX,p.y-SY]};
+  $("#hand",h).addEventListener("pointerdown",e=>{drag=true;svg.setPointerCapture(e.pointerId);e.preventDefault()});
+  svg.addEventListener("pointermove",e=>{
+    if(!drag)return;
+    let [tx,ty]=pt(e),d=Math.hypot(tx,ty);const dc=Math.min(Math.max(d,Math.abs(L1-L2)+2),L1+L2-1),base=Math.atan2(ty,tx);
+    tx=Math.cos(base)*dc;ty=Math.sin(base)*dc;
+    const A1=Math.acos(Math.max(-1,Math.min(1,(L1*L1+dc*dc-L2*L2)/(2*L1*dc)))),a=base-A1;
+    const ex=Math.cos(a)*L1,ey=Math.sin(a)*L1,fa=Math.atan2(ty-ey,tx-ex);
+    let b=fa-a;while(b>Math.PI)b-=2*Math.PI;while(b<-Math.PI)b+=2*Math.PI;
+    pose(a*180/Math.PI,b*180/Math.PI);
+  });
+  const up=()=>{drag=false};svg.addEventListener("pointerup",up);svg.addEventListener("pointercancel",up);
+  pose(10,-55);
+},
+/* --- Т5: співвідношення сторін --- */
+ratio(h){
+  const R=[{n:"16:9",w:16,h:9,px:"1920 × 1080",u:"YouTube, телевізори, монітори, комп'ютерні презентації.",c:"#bfe0ff"},
+   {n:"9:16",w:9,h:16,px:"1080 × 1920",u:"Shorts, Reels, TikTok, сторіс: вертикальне відео для смартфона.",c:"#ffd0dc"},
+   {n:"1:1",w:1,h:1,px:"1080 × 1080",u:"Квадратні пости в соцмережах.",c:"#fff1b8"},
+   {n:"4:3",w:4,h:3,px:"1440 × 1080",u:"Старі телевізори, проєктори, деякі планшети.",c:"#d6f7e5"},
+   {n:"21:9",w:21,h:9,px:"2560 × 1080",u:"Широкоекранне кіно й ультраширокі монітори.",c:"#e6d9ff"}];
+  h.innerHTML='<h4>📐 Співвідношення сторін: обери формат кадру</h4><div class="rt"><div><svg viewBox="0 0 300 200" id="rts"></svg></div><div><div class="ctl" id="rtb" style="margin-top:0"></div><div class="rt-use" id="rtu"></div></div></div>';
+  const box=$("#rts",h),bar=$("#rtb",h),use=$("#rtu",h);
+  function show(i){
+    const r=R[i],s=Math.min(280/r.w,180/r.h),w=r.w*s,hh=r.h*s,x=(300-w)/2,y=(200-hh)/2;
+    box.innerHTML='<rect x="'+f1(x)+'" y="'+f1(y)+'" width="'+f1(w)+'" height="'+f1(hh)+'" rx="8" fill="'+r.c+'" stroke="'+INK+'" stroke-width="4"/>'
+      +'<text x="150" y="'+(i===1?112:106)+'" text-anchor="middle" font-size="'+(i===1?38:44)+'" font-weight="800" fill="'+INK+'">'+r.n+'</text>'
+      +'<text x="150" y="'+(i===1?134:132)+'" text-anchor="middle" font-size="15" font-weight="600" fill="'+INK+'">наприклад '+r.px+'</text>';
+    use.innerHTML="<b>Де використовують:</b> "+r.u;
+    [...bar.children].forEach((b,j)=>b.classList.toggle("on",j===i));
+  }
+  R.forEach((r,i)=>{const b=el("button","pill",r.n);b.onclick=()=>show(i);bar.appendChild(b)});
+  show(0);
+},
+/* --- Т5: роздільна здатність і fps --- */
+res(h){
+  const K=360/3840,L=[["4K (UHD)","3840 × 2160","≈ 8,3 Мп",3840,2160,"#e6d9ff"],["Full HD","1920 × 1080","≈ 2,1 Мп",1920,1080,"#bfe0ff"],["HD","1280 × 720","≈ 0,9 Мп",1280,720,"#d6f7e5"],["SD 480p","854 × 480","≈ 0,4 Мп",854,480,"#fff1b8"]];
+  let g="";L.forEach((r,i)=>{const w=r[3]*K,hh=r[4]*K;g+='<rect x="10" y="10" width="'+f1(w)+'" height="'+f1(hh)+'" fill="'+r[5]+'" stroke="'+INK+'" stroke-width="2.5"/>'});
+  L.forEach((r,i)=>{const y=40+i*42;g+='<rect x="410" y="'+(y-18)+'" width="22" height="22" rx="4" fill="'+r[5]+'" stroke="'+INK+'" stroke-width="2.5"/><text x="442" y="'+y+'" font-size="18" font-weight="800" fill="'+INK+'">'+r[0]+'</text><text x="442" y="'+(y+19)+'" font-size="14.5" fill="#4a4470">'+r[1]+' · '+r[2]+'</text>'});
+  h.innerHTML='<h4>🔎 Роздільна здатність: у скільки разів один кадр більший за інший</h4>'+SVG("0 0 640 224",g)
+   +'<p class="cap">4K має <b>вчетверо більше пікселів</b>, ніж Full HD (вдвічі більше по ширині й по висоті). Більше пікселів — чіткіше зображення, але більший файл.</p>'
+   +'<div class="chiprow"><span class="fp"><b>24</b> к/с — кіно</span><span class="fp"><b>25</b> к/с — телебачення в Європі</span><span class="fp"><b>30</b> к/с — відеоблоги, інтернет-відео</span><span class="fp"><b>60</b> к/с — ігри, спорт</span><span class="fp"><b>120+</b> к/с — сповільнена зйомка</span></div>';
+},
+/* --- Т5: контейнер і кодек --- */
+pack(h){
+  h.innerHTML='<h4>📦 Файл відео: контейнер, кодек і бітрейт</h4><div class="two"><div class="pack"><em>.MP4 — контейнер</em>'
+   +'<div class="pk">🎞️<div>Відеодоріжка<small>стиснена кодеком, наприклад H.264 або H.265</small></div></div>'
+   +'<div class="pk">🔊<div>Звукова доріжка<small>кодек звуку, наприклад AAC</small></div></div>'
+   +'<div class="pk">💬<div>Субтитри й метадані<small>назва, дата, мова</small></div></div></div>'
+   +'<div><p style="margin:0 0 8px"><b>Кодек</b> стискає відео й звук, щоб файл був меншим.</p><p style="margin:0 0 8px"><b>Контейнер</b> (MP4, MOV, MKV, AVI, WebM) «пакує» все в один файл.</p><p style="margin:0"><b>Бітрейт</b> — скільки даних припадає на 1 секунду відео (Мбіт/с). Чим більший, тим вища якість і більший файл.</p></div></div>';
+},
+/* --- Т6: інтерфейс відеоредактора --- */
+editor(h){
+  const clip=(x,y,w,c,l)=>'<rect x="'+x+'" y="'+y+'" width="'+w+'" height="22" rx="4" fill="'+c+'" stroke="#fff" stroke-width="1.5"/>'+(l?'<text x="'+(x+6)+'" y="'+(y+15)+'" font-size="11" font-weight="700" fill="#fff">'+l+'</text>':"");
+  const badge=(x,y,n)=>'<circle cx="'+x+'" cy="'+y+'" r="14" fill="'+YEL+'" stroke="'+INK+'" stroke-width="3"/><text x="'+x+'" y="'+(y+5)+'" text-anchor="middle" font-size="15" font-weight="800" fill="'+INK+'">'+n+'</text>';
+  let g='<rect width="640" height="364" rx="14" fill="#2a2547"/><circle cx="22" cy="18" r="5" fill="#ff5f57"/><circle cx="40" cy="18" r="5" fill="#febc2e"/><circle cx="58" cy="18" r="5" fill="#28c840"/>';
+  g+='<rect x="14" y="40" width="170" height="172" rx="8" fill="#3a3560"/>';
+  [[24,50,"#ff8fab"],[104,50,"#7bb6ff"],[24,104,"#7be0d6"],[104,104,"#ffd84a"],[24,158,"#b99bff"],[104,158,"#ffb98a"]].forEach(m=>g+='<rect x="'+m[0]+'" y="'+m[1]+'" width="70" height="44" rx="4" fill="'+m[2]+'"/>');
+  g+='<rect x="198" y="40" width="262" height="172" rx="8" fill="#14102e"/><rect x="218" y="48" width="222" height="125" rx="3" fill="#8fb4ff"/><polygon points="218,173 262,112 296,150 340,100 440,173" fill="#2bb673"/><circle cx="400" cy="78" r="14" fill="'+YEL+'"/>';
+  g+='<polygon points="316,182 316,198 330,190" fill="#fff"/><rect x="262" y="182" width="4" height="16" fill="#fff"/><rect x="270" y="182" width="4" height="16" fill="#fff"/><polygon points="374,182 374,198 388,190" fill="#fff" opacity=".6"/>';
+  g+='<rect x="474" y="40" width="152" height="172" rx="8" fill="#3a3560"/>';
+  [["Масштаб",.7],["Яскравість",.4],["Контраст",.55],["Гучність",.8]].forEach((r,i)=>{const y=62+i*38;g+='<text x="486" y="'+y+'" font-size="12" fill="#e3dcff">'+r[0]+'</text><rect x="486" y="'+(y+8)+'" width="128" height="6" rx="3" fill="#1f1b3d"/><rect x="486" y="'+(y+8)+'" width="'+f1(128*r[1])+'" height="6" rx="3" fill="'+PINK+'"/><circle cx="'+f1(486+128*r[1])+'" cy="'+(y+11)+'" r="7" fill="#fff"/>'});
+  g+='<rect x="14" y="224" width="612" height="130" rx="8" fill="#1f1b3d"/>';
+  for(let i=0;i<=20;i++)g+='<line x1="'+(56+i*28)+'" y1="236" x2="'+(56+i*28)+'" y2="'+(i%5?240:246)+'" stroke="#8a84b5" stroke-width="1.5"/>';
+  [["V2",254],["V1",284],["A1",314]].forEach(r=>g+='<text x="22" y="'+(r[1]+16)+'" font-size="13" font-weight="800" fill="#ffc94a">'+r[0]+'</text>');
+  g+=clip(176,254,160,PINK,"Титри")+clip(56,284,150,BLUE,"Кліп 1")+clip(210,284,120,TEAL,"Кліп 2")+clip(334,284,190,VIO,"Кліп 3");
+  g+='<rect x="56" y="314" width="468" height="22" rx="4" fill="#2bb673"/><polyline points="60,325 76,318 92,332 108,320 124,330 140,318 156,328 172,320 188,332 204,318 220,328 236,320 252,330 268,318 284,326 300,320 316,332 332,318 348,328 364,320 380,332 396,318 412,328 428,320 444,330 460,318 476,326 492,320 508,330" fill="none" stroke="#d6f7e5" stroke-width="2"/>';
+  g+='<line x1="268" y1="236" x2="268" y2="348" stroke="#ff3e6c" stroke-width="3"/><polygon points="258,228 278,228 268,242" fill="#ff3e6c"/>';
+  g+=badge(36,58,1)+badge(442,58,2)+badge(614,46,3)+badge(600,296,4)+badge(268,217,5);
+  h.innerHTML='<h4>🎛️ Інтерфейс відеоредактора</h4>'+SVG("0 0 640 364",g)
+   +'<p class="cap">Майже всі редактори (DaVinci Resolve, Premiere Pro, Shotcut, Clipchamp) мають схожі зони:<b> ① медіатека · ② монітор перегляду · ③ інспектор і ефекти · ④ доріжки таймлайна (V — відео, A — аудіо) · ⑤ плейхед — червона лінія поточного моменту.</b></p>';
+},
+/* --- Т7: смартфон + порівняння --- */
+phone(h){
+  let g='<rect x="4" y="4" width="192" height="392" rx="30" fill="'+INK+'"/><rect x="14" y="30" width="172" height="346" rx="20" fill="#f3efff"/><rect x="72" y="12" width="56" height="8" rx="4" fill="#4a4470"/>';
+  g+='<rect x="26" y="42" width="148" height="196" rx="8" fill="#8fb4ff"/><polygon points="26,238 66,170 92,206 128,150 174,238" fill="#2bb673"/><circle cx="140" cy="76" r="14" fill="'+YEL+'"/><rect x="48" y="196" width="104" height="26" rx="13" fill="#fff" opacity=".9"/><text x="100" y="214" text-anchor="middle" font-size="14" font-weight="800" fill="'+INK+'">Привіт!</text>';
+  g+='<rect x="26" y="252" width="148" height="30" rx="6" fill="#1f1b3d"/>'+[[30,"#ff8fab",36],[68,"#7bb6ff",46],[116,"#b99bff",54]].map(c=>'<rect x="'+c[0]+'" y="256" width="'+c[2]+'" height="22" rx="4" fill="'+c[1]+'"/>').join("")+'<line x1="84" y1="248" x2="84" y2="286" stroke="'+PINK+'" stroke-width="3"/>';
+  [["Обрізати",PINK],["Текст",ORG],["Музика",TEAL],["Ефекти",VIO],["Швидк.",BLUE]].forEach((b,i)=>{const x=40+i*30;g+='<circle cx="'+x+'" cy="318" r="11" fill="'+b[1]+'" stroke="'+INK+'" stroke-width="2.5"/><text x="'+x+'" y="346" text-anchor="middle" font-size="8.5" font-weight="700" fill="'+INK+'">'+b[0]+'</text>'});
+  h.innerHTML='<h4>📱 Три місця для монтажу</h4><div class="phrow">'+SVG("0 0 200 400",g)
+   +'<div class="cmp"><div class="cm" style="--cc:'+VIO+'"><b>💻 Програма на комп\'ютері</b><div>+ потужні інструменти, 4K, багато доріжок<br>− потрібне встановлення, вимоги до заліза</div></div>'
+   +'<div class="cm" style="--cc:'+BLUE+'"><b>🌐 Онлайн-редактор у браузері</b><div>+ без встановлення, шаблони, спільна робота<br>− потрібен інтернет, обмеження безкоштовних планів</div></div>'
+   +'<div class="cm" style="--cc:'+PINK+'"><b>📱 Мобільний застосунок</b><div>+ швидко, вертикальне відео, шаблони й музика<br>− малий екран, менше точних інструментів</div></div></div></div>';
+}
+};
+
+/* ============ ДАНІ ============ */
+const COLORS=["#ff3e6c","#6c4ce0","#00a99d","#ff8a00","#1e8fff","#b24bf3","#2bb673"];
+const TF=["Правда","Міф"];
+
+const TOPICS=[
+{emoji:"🎞️",title:"Анімація. Види анімації",
+ recap:["<b>Анімація</b> (від лат. anima — «душа», оживлення) — створення ілюзії руху з послідовності нерухомих зображень, що швидко змінюють одне одного.",
+  "<b>Кадр</b> — одне зображення. <b>Частота кадрів (fps, к/с)</b> — скільки кадрів змінюється за секунду: чим більше, тим плавніший рух.",
+  "Рух помітний приблизно від 10–12 к/с; у кіно стандарт — <b>24 к/с</b>, у іграх — 60 к/с.",
+  "<b>Види:</b> рисована (традиційна), лялькова (stop-motion), комп'ютерна 2D, комп'ютерна 3D. Є й інші: перекладна, піскова, моушн-графіка."],
+ viz:["strip","fps","types"],
+ tasks:[
+  {type:"gap",title:"Встав пропущене слово",bank:["ілюзії","кадр","кадрів","240","звуку","100"],items:[
+    {t:"Анімація — це створення ___ руху з нерухомих зображень, що швидко змінюються.",a:"ілюзії"},
+    {t:"Одне зображення з послідовності називають ___.",a:"кадр"},
+    {t:"Частота кадрів — це кількість ___ за одну секунду.",a:"кадрів"},
+    {t:"Для 10 секунд анімації при 24 к/с потрібно ___ кадрів.",a:"240"}]},
+  {type:"match",title:"З'єднай вид анімації з описом",pairs:[
+    ["Рисована (традиційна)","Кожен кадр малюють вручну на папері чи плівці"],
+    ["Лялькова (stop-motion)","Фігурки чи пластилін трохи зсувають і знімають кадр за кадром"],
+    ["Комп'ютерна 2D","Плоскі малюнки й об'єкти рухаються в програмі"],
+    ["Комп'ютерна 3D","Об'ємні моделі у віртуальній сцені з камерою та світлом"]]},
+  {type:"choose",title:"Правда чи міф?",opts:TF,items:[
+    {t:"Частота кадрів показує, скільки кадрів змінюється за одну секунду.",a:0,e:"Її вимірюють у кадрах за секунду: к/с, або fps."},
+    {t:"Чим менша частота кадрів, тим плавніший рух.",a:1,e:"Навпаки: що більше кадрів за секунду, то плавніший рух."},
+    {t:"Класичне кіно найчастіше знімають із частотою 24 кадри на секунду.",a:0,e:"24 к/с — традиційний стандарт кіно."}]},
+  {type:"open",q:"Поясни своїми словами, чому при 2 к/с ми бачимо слайд-шоу, а при 24 к/с — рух.",
+   s:"Коли кадри змінюються рідко, між ними помітна пауза, і мозок сприймає окремі картинки. При 24 к/с зміна така швидка, що картинки зливаються в безперервний рух."}]},
+
+{emoji:"💻",title:"Комп'ютерна анімація",
+ recap:["<b>Комп'ютерна анімація</b> — створення рухомих зображень за допомогою комп'ютера: кадри малюють вручну або задають рух за ключовими кадрами.",
+  "<b>Ключові кадри (keyframes)</b> — важливі положення об'єкта, які задає аніматор. <b>Проміжні кадри (in-betweens)</b> — кадри між ними.",
+  "<b>Твінінг (tweening)</b> — автоматичне створення проміжних кадрів: програма сама змінює положення, розмір, поворот, колір чи форму (морфінг).",
+  "<b>Таймлайн</b> — шкала часу з кадрами та шарами. <b>Easing</b> — плавний розгін і гальмування.",
+  "Програми: Adobe Animate, Synfig Studio, Krita, Pencil2D, Toon Boom Harmony, After Effects, Blender."],
+ viz:["tween"],
+ tasks:[
+  {type:"gap",title:"Встав пропущене слово",bank:["ключових","проміжні","таймлайн","рендер","твінінг"],items:[
+    {t:"Автоматичне створення проміжних кадрів між ключовими називають ___.",a:"твінінг"},
+    {t:"Важливі положення об'єкта аніматор задає в ___ кадрах.",a:"ключових"},
+    {t:"Кадри між ними комп'ютер створює сам: це ___ кадри.",a:"проміжні"},
+    {t:"Шкалу часу з кадрами та шарами називають ___.",a:"таймлайн"}]},
+  {type:"match",title:"З'єднай термін із поясненням",pairs:[
+    ["Ключовий кадр","Важливе положення об'єкта, яке задає аніматор"],
+    ["Проміжний кадр","Кадр між ключовими, який розраховує програма"],
+    ["Easing","Плавний розгін і гальмування руху"],
+    ["Морфінг","Плавне перетворення однієї форми на іншу"]]},
+  {type:"choose",title:"Правда чи міф?",opts:TF,items:[
+    {t:"Під час твінінгу програма може сама змінювати положення, розмір, колір і поворот об'єкта.",a:0},
+    {t:"Easing робить рух рівномірним, як у робота.",a:1,e:"Навпаки: easing додає плавний розгін і гальмування, тож рух виглядає природніше."}]},
+  {type:"open",q:"Яку анімацію з двома ключовими кадрами ти б зробив(ла) для логотипу ліцею? Що змінюватиметься між кадрами?",
+   s:"Наприклад: логотип з'являється зменшеним і прозорим (ключовий кадр 1), а наприкінці збільшується до повного розміру й стає яскравим (ключовий кадр 2). Програма сама створює проміжні кадри."}]},
+
+{emoji:"🔷",title:"Растрова та векторна анімація",
+ recap:["<b>Растрова анімація</b> — кадри складаються з пікселів: малюнки, фото, кадри відео. Формати: GIF, APNG, WebP, послідовність PNG. Мінуси: великі файли, при збільшенні видно <b>пікселізацію</b>.",
+  "<b>Векторна анімація</b> — об'єкти описані формулами: точки, лінії, криві, заливки. Змінюється опис фігур, а не кожен піксель.",
+  "Плюси вектора: масштабується без втрати якості, малий файл. Формати: SVG, Lottie (JSON); SWF (Flash) — застарілий.",
+  "Складні фото-реалістичні тіні й фактури краще передає растр. Для логотипів, інфографіки, іконок і мультфільмів із плоскою графікою зручніший вектор."],
+ viz:["rv"],
+ tasks:[
+  {type:"choose",title:"Растрова чи векторна?",opts:["Растрова","Векторна"],items:[
+    {t:"Кадр складається з пікселів",a:0},
+    {t:"Об'єкти описані формулами й кривими",a:1},
+    {t:"При сильному збільшенні видно квадратики-пікселі",a:0},
+    {t:"Можна збільшити до розміру плаката без втрати чіткості",a:1},
+    {t:"GIF-анімація",a:0}]},
+  {type:"choose",title:"Правда чи міф?",opts:TF,items:[
+    {t:"Векторна анімація зазвичай менша за розміром, бо зберігає описи фігур, а не кожен піксель.",a:0,e:"Опис кривої займає кілька чисел, а картинка з пікселів — мільйони."},
+    {t:"Растрову анімацію можна збільшувати до будь-якого розміру без втрати якості.",a:1,e:"Це вміє вектор. У растра при збільшенні з'являється пікселізація."}]},
+  {type:"match",title:"З'єднай ситуацію з кращим вибором",pairs:[
+    ["Логотип, який має бути чітким і на візитці, і на великому екрані","Векторна: масштабується без втрат"],
+    ["Анімація «живим» пензлем із фактурою акварелі","Растрова: важлива фактура мазків"],
+    ["Дуже легка анімація іконки в мобільному застосунку","Векторна (Lottie): малий файл"],
+    ["Обробка кадрів зі знятого відео","Растрова: кадри — це піксельні зображення"]]},
+  {type:"open",q:"Ти робиш анімований логотип для сайту ліцею. Яку анімацію оберешеш — растрову чи векторну — і чому?",
+   s:"Векторну: логотип зберігатиме чіткість на екранах різного розміру, а файл буде малим, тому сайт завантажуватиметься швидко."}]},
+
+{emoji:"🧊",title:"Тривимірне моделювання та анімація",
+ recap:["<b>2D</b> — плоский простір (осі X, Y). <b>3D</b> — об'ємний простір (X, Y, Z): є глибина, камера й світло.",
+  "3D-модель — це <b>полігональна сітка (mesh)</b>: вершини, ребра, грані. На поверхню накладають <b>текстури</b> та матеріали.",
+  "<b>Етапи створення 3D-сцени:</b> ідея → моделювання → текстури → ригінг → анімація → світло й камера → рендеринг → постобробка.",
+  "<b>Цифровий скелет (rig)</b> — система кісток і суглобів, прив'язаних до моделі. Рухаєш кістки, а сітка («шкіра») деформується. <b>FK</b> — крутимо суглоби по черзі, <b>IK</b> — тягнемо кінцеву точку (кисть), решту рахує програма.",
+  "<b>Рендеринг</b> — обчислення готового зображення чи відео зі сцени. Програми: Blender (безкоштовний), Maya, 3ds Max, Cinema 4D, ZBrush. <b>Motion capture</b> — запис руху реальної людини."],
+ viz:["d23","pipe","rig"],
+ tasks:[
+  {type:"order",title:"Розстав етапи створення 3D-сцени по порядку",steps:[
+    "Моделювання: створення форми об'єкта","Текстурування: матеріали й кольори","Ригінг: створення цифрового скелета","Анімація: рух кісток за ключовими кадрами","Рендеринг: розрахунок готових кадрів"],
+   e:"Модель → текстури → ригінг → анімація → рендеринг."},
+  {type:"match",title:"З'єднай термін із поясненням",pairs:[
+    ["Вершина","Точка в просторі, з яких складається сітка"],
+    ["Полігон (грань)","Плоска фігура на сітці, зазвичай трикутник або чотирикутник"],
+    ["Текстура","Зображення, яке накладають на поверхню моделі"],
+    ["Рендеринг","Розрахунок остаточного зображення сцени"]]},
+  {type:"gap",title:"Встав пропущене слово",bank:["скелет","ригінг","рендеринг","текстура"],items:[
+    {t:"Система кісток і суглобів, що рухає 3D-модель, — це цифровий ___ (rig).",a:"скелет"},
+    {t:"Створення цифрового скелета для моделі називають ___.",a:"ригінг"},
+    {t:"Розрахунок готового зображення чи відео зі сцени — це ___.",a:"рендеринг"}]},
+  {type:"choose",title:"Правда чи міф?",opts:TF,items:[
+    {t:"У 3D-просторі положення точки задають трьома координатами: X, Y і Z.",a:0},
+    {t:"Ригінг виконують після моделювання й до анімації.",a:0,e:"Спершу потрібна модель, а потім скелет, яким рухатиме аніматор."},
+    {t:"Рендеринг складної 3D-сцени завжди триває менше секунди.",a:1,e:"Складні кадри можуть рахуватись хвилинами й навіть годинами."},
+    {t:"Якщо повернути кістку в ріг-моделі, прив'язана до неї частина сітки рухається й деформується.",a:0,e:"Саме для цього й потрібен цифровий скелет."}]},
+  {type:"open",q:"Ти створюєш 3D-мультик про робота-кур'єра на 5 секунд. Які етапи пройдеш і що зробиш на кожному?",
+   s:"Ідея й скетч робота → моделювання тіла й коробки → текстури (метал, фарба) → ригінг (кістки рук і ніг) → анімація ходьби за ключовими кадрами → налаштування світла й камери → рендеринг → монтаж із звуком."}]},
+
+{emoji:"🎬",title:"Особливості роботи з відео",
+ recap:["<b>Відео</b> — послідовність кадрів + звук. Головні параметри: роздільна здатність, частота кадрів, співвідношення сторін, бітрейт, кодек і формат файлу.",
+  "<b>Роздільна здатність</b> — кількість пікселів кадру (ширина × висота): HD 1280×720, Full HD 1920×1080, 4K 3840×2160.",
+  "<b>Частота кадрів:</b> 24 к/с — кіно, 25 — телебачення в Європі, 30 — відеоблоги, 60 — динамічні сцени й ігри.",
+  "<b>Співвідношення сторін:</b> 16:9 — YouTube, ТБ, монітори; 9:16 — Shorts, Reels, TikTok; 1:1 — квадрат; 4:3 — старі ТБ; 21:9 — широкоекранне кіно.",
+  "<b>Монтаж:</b> імпорт → розміщення й обрізання кліпів на таймлайні → переходи, титри, звук → колір і ефекти → <b>експорт (рендеринг)</b> у потрібний формат."],
+ viz:["ratio","res","pack"],
+ tasks:[
+  {type:"match",title:"З'єднай співвідношення сторін із застосуванням",pairs:[
+    ["16:9","YouTube, телевізор, монітор"],
+    ["9:16","Shorts, Reels, TikTok (вертикальне відео)"],
+    ["1:1","Квадратні пости в соцмережах"],
+    ["4:3","Старі телевізори й проєктори"]]},
+  {type:"choose",title:"Правда чи міф?",opts:TF,items:[
+    {t:"Чим більша роздільна здатність, тим більший розмір файлу (за інших рівних умов).",a:0},
+    {t:"Кадр 4K має вдвічі більше пікселів, ніж Full HD.",a:1,e:"Удвічі більше по ширині й по висоті, тож усього пікселів у 4 рази більше."},
+    {t:"Кодек і формат файлу (контейнер) — це одне й те саме.",a:1,e:"Кодек стискає відео, а контейнер (MP4, MKV...) «пакує» відео, звук і субтитри."}]},
+  {type:"gap",title:"Встав пропущене слово",bank:["бітрейт","кодек","контейнер","1920","fps"],items:[
+    {t:"Кадр у форматі Full HD має ___ пікселів по ширині.",a:"1920"},
+    {t:"Обсяг даних відео на одну секунду називають ___.",a:"бітрейт"},
+    {t:"Алгоритм, який стискає відео, — це ___.",a:"кодек"},
+    {t:"MP4 — це ___ файлу, у якому лежать відео, звук і субтитри.",a:"контейнер"}]},
+  {type:"open",q:"Ти знімаєш ролик для YouTube і для сторіс. Які співвідношення сторін, роздільну здатність і частоту кадрів оберешеш для кожного?",
+   s:"YouTube: 16:9, 1920×1080, 25–30 к/с. Сторіс: 9:16, 1080×1920, 30 к/с. Для динамічних сцен можна 60 к/с."}]},
+
+{emoji:"🎛️",title:"Програми для роботи з відео",
+ recap:["Відеоредактори працюють за принципом <b>нелінійного монтажу</b>: кліпи лежать на таймлайні, їх порядок можна змінювати, а вихідні файли не перезаписуються.",
+  "<b>Професійні:</b> DaVinci Resolve (є безкоштовна версія, сильна колірна корекція), Adobe Premiere Pro (за підпискою), Final Cut Pro (macOS).",
+  "<b>Безкоштовні та з відкритим кодом:</b> Shotcut, Kdenlive, OpenShot. Для початківців: Clipchamp у Windows, iMovie на Mac.",
+  "<b>Інші корисні програми:</b> After Effects (візуальні ефекти й моушн-графіка), OBS Studio (запис екрана й трансляції), HandBrake (конвертація), VLC (програвач).",
+  "Типовий інтерфейс: медіатека, монітор перегляду, інспектор і ефекти, таймлайн з доріжками, плейхед."],
+ viz:["editor"],
+ tasks:[
+  {type:"match",title:"З'єднай зону інтерфейсу з призначенням",pairs:[
+    ["Медіатека","Усі файли проєкту: відео, фото, звуки"],
+    ["Монітор перегляду","Показує поточний кадр і результат монтажу"],
+    ["Доріжки таймлайна","Тут монтують кліпи, звук і титри"],
+    ["Плейхед","Червона лінія поточного моменту часу"]]},
+  {type:"match",title:"З'єднай програму із завданням",pairs:[
+    ["DaVinci Resolve","Монтаж і потужна колірна корекція"],
+    ["OBS Studio","Запис екрана й трансляції"],
+    ["HandBrake","Конвертація відео в інші формати"]]},
+  {type:"order",title:"Розстав типові кроки монтажу ролика",steps:[
+    "Імпорт файлів у проєкт","Розміщення й обрізання кліпів на таймлайні","Додавання переходів, титрів і звуку","Колір та ефекти","Експорт (рендеринг) у відеофайл, наприклад MP4"],
+   e:"Імпорт → таймлайн → переходи, титри, звук → колір → експорт."},
+  {type:"choose",title:"Правда чи міф?",opts:TF,items:[
+    {t:"Нелінійний монтаж дозволяє змінювати порядок кліпів, не перезаписуючи вихідні файли.",a:0},
+    {t:"Файл проєкту монтажу й готовий відеофайл — це одне й те саме.",a:1,e:"Проєкт зберігає лише інструкції монтажу. Відео створюється під час експорту."},
+    {t:"Shotcut, Kdenlive та OpenShot — безкоштовні відеоредактори з відкритим кодом.",a:0}]},
+  {type:"open",q:"Опиши три кроки: як обрізати відео з телефона й додати до нього титри в будь-якому редакторі.",
+   s:"Імпортувати відео в проєкт і перетягнути його на таймлайн; обрізати зайве на початку й в кінці; додати текстову доріжку з титрами й експортувати відео."}]},
+
+{emoji:"📱",title:"Онлайн-сервіси та мобільні застосунки для роботи з відео",
+ recap:["<b>Онлайн-редактори</b> працюють у браузері без встановлення: Clipchamp, Canva, Kapwing, WeVideo, Adobe Express, FlexClip. Є шаблони й спільна робота. Мінуси: потрібен інтернет, безкоштовний план має обмеження (водяний знак, якість).",
+  "<b>Мобільні застосунки:</b> CapCut, InShot, VN, iMovie (iOS), Google Фото. Швидкі, зручні для вертикального відео, мають шаблони й музику. Мінуси: малий екран і менше точних інструментів.",
+  "<b>Анімація онлайн і на телефоні:</b> Canva, Animaker, Powtoon, Stop Motion Studio (покадрова зйомка), LottieFiles.",
+  "<b>Безпека й закон:</b> перевіряй умови сервісу, права на музику й шрифти, не завантажуй приватні відео в сумнівні сервіси, дивись дозволи застосунку.",
+  "Перед експортом обирай параметри під платформу: співвідношення сторін, роздільну здатність, частоту кадрів."],
+ viz:["phone"],
+ tasks:[
+  {type:"choose",title:"Де це зручніше зробити?",opts:["Смартфон","Браузер","Програма на ПК"],items:[
+    {t:"Швидко змонтувати вертикальне відео для TikTok одразу після зйомки",a:0},
+    {t:"Змонтувати ролик на комп'ютері, де не можна встановлювати програми",a:1,e:"Онлайн-редактор працює в браузері без встановлення."},
+    {t:"Змонтувати 40-хвилинний фільм у 4K із багатьма доріжками",a:2,e:"Для великих проєктів потрібні потужні настільні програми."},
+    {t:"Зробити презентаційне відео за готовим шаблоном без встановлення програм",a:1}]},
+  {type:"match",title:"З'єднай застосунок із типом",pairs:[
+    ["CapCut","Мобільний і веб відеоредактор із шаблонами"],
+    ["Clipchamp","Онлайн-редактор від Microsoft"],
+    ["Stop Motion Studio","Покадрова анімація на смартфоні"]]},
+  {type:"choose",title:"Правда чи міф?",opts:TF,items:[
+    {t:"У безкоштовних онлайн-редакторах можуть бути водяні знаки чи обмеження якості.",a:0},
+    {t:"Музику з будь-якого сайту можна вільно вставляти у ролик для YouTube.",a:1,e:"Музика має авторське право. Обирай треки з відповідною ліцензією."},
+    {t:"Перед експортом ролика для сторіс варто обрати вертикальне співвідношення 9:16.",a:0,e:"Параметри ролика підбирають під платформу."}]},
+  {type:"open",q:"Який інструмент (ПК, онлайн чи мобільний) ти обереш для відеоролика про свій ліцей і чому?",
+   s:"Для швидкого ролика до сторіс — мобільний застосунок. Для довшого відео з титрами й музикою — онлайн-редактор або програма на ПК, залежно від доступу до комп'ютера й вимог до якості."}]}
+];
+
+/* ============ ДВИЖОК ============ */
+let total=0, earned=0;
+const secs=[];
+
+function seeded(seed){let t=seed>>>0;return()=>{t=(t*1664525+1013904223)>>>0;return t/4294967296}}
+function shuffled(n,seed){
+  const idx=[...Array(n).keys()],r=seeded(seed);
+  for(let k=0;k<6;k++){
+    for(let i=n-1;i>0;i--){const j=Math.floor(r()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]]}
+    if(n<2||idx.some((v,i)=>v!==i))break;
+  }
+  return idx;
+}
+function updateTop(){
+  $("#sc").textContent=earned;$("#tot").textContent=total;
+  const done=secs.reduce((a,s)=>a+s.done,0);
+  $("#pg").style.width=(total?done/total*100:0)+"%";
+  const fs=$("#fs");if(!fs)return;
+  fs.textContent=earned;$("#ft").textContent=total;
+  const p=total?earned/total:0;
+  let m="Виконуй завдання: відповідь із першої спроби дає ⭐.";
+  if(done===total) m=p>=.9?"🏆 Відмінно! Ти добре пам'ятаєш тему й готовий до контрольної.":p>=.7?"👍 Добре! Повтори теми, де були помилки, і спробуй ще раз.":p>=.5?"🙂 Непогано. Перечитай блоки «Пригадаймо» й пройди повторно.":"📚 Є над чим попрацювати. Перечитай теми та спробуй ще раз!";
+  else if(done>0) m="Виконано "+done+" із "+total+" завдань. Продовжуй!";
+  $("#fm").textContent=m;
+}
+function unit(sec){sec.units++;total++;}
+function solved(sec,first){
+  sec.done++; if(first){sec.earned++;earned++}
+  $(".t-score",sec.node).textContent="⭐ "+sec.earned+" / "+sec.units;
+  if(sec.done===sec.units){
+    $(".ribbon",sec.node).classList.add("show");
+    $("#chip"+sec.i).classList.add("done");
+  }
+  updateTop();
+}
+
+const builders={
+  quiz(t,box,sec){
+    unit(sec);let wrong=false;
+    box.appendChild(el("p","q",t.q));
+    const wrap=el("div","opts");box.appendChild(wrap);
+    const fb=el("div","fb");
+    t.opts.forEach((o,i)=>{
+      const b=el("button","opt",'<span class="l">'+"АБВГ"[i]+"</span><span>"+o+"</span>");
+      b.onclick=()=>{
+        if(i===t.a){
+          b.classList.add("good");[...wrap.children].forEach(x=>x.disabled=true);
+          fb.className="fb show ok";fb.innerHTML="✅ Вірно! "+(t.e||"");solved(sec,!wrong);
+        }else{
+          wrong=true;b.classList.add("wrong");b.disabled=true;
+          fb.className="fb show no";fb.innerHTML="Не зовсім. Спробуй ще раз!";
+        }
+      };wrap.appendChild(b);
+    });
+    box.appendChild(fb);
+  },
+  choose(t,box,sec){
+    t.items.forEach(it=>{
+      unit(sec);let wrong=false;
+      const row=el("div","row");row.appendChild(el("div","txt",it.t));
+      const btns=el("div","btns");
+      t.opts.forEach((o,i)=>{
+        const b=el("button","",o);
+        b.onclick=()=>{
+          if(i===it.a){
+            b.classList.add("pick");[...btns.children].forEach(x=>x.disabled=true);
+            row.classList.add("good");solved(sec,!wrong);
+          }else{
+            wrong=true;b.classList.add("miss");b.disabled=true;
+            row.classList.remove("shake");void row.offsetWidth;row.classList.add("shake");
+          }
+        };btns.appendChild(b);
+      });
+      row.appendChild(btns);
+      row.appendChild(el("div","ex",it.e?"💡 "+it.e:"✅ Вірно!"));
+      box.appendChild(row);
+    });
+  },
+  match(t,box,sec){
+    box.appendChild(el("p","hint","Натисни на елемент ліворуч, а потім на підходящий до нього праворуч."));
+    const grid=el("div","match");box.appendChild(grid);
+    const L=el("div");L.style.display="grid";L.style.gap="12px";
+    const R=el("div");R.style.display="grid";R.style.gap="12px";
+    grid.appendChild(L);grid.appendChild(R);
+    const wrongs=t.pairs.map(()=>false);let sel=null,pairColors=["#ff3e6c","#6c4ce0","#00a99d","#e5a800","#1e8fff","#b24bf3"];
+    t.pairs.forEach(()=>unit(sec));
+    t.pairs.forEach((p,i)=>{const b=el("button","m",p[0]);b.onclick=()=>{
+        if(b.disabled)return;
+        if(sel)sel.classList.remove("sel");sel=b;b.classList.add("sel");
+      };b.dataset.i=i;L.appendChild(b)});
+    const order=shuffled(t.pairs.length,t.pairs.length*7+t.pairs[0][0].length);
+    order.forEach(i=>{
+      const b=el("button","m",t.pairs[i][1]);b.dataset.i=i;
+      b.onclick=()=>{
+        if(b.disabled||!sel)return;
+        const li=+sel.dataset.i;
+        if(li===i){
+          const c=pairColors[i%pairColors.length];
+          [sel,b].forEach(x=>{x.classList.remove("sel");x.classList.add("ok");x.style.setProperty("--mc",c);x.disabled=true});
+          sel=null;solved(sec,!wrongs[li]);
+        }else{
+          wrongs[li]=true;const s=sel;
+          [s,b].forEach(x=>x.classList.add("bad"));
+          setTimeout(()=>{[s,b].forEach(x=>x.classList.remove("bad"))},450);
+          s.classList.remove("sel");sel=null;
+        }
+      };R.appendChild(b);
+    });
+  },
+  gap(t,box,sec){
+    box.appendChild(el("p","hint","Натисни слово зі списку — воно стане на підсвічене місце. Можна обрати інше місце, натиснувши на нього."));
+    const slots=[];let active=0;
+    t.items.forEach((it,k)=>{
+      unit(sec);
+      const line=el("div","gapline");
+      const parts=it.t.split("___");
+      line.appendChild(document.createTextNode(parts[0]));
+      const sl=el("span","slot","&nbsp;");sl.dataset.k=k;sl.onclick=()=>{if(!sl.classList.contains("done")){active=k;paint()}};
+      line.appendChild(sl);line.appendChild(document.createTextNode(parts[1]||""));
+      box.appendChild(line);slots.push({sl,it,wrong:false,done:false});
+    });
+    function paint(){slots.forEach((s,k)=>s.sl.classList.toggle("act",k===active&&!s.done))}
+    const bank=el("div","bank");box.appendChild(bank);
+    t.bank.forEach(w=>{
+      const b=el("button","word",w);
+      b.onclick=()=>{
+        const s=slots[active];
+        if(!s||s.done){const n=slots.findIndex(x=>!x.done);if(n<0)return;active=n;paint();return}
+        if(w===s.it.a){
+          s.sl.textContent=w;s.sl.classList.remove("act");s.sl.classList.add("done");s.done=true;
+          solved(sec,!s.wrong);
+          const n=slots.findIndex(x=>!x.done);active=n<0?0:n;paint();
+        }else{
+          s.wrong=true;b.classList.remove("shake");void b.offsetWidth;b.classList.add("shake");
+          setTimeout(()=>b.classList.remove("shake"),450);
+        }
+      };bank.appendChild(b);
+    });
+    paint();
+  },
+  order(t,box,sec){
+    unit(sec);let wrong=false,next=0;
+    box.appendChild(el("p","hint","Натискай кроки по порядку: спочатку перший, потім другий і так далі."));
+    const wrap=el("div","ord");box.appendChild(wrap);
+    const fb=el("div","fb");
+    shuffled(t.steps.length,t.steps.length*13+5).forEach(i=>{
+      const b=el("button","o",'<span class="n">?</span><span>'+t.steps[i]+"</span>");
+      b.onclick=()=>{
+        if(b.disabled)return;
+        if(i===next){
+          next++;b.classList.add("set");b.disabled=true;$(".n",b).textContent=next;
+          if(next===t.steps.length){fb.className="fb show ok";fb.innerHTML="✅ Вірно! "+(t.e||"");solved(sec,!wrong)}
+        }else{
+          wrong=true;b.classList.add("bad");setTimeout(()=>b.classList.remove("bad"),450);
+        }
+      };wrap.appendChild(b);
+    });
+    box.appendChild(fb);
+  },
+  open(t,box){
+    box.appendChild(el("p","q",t.q));
+    const ta=el("textarea");ta.placeholder="Напиши свою відповідь тут (вона нікуди не надсилається)…";box.appendChild(ta);
+    const rb=el("button","reveal","👀 Показати зразок відповіді");
+    const sm=el("div","sample","<b>Зразок:</b> "+t.s);
+    rb.onclick=()=>{sm.classList.toggle("show");rb.textContent=sm.classList.contains("show")?"🙈 Сховати зразок":"👀 Показати зразок відповіді"};
+    box.appendChild(rb);box.appendChild(sm);
+  }
+};
+const LABELS={quiz:"Тест",choose:"Швидка перевірка",match:"Пари",gap:"Пропуски",order:"Порядок",open:"Подумай"};
+
+function build(){
+  const app=$("#app"),chips=$("#chips");
+  /* словничок */
+  const gg=$("#glgrid");
+  GL.forEach(g=>{
+    const a=el("a","gl",g.svg()+"<b>"+g.t+"</b><span>"+g.d+"</span>");a.href="#t"+g.to;a.style.setProperty("--g",g.c);gg.appendChild(a);
+  });
+  const cg=el("a","chip","📖");cg.href="#gloss";cg.title="Словничок";chips.appendChild(cg);
+  TOPICS.forEach((T,i)=>{
+    const c=COLORS[i%COLORS.length];
+    const a=el("a","chip",T.emoji);a.href="#t"+(i+1);a.id="chip"+i;a.title=T.title;a.style.setProperty("--c",c);chips.appendChild(a);
+    const node=el("section","topic");node.id="t"+(i+1);node.style.setProperty("--c",c);
+    node.innerHTML='<div class="t-head"><div class="t-emoji">'+T.emoji+'</div><div><div class="t-num">Тема '+(i+1)+' з '+TOPICS.length+'</div><h2>'+T.title+'</h2></div><div class="t-score"></div></div>'
+      +'<div class="t-body"><div class="recap"><h3>📌 Пригадаймо</h3><ul>'+T.recap.map(r=>"<li>"+r+"</li>").join("")+'</ul></div><div class="vizs"></div><div class="tasks"></div><div class="ribbon">🎉 Тему пройдено! Молодець!</div></div>';
+    const sec={i,node,units:0,done:0,earned:0};secs.push(sec);
+    const vz=$(".vizs",node);
+    (T.viz||[]).forEach(k=>{const h=el("div","viz");vz.appendChild(h);VIZ[k](h)});
+    const tasks=$(".tasks",node);
+    T.tasks.forEach(t=>{
+      const box=el("div","task");
+      const title=t.type==="open"?"Подумай і напиши":t.type==="quiz"?"Обери правильну відповідь":t.title;
+      box.appendChild(el("div","task-h",'<span class="badge">'+LABELS[t.type]+"</span><span>"+title+"</span>"));
+      builders[t.type](t,box,sec);tasks.appendChild(box);
+    });
+    $(".t-score",node).textContent="⭐ 0 / "+sec.units;
+    app.appendChild(node);
+  });
+  const fin=el("section","final");fin.id="final";
+  fin.innerHTML='<h2>🏁 Твій результат</h2><div class="big"><span id="fs">0</span> / <span id="ft">0</span></div><p id="fm">Виконуй завдання, і тут з\'явиться підсумок.</p><button class="again" onclick="location.reload()">🔄 Пройти ще раз</button>';
+  app.appendChild(fin);
+  updateTop();
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{
+    if(e.isIntersecting){document.querySelectorAll(".chip").forEach(c=>c.classList.remove("on"));
+      const id=e.target.id.replace("t","");const c=$("#chip"+(+id-1));if(c){c.classList.add("on");c.scrollIntoView({block:"nearest",inline:"center"})}}
+  })},{rootMargin:"-40% 0px -55% 0px"});
+  document.querySelectorAll(".topic").forEach(t=>io.observe(t));
+}
+build();
+$("#fs").textContent=0;$("#ft").textContent=total;
+</script>
+</body>
+</html>

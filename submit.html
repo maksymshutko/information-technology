@@ -27,8 +27,7 @@
     </div>
     <div class="links">
       <a href="index.html">Головна</a>
-      <a href="10-klas/index.html">10 клас</a>
-      <a href="11-klas/index.html">11 клас</a>
+      <a href="index.html#rozdily">Розділи</a>
       <a href="pidruchnyk.html">Підручник</a>
       <a href="submit.html" class="active">Здати роботу</a>
     </div>
@@ -55,31 +54,25 @@
 
     <div class="form-row">
       <div class="field">
-        <label>Клас</label>
+        <label>Група</label>
         <select id="klass" required>
-          <option value="" disabled selected>Обери клас</option>
-          <option>10-А</option><option>10-Б</option><option>10-В</option>
-          <option>11-А</option><option>11-Б</option><option>11-В</option>
+          <option value="" disabled selected>Обери групу</option>
+          <option>102</option><option>105</option><option>109</option><option>110</option><option>201</option><option>202</option><option>205</option><option>209</option><option>210</option><option>301</option><option>310</option>
         </select>
       </div>
       <div class="field">
-        <label>Урок / завдання</label>
-        <select id="lesson" required>
-          <option value="" disabled selected>Обери урок</option>
-          <optgroup label="10 клас · Тема 1">
-            <option>Урок 1 — БЖД, інформація/повідомлення/дані</option>
-            <option>Урок 2 — Інформаційні системи</option>
-            <option>Урок 4 — ПР1. Проблеми інформаційної безпеки</option>
-            <option>Урок 9 — Тематичне оцінювання (Операція «Інфоагент»)</option>
-          </optgroup>
-          <optgroup label="10 клас · Тема 2">
-            <option>Урок 11 — Статистичний аналіз даних</option>
-            <option>Урок 12 — Візуалізація даних, інфографіка</option>
-            <option>Урок 15 — Тематичне оцінювання (Місія аналітика)</option>
-          </optgroup>
+        <label>Розділ</label>
+        <select id="rozdil" required>
+          <option value="" disabled selected>Обери розділ</option>
+          <option>Розділ 1. Інформаційні технології в суспільстві</option><option>Розділ 2. Моделі та моделювання. Аналіз та візуалізація даних</option><option>Розділ 3. Системи керування базами даних</option><option>Розділ 4. Мультимедійні та гіпертекстові документи</option><option>Розділ 5. Графічний дизайн як засіб візуальної комунікації</option><option>Розділ 6. Векторна графіка</option><option>Розділ 7. Растрова графіка</option><option>Розділ 8. Графічний дизайн у поліграфії</option><option>Розділ 9. Основи анімації та відео</option><option>Розділ 10. Забезпечення безпеки комп’ютерних систем та мереж</option><option>Розділ 11. Основи електронного документообігу</option>
           <option>Інше</option>
         </select>
       </div>
+    </div>
+
+    <div class="field">
+      <label>Тема / завдання</label>
+      <input type="text" id="lesson" required placeholder="Наприклад: Практична робота. Створення банера">
     </div>
 
     <div class="field">
@@ -138,7 +131,7 @@
       lastname: document.getElementById('lastname').value,
       firstname: document.getElementById('firstname').value,
       klass: document.getElementById('klass').value,
-      lesson: document.getElementById('lesson').value,
+      lesson: document.getElementById('rozdil').value.split('.')[0] + ' — ' + document.getElementById('lesson').value.trim(),
       worktype: document.getElementById('worktype').value,
       link: document.getElementById('link').value,
       answer: document.getElementById('answer').value,

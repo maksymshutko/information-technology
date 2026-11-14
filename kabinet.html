@@ -48,8 +48,7 @@
     </div>
     <div class="links">
       <a href="index.html">Головна</a>
-      <a href="10-klas/index.html">10 клас</a>
-      <a href="11-klas/index.html">11 клас</a>
+      <a href="index.html#rozdily">Розділи</a>
       <a href="pidruchnyk.html">Підручник</a>
       <a href="submit.html">Здати роботу</a>
     </div>
@@ -74,7 +73,7 @@
 
   <div id="cabinetBody" style="display:none;">
     <div class="cab-toolbar">
-      <select id="filterKlass"><option value="">Усі класи</option></select>
+      <select id="filterKlass"><option value="">Усі групи</option></select>
       <select id="filterLesson"><option value="">Усі уроки</option></select>
       <input type="text" id="filterSearch" placeholder="Пошук за прізвищем чи ім'ям…">
       <button class="btn btn-ghost" onclick="refreshData()">↻ Оновити</button>
@@ -85,7 +84,7 @@
       <table class="data" id="dataTable">
         <thead>
           <tr>
-            <th>Дата</th><th>Прізвище</th><th>Ім'я</th><th>Клас</th><th>Урок / завдання</th><th>Тип роботи</th><th>Результат / відповідь</th><th>Посилання</th>
+            <th>Дата</th><th>Прізвище</th><th>Ім'я</th><th>Група</th><th>Урок / завдання</th><th>Тип роботи</th><th>Результат / відповідь</th><th>Посилання</th>
           </tr>
         </thead>
         <tbody id="tableBody"></tbody>
@@ -100,6 +99,8 @@
 
 <script>
   let allRows = [];
+  // група: новий заголовок «Група» або старий «Клас» у вже створеній таблиці
+  function grp(r){ return r['Група'] || r['Клас'] || ''; }
 
   function escapeHtml(s){
     return (s === undefined || s === null ? '' : s).toString()
@@ -123,7 +124,7 @@
   }
 
   function populateFilters(){
-    const klasses = [...new Set(allRows.map(r => r['Клас']).filter(Boolean))].sort();
+    const klasses = [...new Set(allRows.map(r => grp(r)).filter(Boolean))].sort();
     const lessons = [...new Set(allRows.map(r => r['Урок / завдання']).filter(Boolean))].sort();
 
     const klassSel = document.getElementById('filterKlass');
@@ -131,7 +132,7 @@
     const prevKlass = klassSel.value;
     const prevLesson = lessonSel.value;
 
-    klassSel.innerHTML = '<option value="">Усі класи</option>' + klasses.map(k => '<option>' + escapeHtml(k) + '</option>').join('');
+    klassSel.innerHTML = '<option value="">Усі групи</option>' + klasses.map(k => '<option>' + escapeHtml(k) + '</option>').join('');
     lessonSel.innerHTML = '<option value="">Усі уроки</option>' + lessons.map(l => '<option>' + escapeHtml(l) + '</option>').join('');
 
     if (klasses.includes(prevKlass)) klassSel.value = prevKlass;
@@ -144,7 +145,7 @@
     const search = document.getElementById('filterSearch').value.trim().toLowerCase();
 
     const rows = allRows.filter(r => {
-      if (klass && r['Клас'] !== klass) return false;
+      if (klass && grp(r) !== klass) return false;
       if (lesson && r['Урок / завдання'] !== lesson) return false;
       if (search) {
         const full = ((r['Прізвище'] || '') + ' ' + (r["Ім'я"] || '')).toLowerCase();
@@ -168,7 +169,7 @@
         '<td>' + formatDate(r['Дата (сервер)']) + '</td>' +
         '<td>' + escapeHtml(r['Прізвище']) + '</td>' +
         '<td>' + escapeHtml(r["Ім'я"]) + '</td>' +
-        '<td>' + escapeHtml(r['Клас']) + '</td>' +
+        '<td>' + escapeHtml(grp(r)) + '</td>' +
         '<td class="wrap-cell">' + escapeHtml(r['Урок / завдання']) + '</td>' +
         '<td>' + escapeHtml(r['Тип роботи']) + '</td>' +
         '<td class="wrap-cell">' + answerHtml + '</td>' +

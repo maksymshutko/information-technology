@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Повторення: ІТ в суспільстві</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1b1340; --bg:#fff7e8; --muted:#6b6590; --white:#fff;
+  --ok:#17b26a; --bad:#f04438;
+  --font:"Rubik","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:92px}
+body{margin:0;font-family:var(--font);font-size:19px;line-height:1.5;color:var(--ink);background:var(--bg);
+  background-image:radial-gradient(circle at 12% 8%,#ffd9e4 0,transparent 26%),radial-gradient(circle at 92% 18%,#d6f0ff 0,transparent 24%),radial-gradient(circle at 80% 70%,#e5ffd9 0,transparent 22%);
+  background-attachment:fixed}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+
+/* --- шапка --- */
+.hero{padding:34px 0 22px}
+.hero-card{background:var(--ink);color:#fff;border-radius:32px;padding:38px 40px;position:relative;overflow:hidden;box-shadow:8px 8px 0 #ff3e6c}
+.hero-card:before,.hero-card:after{content:"";position:absolute;border-radius:50%;opacity:.9}
+.hero-card:before{width:260px;height:260px;right:-60px;top:-80px;background:#6c4ce0}
+.hero-card:after{width:150px;height:150px;right:130px;bottom:-70px;background:#ffc94a}
+.hero .tag{display:inline-block;background:#ffc94a;color:var(--ink);font-weight:800;border-radius:99px;padding:6px 16px;font-size:15px;letter-spacing:.04em;text-transform:uppercase}
+.hero h1{font-size:clamp(32px,5vw,54px);line-height:1.1;margin:16px 0 10px;font-weight:800;position:relative}
+.hero p{font-size:21px;max-width:720px;margin:0;color:#e3dcff;position:relative}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+.step{background:#fff;border:3px solid var(--ink);border-radius:20px;padding:14px 18px;box-shadow:4px 4px 0 var(--ink);display:flex;gap:12px;align-items:center;font-weight:600}
+.step b{display:grid;place-items:center;flex:none;width:42px;height:42px;border-radius:50%;background:#00b8a9;color:#fff;font-size:20px}
+.step:nth-child(2) b{background:#ff3e6c}.step:nth-child(3) b{background:#6c4ce0}
+
+/* --- навігація --- */
+.bar{position:sticky;top:0;z-index:20;background:rgba(255,247,232,.94);backdrop-filter:blur(8px);border-bottom:3px solid var(--ink)}
+.bar-in{display:flex;gap:14px;align-items:center;padding:10px 20px;max-width:1120px;margin:0 auto}
+.score{flex:none;background:var(--ink);color:#ffc94a;border-radius:16px;padding:6px 16px;font-weight:800;font-size:20px;white-space:nowrap}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 2px;scrollbar-width:thin;flex:1}
+.chip{flex:none;display:grid;place-items:center;width:46px;height:46px;border-radius:50%;border:3px solid var(--ink);background:#fff;font-size:22px;text-decoration:none;position:relative;transition:transform .15s}
+.chip:hover{transform:translateY(-3px) rotate(-6deg)}
+.chip.on{background:var(--c);box-shadow:3px 3px 0 var(--ink)}
+.chip.done:after{content:"✓";position:absolute;right:-6px;top:-8px;width:22px;height:22px;border-radius:50%;background:var(--ok);color:#fff;font-size:13px;font-weight:800;display:grid;place-items:center;border:2px solid var(--ink)}
+.prog{height:8px;background:#eadfc9}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff3e6c,#ffc94a,#00b8a9);transition:width .4s}
+
+/* --- розділи-теми --- */
+.topic{margin:34px 0;background:#fff;border:4px solid var(--ink);border-radius:32px;box-shadow:10px 10px 0 var(--c);overflow:hidden}
+.t-head{background:var(--c);color:#fff;padding:22px 30px;display:flex;align-items:center;gap:18px;border-bottom:4px solid var(--ink)}
+.t-emoji{flex:none;width:76px;height:76px;border-radius:24px;background:#fff;border:4px solid var(--ink);display:grid;place-items:center;font-size:42px;transform:rotate(-5deg)}
+.t-num{font-weight:800;font-size:15px;letter-spacing:.08em;text-transform:uppercase;opacity:.95}
+.t-head h2{margin:0;font-size:clamp(24px,3.2vw,34px);line-height:1.15;font-weight:800;text-shadow:2px 2px 0 rgba(27,19,64,.35)}
+.t-score{margin-left:auto;flex:none;background:#fff;color:var(--ink);border:3px solid var(--ink);border-radius:16px;padding:6px 14px;font-weight:800;font-size:18px;white-space:nowrap}
+.t-body{padding:26px 30px 32px}
+.recap{background:color-mix(in srgb,var(--c) 12%,#fff);border:3px dashed var(--c);border-radius:22px;padding:18px 24px 14px;margin-bottom:26px}
+.recap h3{margin:0 0 8px;font-size:21px}
+.recap ul{margin:0;padding-left:0;list-style:none}
+.recap li{position:relative;padding:5px 0 5px 32px}
+.recap li:before{content:"★";position:absolute;left:4px;top:5px;color:var(--c);font-size:20px}
+.task{border:3px solid var(--ink);border-radius:24px;padding:20px 24px 22px;margin-top:20px;background:#fff;box-shadow:5px 5px 0 var(--ink)}
+.task-h{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-weight:800;font-size:20px}
+.task-h .badge{background:var(--c);color:#fff;border:3px solid var(--ink);border-radius:12px;padding:2px 12px;font-size:15px;text-transform:uppercase;letter-spacing:.04em}
+.q{font-size:21px;font-weight:600;margin:0 0 14px}
+.opts{display:grid;gap:12px}
+button{font:inherit;color:inherit;cursor:pointer}
+.opt{text-align:left;background:#fff;border:3px solid var(--ink);border-radius:18px;padding:12px 18px;font-weight:500;transition:transform .12s,background .12s;display:flex;gap:12px;align-items:center}
+.opt:hover:not(:disabled){transform:translateX(5px);background:color-mix(in srgb,var(--c) 14%,#fff)}
+.opt .l{flex:none;width:34px;height:34px;border-radius:50%;background:var(--c);color:#fff;font-weight:800;display:grid;place-items:center;border:2px solid var(--ink)}
+.opt.good{background:#d6f7e5;border-color:var(--ok)}
+.opt.good .l{background:var(--ok)}
+.opt.wrong{background:#ffe0dd;border-color:var(--bad);animation:shake .4s}
+.opt.wrong .l{background:var(--bad)}
+.opt:disabled{cursor:default}
+.fb{margin-top:12px;border-radius:16px;padding:10px 16px;font-weight:500;display:none}
+.fb.show{display:block}
+.fb.ok{background:#d6f7e5;border:2px solid var(--ok)}
+.fb.no{background:#fff0d6;border:2px solid #f79009}
+.row{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;border:3px solid var(--ink);border-radius:18px;padding:12px 16px;margin-bottom:12px;background:#fff}
+.row.good{background:#d6f7e5;border-color:var(--ok)}
+.row.shake{animation:shake .4s}
+.row .txt{font-weight:500}
+.row .ex{grid-column:1/-1;font-size:17px;color:#14633c;display:none}
+.row.good .ex{display:block}
+.btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.btns button{border:3px solid var(--ink);border-radius:14px;background:#fff;padding:6px 16px;font-weight:700;transition:transform .12s}
+.btns button:hover:not(:disabled){transform:translateY(-3px);background:color-mix(in srgb,var(--c) 18%,#fff)}
+.btns button.pick{background:var(--ok);color:#fff}
+.btns button.miss{background:var(--bad);color:#fff;animation:shake .4s}
+.btns button:disabled{cursor:default;opacity:.55}
+.btns button.pick:disabled{opacity:1}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:12px 38px}
+.m{border:3px solid var(--ink);border-radius:16px;padding:10px 14px;background:#fff;text-align:left;font-weight:500;transition:transform .12s}
+.m:hover:not(:disabled){transform:scale(1.02)}
+.m.sel{background:#ffc94a;transform:scale(1.03)}
+.m.bad{background:#ffe0dd;animation:shake .4s}
+.m.ok{color:#fff;border-color:var(--ink);background:var(--mc)}
+.m:disabled{cursor:default}
+.hint{font-size:16px;color:var(--muted);margin:0 0 12px}
+.gapline{padding:12px 4px;font-size:21px;font-weight:500}
+.slot{display:inline-block;min-width:130px;border-bottom:4px dashed var(--c);text-align:center;font-weight:800;padding:0 8px;cursor:pointer;color:var(--c)}
+.slot.act{background:#fff2c2;border-radius:8px}
+.slot.done{border-bottom-style:solid;color:var(--ok);cursor:default;background:none}
+.bank{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.word{border:3px solid var(--ink);background:#fff;border-radius:99px;padding:6px 18px;font-weight:700}
+.word:hover:not(:disabled){background:#ffc94a}
+.word.used{opacity:.3}
+.word.shake{animation:shake .4s;background:#ffe0dd}
+.ord{display:grid;gap:10px}
+.o{display:flex;gap:12px;align-items:center;border:3px solid var(--ink);border-radius:16px;padding:10px 14px;background:#fff;text-align:left;font-weight:500}
+.o:hover:not(:disabled){background:color-mix(in srgb,var(--c) 14%,#fff)}
+.o .n{flex:none;min-width:36px;height:36px;border-radius:50%;border:3px dashed var(--muted);display:grid;place-items:center;font-weight:800;color:var(--muted)}
+.o.set{background:#d6f7e5;border-color:var(--ok)}
+.o.set .n{border:3px solid var(--ok);background:var(--ok);color:#fff}
+.o.bad{background:#ffe0dd;animation:shake .4s}
+.o:disabled{cursor:default}
+textarea{width:100%;min-height:96px;border:3px solid var(--ink);border-radius:18px;padding:12px 16px;font:inherit;resize:vertical;background:#fffdf6}
+.reveal{margin-top:10px;border:3px solid var(--ink);background:var(--c);color:#fff;border-radius:14px;padding:8px 18px;font-weight:700}
+.sample{display:none;margin-top:12px;background:#f0ecff;border:3px dashed #6c4ce0;border-radius:18px;padding:12px 18px}
+.sample.show{display:block}
+.ribbon{display:none;margin-top:22px;background:#17b26a;color:#fff;border:3px solid var(--ink);border-radius:18px;padding:12px 20px;font-weight:800;font-size:21px;text-align:center;box-shadow:4px 4px 0 var(--ink)}
+.ribbon.show{display:block;animation:pop .5s}
+
+/* --- фінал --- */
+.final{margin:40px 0 70px;background:var(--ink);color:#fff;border-radius:32px;padding:40px;text-align:center;box-shadow:10px 10px 0 #00b8a9}
+.final h2{font-size:clamp(28px,4vw,42px);margin:0 0 6px}
+.big{font-size:84px;font-weight:800;color:#ffc94a;line-height:1.1}
+.final p{font-size:22px;margin:8px auto;max-width:700px;color:#e3dcff}
+.again{margin-top:18px;border:3px solid #fff;background:#ff3e6c;color:#fff;border-radius:18px;padding:12px 30px;font-weight:800;font-size:20px}
+.again:hover{background:#ff5d85}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+@keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.06)}100%{transform:scale(1);opacity:1}}
+@media (max-width:760px){
+  body{font-size:17px}
+  .steps{grid-template-columns:1fr}
+  .hero-card{padding:26px 22px}
+  .t-head{padding:16px 18px;flex-wrap:wrap}
+  .t-emoji{width:58px;height:58px;font-size:32px}
+  .t-body{padding:18px 16px 24px}
+  .match{grid-template-columns:1fr}
+  .row{grid-template-columns:1fr}
+  .btns{justify-content:flex-start}
+  .score{font-size:16px;padding:4px 10px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero"><div class="wrap">
+  <div class="hero-card">
+    <span class="tag">Розділ 1 · Повторення</span>
+    <h1>Інформаційні технології в суспільстві</h1>
+    <p>11 тем, коротке нагадування та міні-завдання. Пригадай головне, виконай вправи й назбирай якомога більше зірок!</p>
+  </div>
+  <div class="steps">
+    <div class="step"><b>1</b>Прочитай «Пригадаймо» у кожній темі</div>
+    <div class="step"><b>2</b>Виконай міні-завдання: відповідь з першої спроби дає ⭐</div>
+    <div class="step"><b>3</b>Дивись свій результат угорі та внизу сторінки</div>
+  </div>
+</div></header>
+
+<nav class="bar" aria-label="Теми">
+  <div class="bar-in">
+    <div class="score">⭐ <span id="sc">0</span> / <span id="tot">0</span></div>
+    <div class="chips" id="chips"></div>
+  </div>
+  <div class="prog"><i id="pg"></i></div>
+</nav>
+
+<main class="wrap" id="app"></main>
+
+<script>
+/* ============ ДАНІ ============ */
+const COLORS=["#ff3e6c","#ff8a00","#e5a800","#2bb673","#00a99d","#1e8fff","#6c4ce0","#b24bf3","#e8368f","#4f6bed","#0a9396"];
+const TF=["Правда","Міф"];
+
+const TOPICS=[
+{emoji:"📡",title:"Інформація, повідомлення, дані, інформаційні процеси",
+ recap:["<b>Інформація</b> — відомості про об'єкти, явища й події, які зменшують невизначеність і допомагають приймати рішення.",
+  "<b>Повідомлення</b> — форма, у якій інформацію подають і передають: текст, звук, зображення, жест, сигнал.",
+  "<b>Дані</b> — інформація у вигляді, придатному для зберігання й обробки, зокрема комп'ютером.",
+  "<b>Інформаційні процеси</b>: збирання, зберігання, обробка й передавання."],
+ tasks:[
+  {type:"choose",title:"Правда чи міф?",opts:TF,items:[
+    {t:"Інформація зменшує невизначеність.",a:0,e:"Так: отримавши відомості, ми знаємо більше й легше обираємо дію."},
+    {t:"Дані й інформація — це абсолютно те саме, що й повідомлення.",a:1,e:"Повідомлення — форма, дані — подання для обробки, інформація — зміст, який отримує людина."},
+    {t:"Фото, відео й текст — приклади повідомлень.",a:0,e:"Це різні форми подання повідомлень."}]},
+  {type:"match",title:"З'єднай процес із прикладом",pairs:[
+    ["Збирання","Опитування групи про улюблені предмети"],["Зберігання","Запис таблиці на флешку"],
+    ["Обробка","Підрахунок середнього балу"],["Передавання","Надсилання листа електронною поштою"]]},
+  {type:"quiz",q:"Світлофор змінив колір на червоний. Що тут є повідомленням?",opts:["Знання, що потрібно зупинитись","Сигнал червоного світла","Правила дорожнього руху","Рішення водія"],a:1,
+   e:"Повідомлення — сам сигнал. Інформація — сенс, який із нього витягує людина: «треба зупинитись»."},
+  {type:"open",q:"Наведи приклад, як одна й та сама інформація може бути подана різними повідомленнями (наприклад, прогноз погоди).",
+   s:"Прогноз «завтра дощ» можна подати текстом у новинах, голосом диктора, значком хмаринки із краплями в застосунку або картою з кольоровими зонами."}]},
+
+{emoji:"🏛️",title:"Інформаційні системи — складники й ознаки сучасного суспільства",
+ recap:["<b>Інформаційна система (ІС)</b> — сукупність технічних засобів, програм, даних, людей і правил для збирання, зберігання, обробки та передавання інформації.",
+  "Приклади: електронний журнал, «Дія», навігатор, онлайн-продаж квитків.",
+  "Ознаки сучасного суспільства: інформація — головний ресурс, швидкий обмін даними, цифрові послуги, глобальні мережі."],
+ tasks:[
+  {type:"quiz",q:"Яке твердження про інформаційну систему правильне?",opts:["ІС — це лише комп'ютер","ІС — це тільки сайт в інтернеті","ІС поєднує техніку, програми, дані та людей","ІС працює без людей і без даних"],a:2,
+   e:"Усі складники потрібні разом: без людей, даних чи програм система не працює."},
+  {type:"choose",title:"Який це складник інформаційної системи?",opts:["Апаратне","Програмне","Дані","Люди"],items:[
+    {t:"Сервер",a:0},{t:"Операційна система",a:1},{t:"База даних учнів",a:2},{t:"Адміністратор системи",a:3},{t:"Смартфон користувача",a:0}]},
+  {type:"match",title:"З'єднай систему з призначенням",pairs:[
+    ["Електронний журнал","Облік оцінок і відвідування"],["«Дія»","Державні послуги онлайн"],
+    ["Навігатор","Прокладання маршруту"],["Онлайн-продаж квитків","Бронювання місць і оплата"]]},
+  {type:"open",q:"Назви три інформаційні системи, якими ти користуєшся впродовж дня, і поясни, навіщо вони тобі.",
+   s:"Наприклад: месенджер (спілкування), електронний щоденник (оцінки й розклад), застосунок транспорту (маршрути й оплата проїзду)."}]},
+
+{emoji:"☁️",title:"Сучасні інформаційні технології та системи",
+ recap:["<b>Хмарні технології</b> — дані й програми працюють на віддалених серверах, доступ через інтернет.",
+  "<b>Big Data</b> — величезні масиви даних, які обробляють спеціальними методами.",
+  "<b>Інтернет речей (IoT)</b> — пристрої з датчиками, під'єднані до мережі.",
+  "<b>VR</b> — повне занурення у віртуальний світ, <b>AR</b> — віртуальні об'єкти поверх реального світу."],
+ tasks:[
+  {type:"match",title:"З'єднай технологію з описом",pairs:[
+    ["Хмарні технології","Дані й програми на віддалених серверах"],["Big Data","Величезні масиви даних для аналізу"],
+    ["Інтернет речей","Пристрої з датчиками в мережі"],["Доповнена реальність (AR)","Віртуальні об'єкти поверх реального світу"]]},
+  {type:"quiz",q:"Кілька людей одночасно редагують один документ у Google Документах. Це приклад...",opts:["хмарних технологій","віртуальної реальності","автономного програмування","роботів-помічників"],a:0,
+   e:"Документ зберігається на сервері, тож усі бачать зміни в реальному часі."},
+  {type:"choose",title:"Правда чи міф?",opts:TF,items:[
+    {t:"Розумний годинник, що передає пульс на телефон, — приклад інтернету речей.",a:0,e:"Пристрій із датчиком передає дані в мережу."},
+    {t:"VR накладає віртуальні об'єкти на зображення з камери телефона.",a:1,e:"Це AR. VR занурює в повністю віртуальний світ."},
+    {t:"Big Data — це просто дуже великий жорсткий диск.",a:1,e:"Big Data — це про великі обсяги даних і способи їх аналізу."}]},
+  {type:"open",q:"Яку сучасну технологію з цієї теми ти вважаєш найкориснішою для свого майбутнього фаху й чому?",
+   s:"Приклад: хмарні технології, бо дозволяють працювати над проєктами з будь-якого місця й не втрачати файли."}]},
+
+{emoji:"🧑‍💻",title:"Людина в інформаційному суспільстві",
+ recap:["<b>Інформаційне суспільство</b> — суспільство, у якому головним ресурсом є інформація та знання.",
+  "<b>Цифрова грамотність</b> — уміння безпечно й ефективно користуватись цифровими технологіями.",
+  "<b>Мережевий етикет (нетикет)</b> — правила ввічливого спілкування онлайн.",
+  "<b>Цифровий слід</b> — дані про нас, що залишаються в мережі; <b>авторське право</b> захищає твори авторів."],
+ tasks:[
+  {type:"quiz",q:"Інформаційне суспільство — це суспільство, де...",opts:["немає паперових книжок","головним ресурсом є інформація й знання","усі працюють лише вдома","заборонені соцмережі"],a:1,
+   e:"Знання й обробка інформації стають основою економіки й життя."},
+  {type:"gap",title:"Встав пропущене слово",bank:["слід","нетикет","авторське","вірус","пароль"],items:[
+    {t:"Цифровий ___ — це інформація про нас, яка залишається в інтернеті.",a:"слід"},
+    {t:"Правила ввічливого спілкування в мережі називають ___.",a:"нетикет"},
+    {t:"Права автора на його твір захищає ___ право.",a:"авторське"}]},
+  {type:"choose",title:"Правда чи міф?",opts:TF,items:[
+    {t:"Зображення з інтернету можна без обмежень використовувати без згадки автора.",a:1,e:"Більшість творів захищені авторським правом: потрібні дозвіл або вказання автора за ліцензією."},
+    {t:"Цифрова грамотність — це вміння безпечно й ефективно користуватись цифровими технологіями.",a:0,e:"Саме так."}]},
+  {type:"open",q:"Які три правила нетикету ти б запропонував(ла) для чату вашої групи?",
+   s:"Наприклад: не писати капсом і не ображати; не пересилати чужі фото без дозволу; не надсилати повідомлення вночі без потреби."}]},
+
+{emoji:"🔐",title:"Проблеми інформаційної безпеки",
+ recap:["Три цілі захисту: <b>конфіденційність</b>, <b>цілісність</b>, <b>доступність</b> даних.",
+  "Загрози: віруси, трояни, шпигунське ПЗ, шифрувальники, фішинг, соціальна інженерія.",
+  "Захист: надійні унікальні паролі, двофакторна автентифікація, оновлення, антивірус, резервні копії."],
+ tasks:[
+  {type:"match",title:"З'єднай властивість безпеки з поясненням",pairs:[
+    ["Конфіденційність","Доступ до даних мають лише уповноважені"],["Цілісність","Дані не змінені без дозволу"],
+    ["Доступність","Дані й сервіси доступні, коли потрібні"]]},
+  {type:"quiz",q:"Який пароль найнадійніший?",opts:["qwerty123","Dima2008","Kyiv-Rain-Tram-47!","12345678"],a:2,
+   e:"Довга фраза з різними символами важко підібрати. Пароль має бути унікальним для кожного сайту."},
+  {type:"choose",title:"Правда чи міф?",opts:TF,items:[
+    {t:"Двофакторна автентифікація додає другий крок перевірки, окрім пароля.",a:0,e:"Наприклад, код із SMS чи застосунку."},
+    {t:"Антивірус гарантує 100% захист, тому обережність не потрібна.",a:1,e:"Антивірус допомагає, але не замінює уважність."},
+    {t:"Шифрувальник блокує файли й вимагає викуп.",a:0,e:"Тому важливі резервні копії."}]},
+  {type:"open",q:"Опиши три кроки, які допоможуть захистити твій акаунт у соцмережі.",
+   s:"Унікальний довгий пароль; ввімкнена двофакторна автентифікація; перевірка пристроїв, що мають доступ, і відмова переходити за підозрілими посиланнями."}]},
+
+{emoji:"⚠️",title:"Загрози при роботі в Інтернеті",
+ recap:["<b>Фішинг</b> — підроблені листи й сайти, що виманюють паролі та дані карток.",
+  "Небезпечні завантаження, шахрайство, публічний Wi-Fi, кібербулінг, крадіжка особистих даних.",
+  "Ознаки обману: тиск і поспіх, обіцянки виграшу, дивна адреса сайту, прохання надіслати код із SMS."],
+ tasks:[
+  {type:"choose",title:"Безпечно чи ризиковано?",opts:["Безпечно","Ризиковано"],items:[
+    {t:"Ввести пароль від банку на сайті за посиланням із листа «Ваш рахунок заблоковано».",a:1,e:"Класичний фішинг: заходь у застосунок банку самостійно."},
+    {t:"Перевірити адресу сайту перед введенням даних.",a:0},
+    {t:"Підключитись до відкритого Wi-Fi й оплатити покупку карткою.",a:1,e:"У відкритій мережі дані легше перехопити."},
+    {t:"Увімкнути двофакторну автентифікацію.",a:0},
+    {t:"Надіслати дані картки, щоб «отримати виграш у лотерею».",a:1,e:"Це шахрайство."},
+    {t:"Нікому не повідомляти код із SMS.",a:0}]},
+  {type:"quiz",q:"Фішинг — це...",opts:["прискорення інтернету","виманювання паролів і даних через підроблені листи чи сайти","вид комп'ютерної гри","програма для резервного копіювання"],a:1,
+   e:"Зловмисники видають себе за банк, сервіс чи знайомого."},
+  {type:"choose",title:"Правда чи міф?",opts:TF,items:[
+    {t:"Замочок і https у браузері означають, що сайт точно чесний.",a:1,e:"Https лише шифрує з'єднання, але шахрайський сайт теж може його мати."}]},
+  {type:"open",q:"Тобі пишуть: «Ваш акаунт заблоковано, терміново перейдіть за посиланням!». Що ти зробиш?",
+   s:"Не переходити за посиланням; зайти на сайт чи в застосунок самостійно; перевірити сповіщення; за підозри змінити пароль і повідомити службу підтримки."}]},
+
+{emoji:"🎓",title:"Навчання в інтернеті",
+ recap:["<b>Синхронне</b> навчання — у реальному часі (урок у Zoom), <b>асинхронне</b> — у зручний час (відеокурс).",
+  "Платформи: Prometheus, Coursera, Khan Academy, Duolingo та інші.",
+  "Перед вибором курсу: цілі, програма, відгуки, практика. Перевіряй джерела й плануй час."],
+ tasks:[
+  {type:"match",title:"З'єднай поняття з поясненням",pairs:[
+    ["Синхронне навчання","Урок у відеозв'язку в реальному часі"],["Асинхронне навчання","Відеокурс у будь-який зручний час"],
+    ["Змішане навчання","Поєднання онлайн й очних занять"],["Сертифікат курсу","Підтвердження проходження навчання"]]},
+  {type:"order",title:"Як перевірити достовірність джерела? Розстав кроки по порядку",steps:[
+    "Дізнатись, хто автор і яка організація стоїть за сайтом","Подивитись, коли матеріал опубліковано","Перевірити, чи є посилання на першоджерела","Порівняти з іншими надійними джерелами"],
+   e:"Автор → дата → першоджерела → порівняння."},
+  {type:"quiz",q:"Яка ознака якісного онлайн-курсу?",opts:["Обіцянка стати експертом за один вечір","Зрозумілі цілі, програма, відгуки та практичні завдання","Тільки платний доступ","Відсутність викладача й контактів"],a:1,
+   e:"Чесний курс описує, чого навчить, і дає практику."},
+  {type:"open",q:"Склади план: як ти організуєш самостійне вивчення онлайн-курсу, щоб довести його до кінця?",
+   s:"Фіксований час у розкладі, малі цілі на тиждень, нотатки, відпочинок між блоками, ранній старт завдань, питання на форумі чи в чаті."}]},
+
+{emoji:"🚀",title:"Професії майбутнього: тенденції ринку праці",
+ recap:["Автоматизація й ШІ змінюють ринок: одні завдання зникають, з'являються нові професії.",
+  "Зростає попит на аналітиків даних, фахівців із кібербезпеки, розробників, UX/UI-дизайнерів, спеціалістів із робототехніки.",
+  "Важливі «м'які навички»: критичне мислення, комунікація, адаптивність. Навчання триває впродовж життя."],
+ tasks:[
+  {type:"match",title:"З'єднай професію з завданням",pairs:[
+    ["Аналітик даних","Шукає закономірності в даних"],["Фахівець із кібербезпеки","Захищає системи й дані"],
+    ["UX/UI-дизайнер","Проєктує зручні інтерфейси"],["Розробник","Створює програми й сервіси"]]},
+  {type:"choose",title:"Правда чи міф?",opts:TF,items:[
+    {t:"Нові технології лише зменшують кількість робочих місць.",a:1,e:"Одні професії зникають, але з'являються й нові."},
+    {t:"Уміння працювати в команді й критично мислити цінуються в усіх професіях.",a:0,e:"Це «м'які навички» універсального значення."},
+    {t:"Після випуску навчання можна завершити назавжди.",a:1,e:"Технології змінюються, тож вчитись доведеться впродовж життя."}]},
+  {type:"quiz",q:"Що найкраще допомагає не залишитись без роботи в епоху автоматизації?",opts:["Уникати всіх нових технологій","Вчитись упродовж життя й розвивати гнучкі навички","Працювати без перерв","Мати лише одну вузьку спеціальність"],a:1,
+   e:"Адаптивність і готовність вчитись — головний ресурс працівника."},
+  {type:"open",q:"Обери професію майбутнього, яка тобі цікава. Які навички й знання знадобляться для неї?",
+   s:"Наприклад, аналітик даних: статистика, робота з таблицями й базами, візуалізація, критичне мислення, англійська."}]},
+
+{emoji:"💼",title:"Роль інформаційних технологій у роботі сучасного працівника",
+ recap:["Офісні пакети й таблиці, хмарні сервіси спільної роботи, месенджери й відеозв'язок.",
+  "Електронний документообіг, кваліфікований електронний підпис (КЕП), CRM/ERP, автоматизація процесів.",
+  "У транспорті: GPS-моніторинг, електронні накладні, системи диспетчерування."],
+ tasks:[
+  {type:"match",title:"З'єднай інструмент із призначенням",pairs:[
+    ["Електронні таблиці","Розрахунки й аналіз даних"],["Відеозв'язок","Наради віддалено"],
+    ["Хмарний документ","Спільне редагування онлайн"],["КЕП","Підписання документів онлайн"]]},
+  {type:"gap",title:"Встав пропущене слово",bank:["хмарні","підпис","принтер","сканер"],items:[
+    {t:"Для спільного редагування документа зручні ___ сервіси.",a:"хмарні"},
+    {t:"Кваліфікований електронний ___ має таку саму силу, як власноручний.",a:"підпис"}]},
+  {type:"quiz",q:"Електронний документообіг — це...",opts:["друк усіх документів на принтері","обіг документів в електронному вигляді з обліком і підписом","листування в месенджері без контролю","збереження документів на одному комп'ютері"],a:1,
+   e:"Документи створюють, погоджують і зберігають електронно."},
+  {type:"open",q:"Як ІТ допомагають працівнику твого майбутнього фаху? Назви три приклади.",
+   s:"Наприклад, для водія чи диспетчера: GPS-навігація, електронні накладні, обмін повідомленнями з логістом."}]},
+
+{emoji:"🤖",title:"Поняття про штучний інтелект",
+ recap:["<b>Штучний інтелект (ШІ)</b> — системи, що виконують завдання, які зазвичай потребують людського інтелекту.",
+  "<b>Машинне навчання</b> — програма вчиться на даних, а не за готовими правилами.",
+  "<b>Генеративний ШІ</b> створює нові тексти, зображення, музику.",
+  "Обмеження: ШІ помиляється, може бути упередженим, а його відповіді треба перевіряти."],
+ tasks:[
+  {type:"quiz",q:"Що таке машинне навчання?",opts:["Навчання школярів на комп'ютерах","Метод, коли програма вчиться на даних і знаходить закономірності","Ремонт верстатів","Швидке друкування тексту"],a:1,
+   e:"Програма аналізує приклади й сама формує правила."},
+  {type:"match",title:"З'єднай застосування ШІ з прикладом",pairs:[
+    ["Розпізнавання мови","Голосовий помічник"],["Генеративний ШІ","Створення нових зображень за описом"],
+    ["Рекомендаційні системи","Добірка відео за вподобаннями"],["Комп'ютерний зір","Розпізнавання облич і номерів авто"]]},
+  {type:"gap",title:"Встав пропущене слово",bank:["перевіряти","копіювати","ігнорувати"],items:[
+    {t:"Відповіді штучного інтелекту обов'язково потрібно ___.",a:"перевіряти"}]},
+  {type:"choose",title:"Правда чи міф?",opts:TF,items:[
+    {t:"ШІ завжди дає правильні відповіді.",a:1,e:"ШІ може помилятись або вигадувати факти."},
+    {t:"Якість ШІ залежить від даних, на яких його навчали.",a:0,e:"Погані чи однобокі дані дають упереджені результати."}]},
+  {type:"open",q:"Як чесно використовувати ШІ в навчанні, щоб він допомагав, а не підміняв твої знання?",
+   s:"Просити пояснення й приклади, перевіряти факти за джерелами, писати завдання самостійно, вказувати, що використовував ШІ, не здавати чужий текст як свій."}]},
+
+{emoji:"🌆",title:"Smart-технології та колективний інтелект",
+ recap:["<b>Smart-технології</b> збирають дані й пристосовуються до людини: смарт-будинок, смарт-місто, розумний годинник.",
+  "<b>Колективний інтелект</b> — коли багато людей разом розв'язують задачу краще, ніж поодинці.",
+  "Приклади колективного інтелекту: Вікіпедія, краудсорсинг, краудфандинг, OpenStreetMap."],
+ tasks:[
+  {type:"choose",title:"Колективний інтелект чи Smart-технологія?",opts:["Колективний інтелект","Smart-технологія"],items:[
+    {t:"Вікіпедія",a:0},{t:"Розумний термостат у квартирі",a:1},{t:"OpenStreetMap",a:0},
+    {t:"Лампа, що вмикається за датчиком руху",a:1},{t:"Краудфандинг-збір коштів",a:0},{t:"Розумний годинник",a:1}]},
+  {type:"quiz",q:"Що таке краудсорсинг?",opts:["Продаж техніки онлайн","Залучення багатьох людей до розв'язання спільної задачі","Зберігання даних у хмарі","Захист від вірусів"],a:1,
+   e:"Приклад: волонтери разом наповнюють мапу чи перекладають тексти."},
+  {type:"choose",title:"Правда чи міф?",opts:TF,items:[
+    {t:"Вікіпедію створюють і редагують багато добровольців.",a:0},
+    {t:"Смарт-годинник — приклад колективного інтелекту.",a:1,e:"Це Smart-пристрій, а не спільна робота людей."}]},
+  {type:"open",q:"Придумай ідею «розумного» рішення для твого ліцею, гуртожитку або міста. Які дані воно збиратиме?",
+   s:"Наприклад: розумні датчики світла в коридорах (дані руху й освітленості), система запису в їдальню без черг (дані відвідуваності)."}]}
+];
+
+/* ============ ДВИЖОК ============ */
+const $=(s,r=document)=>r.querySelector(s);
+const el=(tag,cls,html)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e};
+let total=0, earned=0;
+const secs=[];
+
+function seeded(seed){let t=seed>>>0;return()=>{t=(t*1664525+1013904223)>>>0;return t/4294967296}}
+function shuffled(n,seed){
+  const idx=[...Array(n).keys()],r=seeded(seed);
+  for(let k=0;k<6;k++){
+    for(let i=n-1;i>0;i--){const j=Math.floor(r()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]]}
+    if(n<2||idx.some((v,i)=>v!==i))break;
+  }
+  return idx;
+}
+function updateTop(){
+  $("#sc").textContent=earned;$("#tot").textContent=total;
+  const done=secs.reduce((a,s)=>a+s.done,0);
+  $("#pg").style.width=(total?done/total*100:0)+"%";
+  const fs=$("#fs");if(!fs)return;
+  fs.textContent=earned;$("#ft").textContent=total;
+  const p=total?earned/total:0;
+  let m="Виконуй завдання: відповідь із першої спроби дає ⭐.";
+  if(done===total) m=p>=.9?"🏆 Відмінно! Ти добре пам'ятаєш тему й готовий до контрольної.":p>=.7?"👍 Добре! Повтори теми, де були помилки, і спробуй ще раз.":p>=.5?"🙂 Непогано. Перечитай блоки «Пригадаймо» й пройди повторно.":"📚 Є над чим попрацювати. Перечитай теми та спробуй ще раз!";
+  else if(done>0) m="Виконано "+done+" із "+total+" завдань. Продовжуй!";
+  $("#fm").textContent=m;
+}
+function unit(sec){sec.units++;total++;}
+function solved(sec,first){
+  sec.done++; if(first){sec.earned++;earned++}
+  $(".t-score",sec.node).textContent="⭐ "+sec.earned+" / "+sec.units;
+  if(sec.done===sec.units){
+    $(".ribbon",sec.node).classList.add("show");
+    $("#chip"+sec.i).classList.add("done");
+  }
+  updateTop();
+}
+
+const builders={
+  quiz(t,box,sec){
+    unit(sec);let wrong=false;
+    box.appendChild(el("p","q",t.q));
+    const wrap=el("div","opts");box.appendChild(wrap);
+    const fb=el("div","fb");
+    t.opts.forEach((o,i)=>{
+      const b=el("button","opt",'<span class="l">'+"АБВГ"[i]+"</span><span>"+o+"</span>");
+      b.onclick=()=>{
+        if(i===t.a){
+          b.classList.add("good");[...wrap.children].forEach(x=>x.disabled=true);
+          fb.className="fb show ok";fb.innerHTML="✅ Вірно! "+(t.e||"");solved(sec,!wrong);
+        }else{
+          wrong=true;b.classList.add("wrong");b.disabled=true;
+          fb.className="fb show no";fb.innerHTML="Не зовсім. Спробуй ще раз!";
+        }
+      };wrap.appendChild(b);
+    });
+    box.appendChild(fb);
+  },
+  choose(t,box,sec){
+    t.items.forEach(it=>{
+      unit(sec);let wrong=false;
+      const row=el("div","row");row.appendChild(el("div","txt",it.t));
+      const btns=el("div","btns");
+      t.opts.forEach((o,i)=>{
+        const b=el("button","",o);
+        b.onclick=()=>{
+          if(i===it.a){
+            b.classList.add("pick");[...btns.children].forEach(x=>x.disabled=true);
+            row.classList.add("good");solved(sec,!wrong);
+          }else{
+            wrong=true;b.classList.add("miss");b.disabled=true;
+            row.classList.remove("shake");void row.offsetWidth;row.classList.add("shake");
+          }
+        };btns.appendChild(b);
+      });
+      row.appendChild(btns);
+      row.appendChild(el("div","ex",it.e?"💡 "+it.e:"✅ Вірно!"));
+      box.appendChild(row);
+    });
+  },
+  match(t,box,sec){
+    box.appendChild(el("p","hint","Натисни на елемент ліворуч, а потім на підходящий до нього праворуч."));
+    const grid=el("div","match");box.appendChild(grid);
+    const L=el("div");L.style.display="grid";L.style.gap="12px";
+    const R=el("div");R.style.display="grid";R.style.gap="12px";
+    grid.appendChild(L);grid.appendChild(R);
+    const wrongs=t.pairs.map(()=>false);let sel=null,pairColors=["#ff3e6c","#6c4ce0","#00a99d","#e5a800","#1e8fff","#b24bf3"];
+    t.pairs.forEach(()=>unit(sec));
+    const lb=t.pairs.map((p,i)=>{const b=el("button","m",p[0]);b.onclick=()=>{
+        if(b.disabled)return;
+        if(sel)sel.classList.remove("sel");sel=b;b.classList.add("sel");
+      };b.dataset.i=i;L.appendChild(b);return b});
+    const order=shuffled(t.pairs.length,t.pairs.length*7+t.pairs[0][0].length);
+    order.forEach(i=>{
+      const b=el("button","m",t.pairs[i][1]);b.dataset.i=i;
+      b.onclick=()=>{
+        if(b.disabled||!sel)return;
+        const li=+sel.dataset.i;
+        if(li===i){
+          const c=pairColors[i%pairColors.length];
+          [sel,b].forEach(x=>{x.classList.remove("sel");x.classList.add("ok");x.style.setProperty("--mc",c);x.disabled=true});
+          sel=null;solved(sec,!wrongs[li]);
+        }else{
+          wrongs[li]=true;const s=sel;
+          [s,b].forEach(x=>x.classList.add("bad"));
+          setTimeout(()=>{[s,b].forEach(x=>x.classList.remove("bad"))},450);
+          s.classList.remove("sel");sel=null;
+        }
+      };R.appendChild(b);
+    });
+  },
+  gap(t,box,sec){
+    box.appendChild(el("p","hint","Натисни слово зі списку — воно стане на підсвічене місце. Можна обрати інше місце, натиснувши на нього."));
+    const slots=[];let active=0;
+    t.items.forEach((it,k)=>{
+      unit(sec);
+      const line=el("div","gapline");
+      const parts=it.t.split("___");
+      line.appendChild(document.createTextNode(parts[0]));
+      const sl=el("span","slot","&nbsp;");sl.dataset.k=k;sl.onclick=()=>{if(!sl.classList.contains("done")){active=k;paint()}};
+      line.appendChild(sl);line.appendChild(document.createTextNode(parts[1]||""));
+      box.appendChild(line);slots.push({sl,it,wrong:false,done:false});
+    });
+    function paint(){slots.forEach((s,k)=>s.sl.classList.toggle("act",k===active&&!s.done))}
+    const bank=el("div","bank");box.appendChild(bank);
+    t.bank.forEach(w=>{
+      const b=el("button","word",w);
+      b.onclick=()=>{
+        const s=slots[active];
+        if(!s||s.done){const n=slots.findIndex(x=>!x.done);if(n<0)return;active=n;paint();return}
+        if(w===s.it.a){
+          s.sl.textContent=w;s.sl.classList.remove("act");s.sl.classList.add("done");s.done=true;
+          solved(sec,!s.wrong);
+          const n=slots.findIndex(x=>!x.done);active=n<0?0:n;paint();
+        }else{
+          s.wrong=true;b.classList.remove("shake");void b.offsetWidth;b.classList.add("shake");
+          setTimeout(()=>b.classList.remove("shake"),450);
+        }
+      };bank.appendChild(b);
+    });
+    paint();
+  },
+  order(t,box,sec){
+    unit(sec);let wrong=false,next=0;
+    box.appendChild(el("p","hint","Натискай кроки по порядку: спочатку перший, потім другий і так далі."));
+    const wrap=el("div","ord");box.appendChild(wrap);
+    const fb=el("div","fb");
+    shuffled(t.steps.length,t.steps.length*13+5).forEach(i=>{
+      const b=el("button","o",'<span class="n">?</span><span>'+t.steps[i]+"</span>");
+      b.onclick=()=>{
+        if(b.disabled)return;
+        if(i===next){
+          next++;b.classList.add("set");b.disabled=true;$(".n",b).textContent=next;
+          if(next===t.steps.length){fb.className="fb show ok";fb.innerHTML="✅ Вірно! "+(t.e||"");solved(sec,!wrong)}
+        }else{
+          wrong=true;b.classList.add("bad");setTimeout(()=>b.classList.remove("bad"),450);
+        }
+      };wrap.appendChild(b);
+    });
+    box.appendChild(fb);
+  },
+  open(t,box){
+    box.appendChild(el("p","q",t.q));
+    const ta=el("textarea");ta.placeholder="Напиши свою відповідь тут (вона нікуди не надсилається)…";box.appendChild(ta);
+    const rb=el("button","reveal","👀 Показати зразок відповіді");
+    const sm=el("div","sample","<b>Зразок:</b> "+t.s);
+    rb.onclick=()=>{sm.classList.toggle("show");rb.textContent=sm.classList.contains("show")?"🙈 Сховати зразок":"👀 Показати зразок відповіді"};
+    box.appendChild(rb);box.appendChild(sm);
+  }
+};
+const LABELS={quiz:"Тест",choose:"Швидка перевірка",match:"Пари",gap:"Пропуски",order:"Порядок",open:"Подумай"};
+
+function build(){
+  const app=$("#app"),chips=$("#chips");
+  TOPICS.forEach((T,i)=>{
+    const c=COLORS[i%COLORS.length];
+    const a=el("a","chip",T.emoji);a.href="#t"+(i+1);a.id="chip"+i;a.title=T.title;a.style.setProperty("--c",c);chips.appendChild(a);
+    const node=el("section","topic");node.id="t"+(i+1);node.style.setProperty("--c",c);
+    node.innerHTML='<div class="t-head"><div class="t-emoji">'+T.emoji+'</div><div><div class="t-num">Тема '+(i+1)+' з '+TOPICS.length+'</div><h2>'+T.title+'</h2></div><div class="t-score"></div></div>'
+      +'<div class="t-body"><div class="recap"><h3>📌 Пригадаймо</h3><ul>'+T.recap.map(r=>"<li>"+r+"</li>").join("")+'</ul></div><div class="tasks"></div><div class="ribbon">🎉 Тему пройдено! Молодець!</div></div>';
+    const sec={i,node,units:0,done:0,earned:0};secs.push(sec);
+    const tasks=$(".tasks",node);
+    T.tasks.forEach((t,k)=>{
+      const box=el("div","task");
+      const title=t.title||(t.type==="quiz"?"Обери правильну відповідь":t.type==="open"?"Відкрите запитання":"");
+      box.appendChild(el("div","task-h",'<span class="badge">'+LABELS[t.type]+"</span><span>"+(t.type==="open"||t.type==="quiz"?(t.type==="open"?"Подумай і напиши":"Обери правильну відповідь"):title)+"</span>"));
+      builders[t.type](t,box,sec);tasks.appendChild(box);
+    });
+    $(".t-score",node).textContent="⭐ 0 / "+sec.units;
+    app.appendChild(node);
+  });
+  const fin=el("section","final");fin.id="final";
+  fin.innerHTML='<h2>🏁 Твій результат</h2><div class="big"><span id="fs">0</span> / <span id="ft">0</span></div><p id="fm">Виконуй завдання — і тут з'+"'"+'явиться підсумок.</p><button class="again" onclick="location.reload()">🔄 Пройти ще раз</button>';
+  app.appendChild(fin);
+  updateTop();
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{
+    if(e.isIntersecting){document.querySelectorAll(".chip").forEach(c=>c.classList.remove("on"));
+      const id=e.target.id.replace("t","");const c=$("#chip"+(+id-1));if(c){c.classList.add("on");c.scrollIntoView({block:"nearest",inline:"center"})}}
+  })},{rootMargin:"-40% 0px -55% 0px"});
+  document.querySelectorAll(".topic").forEach(t=>io.observe(t));
+}
+build();
+$("#fs").textContent=0;$("#ft").textContent=total;
+</script>
+</body>
+</html>

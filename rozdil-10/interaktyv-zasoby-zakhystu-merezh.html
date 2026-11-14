@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Засоби захисту мереж — інтерактив</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1b1340; --white:#fff; --yellow:#ffd23f; --pink:#ff4d8d; --blue:#2ec4ff; --green:#2ee59d; --purple:#7a5cff; --orange:#ff8a3d; --red:#ff3b5c;
+  --bg1:#7a5cff; --bg2:#ff4d8d;
+}
+*{box-sizing:border-box}
+html{font-size:clamp(14px,1.5vw,30px)}
+body{margin:0;height:100vh;overflow:hidden;font-family:"Rubik","Trebuchet MS","Segoe UI",system-ui,sans-serif;font-weight:700;color:var(--ink);
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));transition:background .6s;user-select:none}
+body::before,body::after{content:"";position:fixed;border-radius:50%;background:rgba(255,255,255,.14);z-index:0;pointer-events:none}
+body::before{width:42vw;height:42vw;left:-12vw;top:-16vw}
+body::after{width:30vw;height:30vw;right:-8vw;bottom:-12vw}
+#app{position:relative;z-index:1;height:100vh;display:flex;flex-direction:column;padding:1.2vh 2vw}
+header{display:flex;align-items:center;gap:1.5rem;height:8vh;color:#fff}
+.logo{font-weight:900;font-size:1.35rem;letter-spacing:.04em;text-shadow:0 .15rem 0 rgba(27,19,64,.35);white-space:nowrap}
+.dots{flex:1;display:flex;gap:.6rem;justify-content:center}
+.dot{width:1.1rem;height:1.1rem;border-radius:50%;background:rgba(255,255,255,.4);border:.18rem solid var(--ink);cursor:pointer;transition:.2s}
+.dot.done{background:var(--yellow)}
+.dot.on{background:#fff;transform:scale(1.5)}
+.score{background:var(--yellow);border:.2rem solid var(--ink);border-radius:2rem;padding:.2rem 1.1rem;font-size:1.3rem;font-weight:900;box-shadow:0 .25rem 0 var(--ink);cursor:pointer;color:var(--ink)}
+main{flex:1;position:relative;min-height:0}
+.scene{display:none;height:100%;flex-direction:column;animation:pop .45s cubic-bezier(.2,1.4,.4,1)}
+.scene.active{display:flex}
+@keyframes pop{from{opacity:0;transform:scale(.94) translateY(2vh)}to{opacity:1;transform:none}}
+footer{display:flex;justify-content:space-between;align-items:center;height:9vh}
+.btn{font:inherit;font-weight:900;font-size:1.3rem;color:var(--ink);background:#fff;border:.22rem solid var(--ink);border-radius:1.2rem;padding:.45em 1.2em;box-shadow:0 .35rem 0 var(--ink);cursor:pointer;transition:transform .08s,box-shadow .08s;text-transform:uppercase}
+.btn:hover{filter:brightness(1.06)}
+.btn:active{transform:translateY(.3rem);box-shadow:0 .05rem 0 var(--ink)}
+.btn.y{background:var(--yellow)} .btn.g{background:var(--green)} .btn.r{background:var(--red);color:#fff} .btn.b{background:var(--blue)} .btn.p{background:var(--purple);color:#fff}
+.btn[disabled]{opacity:.4;pointer-events:none}
+.kicker{display:inline-block;background:var(--ink);color:var(--yellow);border-radius:2rem;padding:.15rem 1rem;font-size:1.05rem;letter-spacing:.08em;text-transform:uppercase;align-self:flex-start}
+h1,h2{margin:.3rem 0;font-weight:900;text-transform:uppercase;line-height:1.02;color:#fff;text-shadow:0 .2rem 0 rgba(27,19,64,.5)}
+h1{font-size:3.6rem} h2{font-size:2.5rem}
+.card{background:#fff;border:.24rem solid var(--ink);border-radius:1.4rem;box-shadow:0 .4rem 0 var(--ink);padding:1rem 1.4rem}
+.row{display:flex;gap:1.2rem}
+.grow{flex:1;min-width:0}
+.big{font-size:1.7rem;line-height:1.25}
+.char{height:100%;width:auto;animation:bob 2.6s ease-in-out infinite;transform-origin:50% 100%}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-.5rem) rotate(1.5deg)}}
+.char .eyes{animation:blink 4s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+.char .flame{animation:flick .5s infinite alternate;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes flick{from{transform:scale(1,1)}to{transform:scale(1.12,.9) rotate(3deg)}}
+.char .m-sad{display:none}
+.char[data-mood="sad"] .m-happy{display:none}
+.char[data-mood="sad"] .m-sad{display:inline}
+.char[data-mood="cheer"]{animation:cheer .5s infinite}
+@keyframes cheer{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-1.2rem) scale(1.06)}}
+.char[data-mood="shake"]{animation:shake .4s 2}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-.6rem)}75%{transform:translateX(.6rem)}}
+.bubble{position:relative;background:#fff;border:.22rem solid var(--ink);border-radius:1.2rem;padding:.6rem 1.1rem;font-size:1.35rem;box-shadow:0 .3rem 0 var(--ink)}
+.bubble::after{content:"";position:absolute;left:2rem;bottom:-1rem;width:1.4rem;height:1.4rem;background:#fff;border-right:.22rem solid var(--ink);border-bottom:.22rem solid var(--ink);transform:rotate(45deg)}
+.bubble.left::after{left:auto;right:2rem}
+.fx{position:fixed;font-size:2.4rem;pointer-events:none;z-index:99;animation:fly 1.1s ease-out forwards}
+@keyframes fly{to{transform:translate(var(--dx),var(--dy)) rotate(360deg);opacity:0}}
+
+/* title */
+.title-wrap{flex:1;min-height:0;display:flex;flex-direction:column;gap:.5rem}
+.team{display:flex;gap:1vw;flex:1;min-height:0;align-items:flex-end;margin-top:.3rem;min-width:0}
+.team .c{height:92%;cursor:pointer;min-width:0;flex:0 1 auto}
+.team .c svg{height:100%;max-width:100%}
+.team .hk{height:100%;margin-right:auto;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:1.1rem;cursor:pointer}
+.team .hk svg{height:62%}
+
+/* characters grid */
+.heroes{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;flex:1;min-height:0;margin:.8rem 0}
+.hero{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:.4rem;padding:.7rem;cursor:pointer;border-radius:1.4rem;border:.24rem solid var(--ink);background:rgba(255,255,255,.88);box-shadow:0 .4rem 0 var(--ink);transition:.15s;min-height:0}
+.hero:hover{transform:translateY(-.3rem)}
+.hero.on{background:var(--yellow);transform:translateY(-.5rem) scale(1.03)}
+.hero .art{flex:1;min-height:0;display:flex;align-items:flex-end}
+.hero b{font-size:1.25rem;text-transform:uppercase;text-align:center}
+.hero small{font-size:.95rem;opacity:.8;font-weight:700}
+
+/* quiz */
+.q-top{display:flex;justify-content:space-between;align-items:center}
+.q-text{font-size:2rem;font-weight:900;line-height:1.1;color:var(--ink);margin:.2rem 0 .6rem}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;flex:none}
+.opt{display:flex;align-items:center;gap:1rem;font:inherit;font-weight:900;font-size:1.45rem;text-align:left;color:var(--ink);padding:.5rem .9rem;border:.24rem solid var(--ink);border-radius:1.3rem;background:#fff;box-shadow:0 .35rem 0 var(--ink);cursor:pointer;transition:.12s}
+.opt:hover{transform:translateY(-.2rem)}
+.opt .l{flex:none;width:2.7rem;height:2.7rem;border-radius:50%;border:.2rem solid var(--ink);display:grid;place-items:center;font-size:1.5rem}
+.opt.ok{background:var(--green);animation:pulse .5s}
+.opt.no{background:var(--red);color:#fff;animation:shake .4s}
+.opt.dim{opacity:.45}
+@keyframes pulse{50%{transform:scale(1.04)}}
+.why{display:none;gap:1rem;align-items:center;margin-top:auto;padding-top:.5rem}
+.why.show{display:flex}
+.why .av{height:11vh;flex:none}
+.why .t{font-size:1.3rem;line-height:1.15}
+
+/* firewall */
+.fw{display:grid;grid-template-columns:1.1fr 1.3fr;grid-template-rows:minmax(0,1fr);gap:1.2rem;flex:1;min-height:0}
+.rules{padding:.8rem 1.1rem;font-size:1.1rem}
+.rules h3{margin:.1rem 0 .4rem;font-size:1.4rem;text-transform:uppercase}
+.rules li{list-style:none;margin:.25rem 0;padding:.25rem .5rem;border-radius:.6rem;border:.15rem solid transparent;font-size:1.05rem}
+.rules li.hit{border-color:var(--ink);background:var(--yellow)}
+.pill{display:inline-block;padding:0 .5rem;border-radius:.5rem;color:#fff;font-weight:900}
+.pill.a{background:#10b981}.pill.d{background:var(--red)}
+.packet{padding:1rem 1.4rem;font-size:1.7rem}
+.packet .from{display:flex;align-items:center;justify-content:space-between;gap:.8rem;font-size:1.65rem}
+.packet .tag{background:var(--blue);border:.18rem solid var(--ink);border-radius:.8rem;padding:.1rem .7rem;font-size:1.3rem}
+.stage{display:flex;align-items:flex-end;justify-content:space-between;flex:1;min-height:0;gap:1rem;padding-top:.4rem}
+.stage .who{height:100%;flex:none}
+.stage .env{font-size:5rem;transition:transform .6s,opacity .6s}
+.env.go{transform:translateX(12vw);opacity:0}
+.env.stop{transform:translateX(-4vw) rotate(-20deg);opacity:.2}
+
+/* hunt */
+.hunt{display:grid;grid-template-columns:1.6fr 1fr;grid-template-rows:minmax(0,1fr);gap:1.2rem;flex:1;min-height:0}
+.map{position:relative;padding:0;background:#e9f7ff;overflow:hidden}
+.map svg.lines{position:absolute;inset:0;width:100%;height:100%}
+.hot{position:absolute;transform:translate(-50%,-50%);font:inherit;border:.22rem solid var(--ink);background:#fff;border-radius:1.2rem;padding:.2rem .8rem;box-shadow:0 .3rem 0 var(--ink);cursor:pointer;text-align:center;font-weight:900;font-size:1.05rem}
+.hot .e{display:block;font-size:2.8rem;line-height:1.1}
+.hot::after{content:"?";position:absolute;right:-.8rem;top:-.8rem;width:1.7rem;height:1.7rem;border-radius:50%;background:var(--red);color:#fff;border:.15rem solid var(--ink);font-size:1.1rem;line-height:1.4rem;animation:pulse 1.2s infinite}
+.hot.fixed{background:var(--green)}
+.hot.fixed::after{content:"✓";background:#fff;color:#0a7a52;animation:none}
+.hot.sel{outline:.3rem solid var(--yellow)}
+.info{font-size:1.35rem;line-height:1.22;display:flex;flex-direction:column;gap:.6rem;overflow:auto}
+.info .bad{background:#ffe3e8;border-radius:1rem;padding:.5rem .8rem}
+.info .good{background:#d9fff0;border-radius:1rem;padding:.5rem .8rem}
+
+/* layers */
+.layers{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:minmax(0,1fr);gap:1.2rem;flex:1;min-height:0}
+.layers svg{height:100%;width:100%;max-height:100%}
+.ring{transform-origin:300px 300px;transition:transform .5s cubic-bezier(.2,1.5,.4,1),opacity .4s;transform:scale(.3);opacity:0}
+.ring.vis{transform:scale(1);opacity:1}
+.lyr{font-size:1.2rem;display:flex;gap:.7rem;align-items:center;margin:.25rem 0}
+.lyr i{font-style:normal;font-size:2rem}
+
+/* password */
+.pw{display:grid;grid-template-columns:1.4fr 1fr;grid-template-rows:minmax(0,1fr);gap:1.2rem;flex:1;min-height:0}
+.pwbox{font-family:"Courier New",monospace;font-size:3.3rem;text-align:center;padding:1.3rem .5rem;border:.28rem dashed var(--ink);border-radius:1.4rem;background:#fff9d6;word-break:break-all;line-height:1.15}
+.meter{height:2rem;border:.22rem solid var(--ink);border-radius:2rem;background:#fff;overflow:hidden}
+.meter i{display:block;height:100%;width:0;transition:width .8s,background .4s}
+
+/* vpn */
+.vpn{flex:1;min-height:0;display:flex;flex-direction:column;gap:1rem}
+.track{position:relative;flex:1;min-height:0;display:grid;grid-template-columns:12% 1fr 12%;align-items:center;gap:.5rem}
+.node{text-align:center;font-size:1.3rem;line-height:1.1}
+.node span{display:block;font-size:5rem}
+.pipe{position:relative;height:100%}
+.pipe .line{position:absolute;left:0;right:0;top:62%;height:1.2rem;border-radius:1rem;background:#fff;border:.2rem solid var(--ink)}
+.tunnel{position:absolute;left:3%;right:3%;top:calc(62% - 1.2rem);height:3.6rem;border-radius:2rem;background:repeating-linear-gradient(45deg,#ffd23f,#ffd23f 14px,#ffb703 14px,#ffb703 28px);border:.22rem solid var(--ink);opacity:0;transition:opacity .4s}
+[data-vpn=on] .tunnel{opacity:1}
+.pkt{position:absolute;top:calc(62% - .9rem);left:0;font-family:"Courier New",monospace;font-size:1.2rem;background:#fff;border:.18rem solid var(--ink);border-radius:.7rem;padding:.1rem .6rem;animation:mv 5s linear infinite;white-space:nowrap}
+.pkt:nth-child(5){animation-delay:-1.7s}.pkt:nth-child(6){animation-delay:-3.4s}
+@keyframes mv{from{left:0}to{left:calc(100% - 9rem)}}
+.pkt .enc{display:none;background:var(--ink);color:var(--green);padding:0 .2rem}
+[data-vpn=on] .pkt .enc{display:inline}[data-vpn=on] .pkt .plain{display:none}
+.spy{position:absolute;left:50%;top:-4%;transform:translateX(-50%);height:46%;display:flex;gap:1rem;align-items:flex-end}
+.spy .bubble{margin-bottom:2rem;font-size:1.3rem}
+
+/* final */
+.final{display:grid;grid-template-columns:1.25fr 1fr;grid-template-rows:minmax(0,1fr);gap:1.2rem;flex:1;min-height:0}
+.final>*{min-width:0}
+.timer{font-family:"Courier New",monospace;font-size:4.6rem;font-weight:900;text-align:center;line-height:1}
+.final li{margin:.25rem 0;font-size:1.15rem;line-height:1.15}
+.cheer{display:flex;gap:.5vw;height:15vh;align-items:flex-end;margin-top:.5rem;min-width:0}
+.cheer .c{height:100%;min-width:0;flex:1}
+.cheer .c svg{height:100%;width:100%}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="logo">🛡️ ЗАХИСТ МЕРЕЖ · ІНТЕРАКТИВ</div>
+    <div class="dots" id="dots"></div>
+    <div class="score" id="score" title="Клік — скинути рахунок">⭐ 0 / 0</div>
+  </header>
+  <main id="main"></main>
+  <footer>
+    <button class="btn" id="prev">◀ Назад</button>
+    <div style="color:#fff;font-size:1.1rem;text-shadow:0 .1rem 0 rgba(27,19,64,.5)">стрілки ← → · клавіша <b>F</b> — на весь екран · <b>R</b> — заново</div>
+    <button class="btn y" id="next">Далі ▶</button>
+  </footer>
+</div>
+
+<script>
+"use strict";
+const INK = "#1b1340";
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const el = (html) => { const t = document.createElement("div"); t.innerHTML = html.trim(); return t.firstElementChild; };
+const pick = (a) => a[Math.floor(Math.random() * a.length)];
+
+/* ---------- персонажі (SVG) ---------- */
+const eyes = (a, b, y, r = 14) => `<g class="eyes"><circle cx="${a}" cy="${y}" r="${r}" fill="#fff" stroke="${INK}" stroke-width="5"/><circle cx="${b}" cy="${y}" r="${r}" fill="#fff" stroke="${INK}" stroke-width="5"/><circle cx="${a + 2}" cy="${y + 2}" r="${r * .45}" fill="${INK}"/><circle cx="${b + 2}" cy="${y + 2}" r="${r * .45}" fill="${INK}"/></g>`;
+const mouth = (x, y, w = 16) => `<path class="m-happy" d="M${x - w} ${y} Q${x} ${y + w * 1.7} ${x + w} ${y} Z" fill="#fff" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/><g class="m-sad"><path d="M${x - w * .8} ${y + w * .8} Q${x} ${y - w * .5} ${x + w * .8} ${y + w * .8}" fill="none" stroke="${INK}" stroke-width="5" stroke-linecap="round"/><path d="M${x + w * 1.8} ${y - w * 2.4} q-7 11 0 15 q7 -4 0 -15z" fill="#5ad1ff" stroke="${INK}" stroke-width="3"/></g>`;
+const wrap = (inner, mood = "happy") => `<svg class="char" data-mood="${mood}" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg" stroke-linejoin="round" stroke-linecap="round">${inner}</svg>`;
+const S = `stroke="${INK}" stroke-width="5"`;
+
+const CH = {
+  fire: () => wrap(`
+    <path class="flame" d="M100 4 C124 28 134 42 122 66 C114 55 107 52 100 58 C93 52 86 55 78 66 C66 42 88 28 100 4Z" fill="#ffb703" ${S}/>
+    <path class="flame" d="M100 30 C108 42 112 50 106 60 C103 56 101 55 100 56 C99 55 97 56 94 60 C88 50 94 42 100 30Z" fill="#fff3a0"/>
+    <rect x="36" y="64" width="128" height="138" rx="10" fill="#ff6b3d" ${S}/>
+    <g stroke="#ffd2b8" stroke-width="4" fill="none"><path d="M36 98H164M36 134H164M36 170H164"/><path d="M82 64V98M122 98V134M82 134V170M122 170V202M60 98V134M60 170V202M104 134V170M140 64V98"/></g>
+    ${eyes(78, 122, 120, 15)}${mouth(100, 154, 18)}
+    <rect x="8" y="112" width="34" height="22" rx="11" fill="#ff6b3d" ${S}/><rect x="158" y="112" width="34" height="22" rx="11" fill="#ff6b3d" ${S}/>
+    <circle cx="176" cy="100" r="18" fill="#ff3b5c" ${S}/><text x="176" y="107" font-size="20" text-anchor="middle" font-weight="900" fill="#fff" stroke="none">✋</text>
+    <rect x="56" y="200" width="30" height="14" rx="6" fill="${INK}"/><rect x="114" y="200" width="30" height="14" rx="6" fill="${INK}"/>`),
+  vpn: () => wrap(`
+    <path d="M100 52V28" fill="none" ${S}/><circle cx="100" cy="22" r="9" fill="#2ee59d" ${S}/>
+    <rect x="42" y="50" width="116" height="152" rx="58" fill="#7a5cff" ${S}/>
+    <rect x="58" y="92" width="40" height="28" rx="11" fill="${INK}"/><rect x="102" y="92" width="40" height="28" rx="11" fill="${INK}"/><path d="M98 102H102" ${S} fill="none"/>
+    <path d="M66 100l10 -3M110 100l10 -3" stroke="#fff" stroke-width="4" fill="none"/>
+    ${mouth(100, 142, 16)}
+    <rect x="72" y="160" width="56" height="36" rx="9" fill="#ffd23f" ${S}/><circle cx="100" cy="174" r="7" fill="${INK}"/><rect x="97" y="177" width="6" height="12" fill="${INK}"/>
+    <rect x="10" y="118" width="36" height="22" rx="11" fill="#7a5cff" ${S}/><rect x="154" y="118" width="36" height="22" rx="11" fill="#7a5cff" ${S}/>`),
+  av: () => wrap(`
+    <path d="M100 14 L174 42 V110 C174 160 138 194 100 212 C62 194 26 160 26 110 V42 Z" fill="#2ee59d" ${S}/>
+    <path d="M100 32 L158 54 V108 C158 148 130 176 100 192 C70 176 42 148 42 108 V54 Z" fill="#a6ffd8"/>
+    <path d="M100 52v22M89 63h22" stroke="#fff" stroke-width="8" fill="none"/><path d="M100 52v22M89 63h22" ${S} stroke-width="2" fill="none" opacity=".0"/>
+    ${eyes(76, 124, 108, 16)}${mouth(100, 148, 20)}
+    <path d="M60 86q16 -10 30 0M110 86q16 -10 30 0" fill="none" ${S}/>`),
+  owl: () => wrap(`
+    <path d="M46 72 L56 26 L86 56Z M154 72 L144 26 L114 56Z" fill="#ffb703" ${S}/>
+    <ellipse cx="100" cy="128" rx="64" ry="80" fill="#ffb703" ${S}/>
+    <ellipse cx="100" cy="156" rx="40" ry="48" fill="#ffe08a"/>
+    <circle cx="74" cy="94" r="27" fill="#fff" ${S}/><circle cx="126" cy="94" r="27" fill="#fff" ${S}/>
+    <circle class="eyes" cx="78" cy="98" r="12" fill="${INK}"/><circle class="eyes" cx="130" cy="98" r="12" fill="${INK}"/>
+    <path d="M100 106 L86 126 L114 126Z" fill="#ff8a3d" ${S}/>
+    ${mouth(100, 142, 11)}
+    <circle cx="160" cy="152" r="22" fill="#bff0ff" fill-opacity=".8" ${S}/><path d="M176 168 L194 190" ${S} stroke-width="10" fill="none"/>
+    <rect x="62" y="204" width="28" height="12" rx="6" fill="#ff8a3d" ${S}/><rect x="110" y="204" width="28" height="12" rx="6" fill="#ff8a3d" ${S}/>`),
+  beaver: () => wrap(`
+    <ellipse cx="38" cy="190" rx="28" ry="13" transform="rotate(-22 38 190)" fill="#7a4a22" ${S}/>
+    <circle cx="56" cy="60" r="18" fill="#b8743a" ${S}/><circle cx="144" cy="60" r="18" fill="#b8743a" ${S}/>
+    <ellipse cx="100" cy="130" rx="64" ry="76" fill="#b8743a" ${S}/><ellipse cx="100" cy="164" rx="38" ry="40" fill="#f0c28a"/>
+    ${eyes(78, 122, 100, 13)}<ellipse cx="100" cy="122" rx="13" ry="9" fill="${INK}"/>
+    <rect x="88" y="132" width="24" height="26" rx="5" fill="#fff" ${S}/><path d="M100 132V158" ${S} stroke-width="3" fill="none"/>
+    <path class="m-happy" d="M84 126 Q100 140 116 126" fill="none" ${S}/><g class="m-sad"><path d="M50 96 q-7 11 0 15 q7 -4 0 -15z" fill="#5ad1ff" stroke="${INK}" stroke-width="3"/></g>
+    <rect x="124" y="150" width="52" height="48" rx="7" fill="#2ec4ff" ${S}/><rect x="134" y="152" width="32" height="18" fill="#fff" stroke="${INK}" stroke-width="3"/><rect x="146" y="176" width="14" height="22" fill="${INK}"/>
+    <text x="150" y="166" font-size="13" font-weight="900" text-anchor="middle" fill="${INK}" stroke="none">3-2-1</text>`),
+  hacker: () => wrap(`
+    <path d="M26 214 Q26 126 100 122 Q174 126 174 214Z" fill="#3b2a7a" ${S}/>
+    <path d="M44 96 Q36 18 100 20 Q164 18 156 96 Q150 48 100 48 Q50 48 44 96Z" fill="#3b2a7a" ${S}/>
+    <circle cx="100" cy="86" r="42" fill="#ffd7b5" ${S}/>
+    <path d="M52 76 Q100 30 148 76 Q100 52 52 76Z" fill="#3b2a7a" stroke="none"/>
+    <rect x="58" y="72" width="38" height="26" rx="9" fill="#2ee59d" fill-opacity=".9" ${S}/><rect x="104" y="72" width="38" height="26" rx="9" fill="#2ee59d" fill-opacity=".9" ${S}/><path d="M96 84H104" ${S} fill="none"/>
+    <circle cx="78" cy="87" r="5" fill="${INK}"/><circle cx="124" cy="87" r="5" fill="${INK}"/>
+    <path class="m-happy" d="M78 112 Q102 134 128 106" fill="none" ${S}/>
+    <g class="m-sad"><path d="M82 120 Q102 104 124 120" fill="none" ${S}/><path d="M148 66 q-7 11 0 15 q7 -4 0 -15z" fill="#5ad1ff" stroke="${INK}" stroke-width="3"/></g>
+    <rect x="58" y="156" width="84" height="50" rx="7" fill="#d9dbe8" ${S}/><text x="100" y="192" font-size="28" text-anchor="middle" stroke="none">☠️</text>`)
+};
+const NAMES = {
+  fire: ["ФАЄРИК", "Фаєрвол"], vpn: ["ТУНЕЛИК", "VPN"], av: ["АНТИВІРУСИК", "Антивірус"], owl: ["СОВА-ЛОГЕР", "Моніторинг"], beaver: ["БОБЕР-БЕКАП", "Резервні копії"]
+};
+function setMood(root, mood, ms = 1400) {
+  const svgs = root.matches && root.matches(".char") ? [root] : $$(".char", root);
+  svgs.forEach((s) => { s.dataset.mood = mood; if (ms) setTimeout(() => (s.dataset.mood = "happy"), ms); });
+}
+function burst(x, y, set) {
+  const em = set || ["⭐", "🎉", "✨", "🛡️", "💥"];
+  for (let i = 0; i < 14; i++) {
+    const s = document.createElement("span");
+    s.className = "fx"; s.textContent = pick(em);
+    s.style.left = x + "px"; s.style.top = y + "px";
+    s.style.setProperty("--dx", Math.random() * 500 - 250 + "px");
+    s.style.setProperty("--dy", -Math.random() * 360 - 60 + "px");
+    document.body.appendChild(s); setTimeout(() => s.remove(), 1200);
+  }
+}
+const center = (e) => { const r = e.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
+
+/* ---------- рахунок ---------- */
+let right = 0, total = 0;
+const scoreEl = $("#score");
+function addScore(ok) { total++; if (ok) right++; scoreEl.textContent = `⭐ ${right} / ${total}`; }
+scoreEl.onclick = () => { if (confirm("Скинути рахунок групи?")) { right = total = 0; scoreEl.textContent = "⭐ 0 / 0"; } };
+
+/* ---------- універсальна вікторина ---------- */
+function quiz(root, o) {
+  const items = o.items; let i = 0, locked = false, got = 0;
+  const L = ["А", "Б", "В", "Г"], COL = ["#ff8a3d", "#2ec4ff", "#2ee59d", "#ffd23f"];
+  root.innerHTML = `<div class="q-top"><span class="kicker">${o.kicker}</span><span class="kicker" id="qc"></span></div>
+    <div class="row" style="flex:1;min-height:0;margin-top:.5rem">
+      <div class="card grow" style="display:flex;flex-direction:column;min-height:0">
+        <div class="q-text" id="qt"></div><div class="opts" id="qo"></div>
+        <div class="why" id="qw"><div class="av" id="qa"></div><div class="t" id="qx"></div></div>
+      </div>
+      <div style="width:17vw;display:flex;flex-direction:column;align-items:center;justify-content:flex-end">
+        <div class="bubble left" id="qb" style="margin-bottom:1.6rem;font-size:1.2rem">${o.host || "Я питаю — ви відповідаєте в чаті!"}</div>
+        <div style="height:30vh" id="qh">${CH[o.char]()}</div>
+      </div></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:.8rem"><button class="btn g" id="qn" disabled>Наступне ▶</button></div>`;
+  const q = $("#qt", root), opts = $("#qo", root), why = $("#qw", root), nextBtn = $("#qn", root);
+  function show() {
+    locked = false; const it = items[i];
+    $("#qc", root).textContent = `${i + 1} / ${items.length}`;
+    q.innerHTML = it.q; opts.innerHTML = ""; why.classList.remove("show"); nextBtn.disabled = true;
+    nextBtn.textContent = i === items.length - 1 ? "Результат ⭐" : "Наступне ▶";
+    it.o.forEach((t, k) => {
+      const b = el(`<button class="opt"><span class="l" style="background:${COL[k]}">${L[k]}</span><span>${t}</span></button>`);
+      b.onclick = () => {
+        if (locked) return; locked = true;
+        const ok = k === it.a; addScore(ok); if (ok) got++;
+        $$(".opt", opts).forEach((x, j) => { if (j === it.a) x.classList.add("ok"); else if (j === k) x.classList.add("no"); else x.classList.add("dim"); });
+        $("#qa", root).innerHTML = CH[it.char || o.char]();
+        $("#qx", root).innerHTML = (ok ? "✅ ВІРНО! " : "❌ Майже! ") + it.w;
+        why.classList.add("show"); nextBtn.disabled = false;
+        const h = $("#qh .char", root); setMood(h, ok ? "cheer" : "sad", 1500);
+        if (ok) burst(...center(b));
+      };
+      opts.appendChild(b);
+    });
+  }
+  nextBtn.onclick = () => {
+    if (i < items.length - 1) { i++; show(); return; }
+    root.innerHTML = `<span class="kicker">${o.kicker}</span><div class="card" style="margin:1rem 0;text-align:center;flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:1rem">
+      <div style="font-size:3rem;font-weight:900">РЕЗУЛЬТАТ: ${got} / ${items.length}</div>
+      <div style="height:30vh">${CH.fire()}</div>
+      <div class="big">${got >= items.length - 1 ? "Ого! Захист мережі у надійних руках! 🏆" : got >= items.length / 2 ? "Непогано! Ще раз повторимо слабкі місця 💪" : "Хакер Боря радіє… Повторюємо разом! 😅"}</div>
+      <button class="btn y" id="again">↻ Ще раз</button></div>`;
+    $("#again", root).onclick = () => quiz(root, o);
+    burst(innerWidth / 2, innerHeight / 2);
+  };
+  show();
+}
+
+/* ---------- сцени ---------- */
+const USB = `<svg viewBox="0 0 100 100" style="width:1em;height:1em;vertical-align:-.12em" stroke-linejoin="round" stroke-linecap="round"><rect x="38" y="4" width="24" height="30" rx="3" fill="#d9dbe8" stroke="#1b1340" stroke-width="6"/><rect x="45" y="12" width="4" height="9" fill="#1b1340"/><rect x="53" y="12" width="4" height="9" fill="#1b1340"/><rect x="26" y="32" width="48" height="64" rx="10" fill="#2ec4ff" stroke="#1b1340" stroke-width="6"/><rect x="36" y="46" width="28" height="16" rx="4" fill="#fff" stroke="#1b1340" stroke-width="4"/><circle cx="50" cy="80" r="5" fill="#ffd23f" stroke="#1b1340" stroke-width="3"/></svg>`;
+
+const scenes = [];
+const add = (title, bg, build) => scenes.push({ title, bg, build });
+
+// 0. Титул
+add("Старт", ["#7a5cff", "#ff4d8d"], (r) => {
+  r.innerHTML = `<div class="title-wrap">
+    <span class="kicker">Інформатика · Розділ 10</span>
+    <h1>ЗАСОБИ<br>ЗАХИСТУ МЕРЕЖ</h1>
+    <div class="big" style="color:#fff;text-shadow:0 .12rem 0 rgba(27,19,64,.5)">Сьогодні ми — команда кіберзахисників! 🦸 Хакер Боря атакує, а ми обороняємось.</div>
+    <div class="team">
+      <div class="hk" id="hk">
+        <div class="bubble" id="hb" style="max-width:24vw;font-size:1.1rem">Хе-хе! Сьогодні я зламаю вашу мережу! 😈 (клікни на мене)</div>${CH.hacker()}</div>
+      ${["fire", "vpn", "av", "owl", "beaver"].map((k, n) => `<div class="c" data-k="${k}" style="animation-delay:${n * .2}s">${CH[k]()}</div>`).join("")}
+    </div></div>`;
+  const phrases = ["Хе-хе! Сьогодні я зламаю вашу мережу! 😈", "Пароль 123456? Дякую! 😏", "Ой, а фаєрвол мене не пускає… 😳", "Це ж VPN-тунель! Нічого не бачу! 😭", "Антивірус мене помітив… тікаю! 🏃"];
+  let n = 0;
+  $("#hk", r).onclick = () => { n = (n + 1) % phrases.length; $("#hb", r).textContent = phrases[n]; setMood($("#hk .char", r), n % 2 ? "sad" : "shake", 1200); };
+  $$(".team .c[data-k]", r).forEach((c) => c.onclick = () => { setMood(c.firstElementChild, "cheer", 1000); burst(...center(c)); });
+});
+
+// 1. Знайомство
+add("Герої", ["#2ec4ff", "#7a5cff"], (r) => {
+  const info = {
+    fire: ["Я ФАЄРВОЛ! 🧱", "Стою на кордоні мережі й перевіряю кожен пакет: пропустити чи заборонити — за правилами. Усе, що не дозволено, — стоп!"],
+    vpn: ["Я VPN! 🔐", "Створюю зашифрований тунель між тобою та інтернетом. У кафе ніхто не підслухає твій трафік."],
+    av: ["Я АНТИВІРУС! 🦠", "Перевіряю файли й програми на комп'ютері та ловлю шкідливі — трояни, шифрувальники, шпигунів."],
+    owl: ["Я МОНІТОРИНГ! 👁️", "Читаю журнали подій (IDS/SIEM), бачу дивні входи й дивний трафік і підіймаю тривогу."],
+    beaver: ["Я РЕЗЕРВНІ КОПІЇ! 💾", "Якщо шифрувальник усе зіпсує — я поверну дані. Пам'ятай правило 3-2-1!"]
+  };
+  r.innerHTML = `<span class="kicker">Знайомство з командою</span><h2>ХТО З НАС ЩО РОБИТЬ?</h2>
+    <div class="heroes">${Object.keys(CH).filter((k) => k !== "hacker").map((k) => `<div class="hero" data-k="${k}"><div class="art">${CH[k]()}</div><b>${NAMES[k][0]}</b><small>${NAMES[k][1]}</small></div>`).join("")}</div>
+    <div class="card" style="min-height:17vh"><div class="big" id="hi" style="display:flex;align-items:center;gap:1rem">👆 Клікни на героя — і він розповість про себе!</div></div>`;
+  $$(".hero", r).forEach((h) => h.onclick = () => {
+    $$(".hero", r).forEach((x) => x.classList.remove("on")); h.classList.add("on");
+    const [t, d] = info[h.dataset.k];
+    $("#hi", r).innerHTML = `<div style="font-size:2.3rem;font-weight:900;flex:none">${t}</div><div>${d}</div>`;
+    setMood($(".char", h), "cheer", 1200); burst(...center(h));
+  });
+});
+
+// 2. Вікторина
+add("Вікторина", ["#ff8a3d", "#ff4d8d"], (r) => quiz(r, {
+  kicker: "🎤 Вікторина · відповідаємо в чаті", char: "owl", host: "Відповідайте А, Б, В чи Г у чаті — а я клікну!",
+  items: [
+    { q: "Хто ПЕРШИМ перевіряє мережевий трафік на кордоні мережі?", o: ["Принтер", "Фаєрвол", "Колонки", "Монітор"], a: 1, w: "Фаєрвол фільтрує пакети за правилами.", char: "fire" },
+    { q: "Що робить VPN?", o: ["Шифрує трафік у тунелі", "Прискорює інтернет у 2 рази", "Видаляє віруси", "Робить копії файлів"], a: 0, w: "VPN створює зашифрований тунель — підслухати такий трафік складно.", char: "vpn" },
+    { q: "Який стандарт захисту Wi-Fi давно зламаний?", o: ["WPA3", "WPA2", "WEP", "Усі безпечні"], a: 2, w: "WEP підбирається за лічені хвилини — не користуйтесь ним!", char: "owl" },
+    { q: "Що означає правило резервних копій 3-2-1?", o: ["3 паролі, 2 пристрої, 1 акаунт", "3 антивіруси, 2 фаєрволи, 1 VPN", "3 флешки, 2 диски, 1 ноутбук", "3 копії, 2 типи носіїв, 1 — окремо"], a: 3, w: "Три копії даних, на двох типах носіїв, одна з них — окремо (наприклад, у хмарі).", char: "beaver" },
+    { q: "Яка програма показує відкриті порти (для ВЛАСНОЇ мережі)?", o: ["Paint", "Excel", "Nmap", "Zoom"], a: 2, w: "Nmap сканує порти й сервіси — тільки у власній мережі чи з дозволу!", char: "owl" },
+    { q: "Що таке DMZ?", o: ["Буферна зона для серверів, доступних з інтернету", "Пароль адміністратора", "Тип вірусу", "Модель роутера"], a: 0, w: "У DMZ стоять веб-сервер і пошта — їх злам не відкриває шлях у внутрішню мережу.", char: "fire" },
+    { q: "Чим IPS відрізняється від IDS?", o: ["Нічим", "IPS автоматично блокує атаки", "IPS лише пише журнал", "IPS — це антивірус"], a: 1, w: "IDS лише виявляє й повідомляє, а IPS ще й блокує.", char: "owl" }
+  ]
+}));
+
+// 3. Фаєрвол-ворота
+add("Фаєрвол", ["#ff4d8d", "#ff8a3d"], (r) => {
+  const rules = [
+    ["Інтернет → веб-сервер · порт 443 (HTTPS)", "a"], ["Інтернет → веб-сервер · порт 80 (HTTP)", "a"],
+    ["Будь-хто → будь-куди · порт 23 (Telnet)", "d"], ["Внутрішня мережа → Інтернет · порти 80, 443", "a"], ["Усе інше", "d"]
+  ];
+  const pk = [
+    ["Інтернет", "веб-сервер", "443 · HTTPS", "a", 0], ["Інтернет", "веб-сервер", "23 · Telnet", "d", 2], ["Внутрішня мережа", "Інтернет", "443 · HTTPS", "a", 3],
+    ["Невідомий пристрій", "файл-сервер", "445 · SMB", "d", 4], ["Інтернет", "веб-сервер", "80 · HTTP", "a", 1], ["Інтернет", "принтер у мережі", "9100 · друк", "d", 4],
+    ["Внутрішня мережа", "Інтернет", "80 · HTTP", "a", 3], ["Інтернет", "будь-куди", "23 · Telnet", "d", 2]
+  ];
+  let i = 0, locked = false, got = 0;
+  r.innerHTML = `<span class="kicker">🧱 Гра · Фаєрик на воротах</span>
+    <div class="fw" style="margin-top:.5rem">
+      <div class="card rules"><h3>📋 Правила (зверху вниз)</h3><ol style="padding:0;margin:0" id="fr">${rules.map((x, n) => `<li data-n="${n}"><span class="pill ${x[1]}">${x[1] === "a" ? "ДОЗВОЛИТИ" : "ЗАБОРОНИТИ"}</span> ${x[0]}</li>`).join("")}</ol></div>
+      <div style="display:flex;flex-direction:column;gap:.8rem;min-height:0">
+        <div class="card packet"><div style="font-size:1rem;opacity:.7">ПАКЕТ <span id="pn"></span></div>
+          <div class="from"><span id="pf"></span><span style="font-size:2rem">➡️</span><span id="pt"></span></div>
+          <div style="margin-top:.4rem">Порт: <span class="tag" id="pp"></span></div></div>
+        <div class="stage"><div class="who" id="who" style="height:100%">${CH.hacker()}</div><div class="env" id="env">✉️</div><div class="who">${CH.fire()}</div></div>
+        <div style="display:flex;gap:1rem;align-items:center"><button class="btn g" id="ok" style="flex:1">✅ Пропустити</button><button class="btn r" id="no" style="flex:1">⛔ Заборонити</button><button class="btn y" id="nx" disabled>▶</button></div>
+        <div class="bubble" id="msg" style="font-size:1.25rem;min-height:3rem">Група голосує в чаті — ПРОПУСТИТИ чи ЗАБОРОНИТИ?</div>
+      </div></div>`;
+  const $f = (s) => $(s, r);
+  function show() {
+    locked = false; const p = pk[i];
+    $f("#pn").textContent = `${i + 1} / ${pk.length}`; $f("#pf").textContent = p[0]; $f("#pt").textContent = p[1]; $f("#pp").textContent = p[2];
+    $$("#fr li", r).forEach((l) => l.classList.remove("hit")); $f("#env").className = "env"; $f("#nx").disabled = true; $f("#ok").disabled = $f("#no").disabled = false;
+    $f("#msg").textContent = "Група голосує в чаті — ПРОПУСТИТИ чи ЗАБОРОНИТИ?";
+  }
+  function answer(v) {
+    if (locked) return; locked = true; const p = pk[i], ok = v === p[3]; addScore(ok); if (ok) got++;
+    $$("#fr li", r)[p[4]].classList.add("hit"); $f("#env").classList.add(p[3] === "a" ? "go" : "stop");
+    $f("#msg").innerHTML = `${ok ? "✅ ВІРНО!" : "❌ Не зовсім."} Спрацювало правило №${p[4] + 1}: <b>${p[3] === "a" ? "ДОЗВОЛИТИ" : "ЗАБОРОНИТИ"}</b>`;
+    setMood($f("#who .char"), p[3] === "a" ? "shake" : "sad", 1500);
+    if (ok) burst(...center($f("#msg")));
+    $f("#nx").disabled = false; $f("#ok").disabled = $f("#no").disabled = true;
+  }
+  $f("#ok").onclick = () => answer("a"); $f("#no").onclick = () => answer("d");
+  $f("#nx").onclick = () => {
+    if (i < pk.length - 1) { i++; show(); return; }
+    $f("#msg").innerHTML = `🏁 Готово! Правильно: <b>${got} з ${pk.length}</b>. Фаєрик пишається вами! 🧱`; burst(innerWidth / 2, innerHeight / 2);
+    $f("#nx").textContent = "↻"; $f("#nx").onclick = () => { i = 0; got = 0; $f("#nx").textContent = "▶"; show(); $f("#nx").onclick = null; scenes[3].build(r); };
+  };
+  show();
+});
+
+// 4. Знайди діри
+add("Діри в мережі", ["#2ee59d", "#2ec4ff"], (r) => {
+  const spots = [
+    { e: "📡", n: "Роутер", x: 50, y: 52, bad: "Пароль адміністратора admin/admin і стара прошивка.", good: "Змінити пароль адміністратора, оновити прошивку, вимкнути WPS." },
+    { e: "📷", n: "Камера", x: 17, y: 20, bad: "Стандартний пароль і відкритий доступ з інтернету — майбутній бот Mirai!", good: "Змінити пароль, закрити порти, перенести в гостьову мережу." },
+    { e: "🖥️", n: "Старий ПК", x: 83, y: 22, bad: "Windows без оновлень — вразливості відомі всім хакерам.", good: "Оновити систему або ізолювати пристрій від мережі." },
+    { e: "📶", n: "Wi-Fi", x: 17, y: 80, bad: "Мережа без пароля або зі старим захистом WEP.", good: "WPA3 (або WPA2 + довгий пароль), окрема гостьова мережа." },
+    { e: "☕💻", n: "Кафе", x: 83, y: 80, bad: "Ноутбук у публічному Wi-Fi без VPN: трафік можна підслухати.", good: "Увімкнути VPN і заходити лише на сайти з HTTPS." },
+    { e: USB, n: "Флешка", x: 50, y: 14, bad: "Невідома флешка «Зарплати 2025» — класична USB-пастка.", good: "Не підключати! Віддати адміністратору." }
+  ];
+  let found = 0;
+  r.innerHTML = `<span class="kicker">🔍 Детектив · знайди слабкі місця</span>
+    <div class="hunt" style="margin-top:.5rem">
+      <div class="card map" id="mp"><svg class="lines" viewBox="0 0 100 100" preserveAspectRatio="none">${spots.filter((s) => s.n !== "Роутер").map((s) => `<line x1="50" y1="52" x2="${s.x}" y2="${s.y}" stroke="#1b1340" stroke-width=".4" stroke-dasharray="1.4 1.2"/>`).join("")}</svg>
+        ${spots.map((s, k) => `<button class="hot" data-k="${k}" style="left:${s.x}%;top:${s.y}%"><span class="e">${s.e}</span>${s.n}</button>`).join("")}</div>
+      <div class="card info" id="inf"><div style="font-size:1.8rem;font-weight:900">Знайдено: <span id="fc">0</span> / ${spots.length}</div>
+        <div>👆 Клікай на пристрої з червоним «?» — а група підкаже, що з ним не так.</div><div style="height:22vh;margin-top:auto">${CH.owl()}</div></div></div>`;
+  $$(".hot", r).forEach((b) => b.onclick = () => {
+    const s = spots[b.dataset.k]; $$(".hot", r).forEach((x) => x.classList.remove("sel")); b.classList.add("sel");
+    if (!b.classList.contains("fixed")) { b.classList.add("fixed"); found++; addScore(true); burst(...center(b)); }
+    $("#inf", r).innerHTML = `<div style="font-size:1.8rem;font-weight:900">Знайдено: ${found} / ${spots.length}</div><div style="font-size:2rem;font-weight:900">${s.e} ${s.n}</div>
+      <div class="bad">😈 <b>Проблема:</b> ${s.bad}</div><div class="good">🛡️ <b>Виправлення:</b> ${s.good}</div>
+      <div style="height:18vh;margin-top:auto">${found === spots.length ? CH.fire() : CH.owl()}</div>`;
+    if (found === spots.length) burst(innerWidth / 2, innerHeight / 2);
+  });
+});
+
+// 5. Шари оборони
+add("Оборона шарами", ["#7a5cff", "#2ec4ff"], (r) => {
+  const L = [
+    ["Дані", "💎", "#2ee59d", 30, "Те, що ми захищаємо: файли, бази, фото. Тут працюють резервні копії й шифрування.", "beaver"],
+    ["Застосунок", "📱", "#ffd23f", 78, "Програми з мінімальними правами й перевіркою того, що вводить користувач.", "av"],
+    ["Пристрій", "💻", "#ff8a3d", 126, "Антивірус, оновлення системи, шифрування диска.", "av"],
+    ["Внутрішня мережа", "🏢", "#2ec4ff", 174, "Сегментація: окремі мережі для персоналу, гостей і камер.", "vpn"],
+    ["Периметр", "🧱", "#ff4d8d", 222, "Фаєрвол, IPS, VPN-шлюз — кордон між мережею та інтернетом.", "fire"],
+    ["Люди й правила", "🧑‍🏫", "#7a5cff", 270, "Навчання, політики безпеки, обережність: найважливіший шар!", "owl"]
+  ];
+  let n = 0;
+  r.innerHTML = `<span class="kicker">🧅 Глибока оборона</span><h2>БУДУЄМО ЗАХИСТ ШАРАМИ</h2>
+    <div class="layers"><div class="card" style="padding:.4rem;min-height:0;display:flex"><svg viewBox="0 0 600 600">${[...L].reverse().map((l, k) => `<g class="ring" data-i="${L.length - 1 - k}"><circle cx="300" cy="300" r="${l[3] + 24}" fill="${l[2]}" stroke="${INK}" stroke-width="6"/><text x="300" y="${300 - l[3] - 24 + 33}" text-anchor="middle" font-size="${l[3] < 40 ? 20 : l[3] < 100 ? 16 : l[3] < 150 ? 19 : 23}" font-weight="900" fill="${INK}" stroke="none">${l[1]} ${l[0]}</text></g>`).join("")}<circle cx="300" cy="300" r="2" fill="none"/></svg></div>
+      <div style="display:flex;flex-direction:column;gap:.8rem;min-height:0"><div class="card" id="ly" style="flex:1;font-size:1.4rem;line-height:1.25">👉 Натискай «Додати шар» — і будуємо захист від центру назовні.</div>
+        <div style="height:19vh;flex:none" id="lc">${CH.hacker()}</div><div style="display:flex;gap:1rem"><button class="btn y" id="la" style="flex:1">➕ Додати шар</button><button class="btn" id="lr">↻</button></div></div></div>`;
+  const rings = []; $$(".ring", r).forEach((g) => (rings[+g.dataset.i] = g));
+  $("#la", r).onclick = () => {
+    if (n >= L.length) return; const l = L[n]; rings[n].classList.add("vis"); n++;
+    $("#ly", r).innerHTML = `<div style="font-size:2rem;font-weight:900">${l[1]} Шар ${n}: ${l[0]}</div><div style="margin-top:.5rem">${l[4]}</div><div style="margin-top:.6rem;opacity:.7;font-size:1.1rem">${n < L.length ? "Хакер Боря вже нервує…" : "Хакеру Борі не пробитися! 🎉"}</div>`;
+    $("#lc", r).innerHTML = n < L.length ? CH.hacker() : CH.fire(); if (n >= L.length) { setMood($("#lc .char", r), "cheer", 0); burst(innerWidth / 2, innerHeight / 2); } else setMood($("#lc .char", r), n > 3 ? "sad" : "shake", 1200);
+    if (n >= L.length) $("#la", r).disabled = true;
+  };
+  $("#lr", r).onclick = () => scenes[5].build(r);
+});
+
+// 6. Паролі
+add("Паролі", ["#ffd23f", "#ff8a3d"], (r) => {
+  const P = [
+    ["123456", 0, "Найпопулярніший і найслабший пароль у світі."], ["qwerty", 0, "Прямий ряд клавіш — перше, що пробує хакер."], ["admin", 0, "Стандартний пароль роутерів і камер: боти перебирають його першим."],
+    ["Kyiv2024", 0, "Слово + рік — передбачувано, словникова атака справляється."], ["P@ssw0rd", 0, "Заміна літер на символи — відомий шаблон, у всіх словниках."],
+    ["kit-yist-borsch-na-dakhu-7", 1, "Довга фраза з кількох слів — і легко запам'ятати, і важко підібрати."],
+    ["mT7!vQ2#xLp9", 1, "Довгий випадковий пароль. Запам'ятати складно — тож потрібен менеджер паролів."], ["мій-пес-їсть-сир-у-неділю", 1, "Довга кумедна фраза — відмінний пароль."]
+  ];
+  const order = [0, 5, 3, 6, 2, 4, 7, 1]; let i = 0, locked = false, got = 0;
+  r.innerHTML = `<span class="kicker">🔑 Гра · сильний чи слабкий?</span>
+    <div class="pw" style="margin-top:.5rem"><div style="display:flex;flex-direction:column;gap:.9rem;min-height:0">
+      <div class="card"><div style="opacity:.7;font-size:1rem">ПАРОЛЬ <span id="pn"></span></div><div class="pwbox" id="pb"></div></div>
+      <div><div style="font-size:1.1rem">МІЦНІСТЬ:</div><div class="meter"><i id="mt"></i></div></div>
+      <div style="display:flex;gap:1rem"><button class="btn r" id="pwk" style="flex:1">💥 Слабкий</button><button class="btn g" id="pws" style="flex:1">💪 Сильний</button><button class="btn y" id="pnx" disabled>▶</button></div>
+      <div class="card" id="pe" style="font-size:1.35rem;min-height:5rem">Голосуємо в чаті: СИЛЬНИЙ чи СЛАБКИЙ?</div></div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:.6rem"><div class="bubble left" id="hb" style="font-size:1.2rem">Дайте мені слабкий пароль! 😈</div><div style="height:36vh" id="hh">${CH.hacker()}</div></div></div>`;
+  const f = (s) => $(s, r);
+  function show() { locked = false; f("#pn").textContent = `${i + 1} / ${P.length}`; f("#pb").textContent = P[order[i]][0]; f("#mt").style.width = "0"; f("#pe").textContent = "Голосуємо в чаті: СИЛЬНИЙ чи СЛАБКИЙ?"; f("#pnx").disabled = true; f("#pwk").disabled = f("#pws").disabled = false; f("#hb").textContent = "Дайте мені слабкий пароль! 😈"; }
+  function ans(strong) {
+    if (locked) return; locked = true; const p = P[order[i]], ok = (p[1] === 1) === strong; addScore(ok); if (ok) got++;
+    f("#mt").style.width = p[1] ? "100%" : "12%"; f("#mt").style.background = p[1] ? "#2ee59d" : "#ff3b5c";
+    f("#pe").innerHTML = `${ok ? "✅ ВІРНО!" : "❌ Ні!"} Це <b>${p[1] ? "СИЛЬНИЙ" : "СЛАБКИЙ"}</b> пароль. ${p[2]}`;
+    f("#hb").textContent = p[1] ? "Ай… не можу підібрати! 😭" : "Хі-хі, зламав миттєво! 😈"; setMood(f("#hh .char"), p[1] ? "sad" : "cheer", 2000);
+    if (ok) burst(...center(f("#pb"))); f("#pnx").disabled = false; f("#pwk").disabled = f("#pws").disabled = true;
+  }
+  f("#pwk").onclick = () => ans(false); f("#pws").onclick = () => ans(true);
+  f("#pnx").onclick = () => { if (i < P.length - 1) { i++; show(); } else { f("#pe").innerHTML = `🏁 Готово! Правильно: <b>${got} з ${P.length}</b>. Секрет: ДОВЖИНА + унікальність + менеджер паролів.`; burst(innerWidth / 2, innerHeight / 2); f("#pnx").disabled = true; } };
+  show();
+});
+
+// 7. VPN
+add("VPN-тунель", ["#2ec4ff", "#7a5cff"], (r) => {
+  r.innerHTML = `<span class="kicker">🔐 VPN · зашифрований тунель</span><h2>ХТО ПІДСЛУХОВУЄ У КАФЕ?</h2>
+    <div class="vpn" id="vp" data-vpn="off"><div class="track">
+      <div class="node"><span>💻</span>ТИ<br>у кафе ☕</div>
+      <div class="pipe"><div class="spy" id="sp"><div class="bubble" id="sb">Ха! Бачу всі паролі! 😈</div><div style="height:100%">${CH.hacker()}</div></div>
+        <div class="line"></div><div class="tunnel"></div>
+        <span class="pkt"><span class="plain">пароль: 12345</span><span class="enc">x#9f@!q7</span></span>
+        <span class="pkt"><span class="plain">чат: привіт!</span><span class="enc">k2$Zp&amp;0a</span></span>
+        <span class="pkt"><span class="plain">картка: 4441…</span><span class="enc">%v8!Lm#3</span></span></div>
+      <div class="node"><span>🌐</span>САЙТ<br>банку</div></div>
+      <div style="display:flex;gap:1rem;justify-content:center"><button class="btn r" id="v0" style="min-width:20vw">🔓 БЕЗ VPN</button><button class="btn g" id="v1" style="min-width:20vw">🔐 З VPN</button></div></div>`;
+  const vp = $("#vp", r), setv = (on) => { vp.dataset.vpn = on ? "on" : "off"; $("#sb", r).textContent = on ? "Нічого не розумію… 😭" : "Ха! Бачу всі паролі! 😈"; setMood($("#sp .char", r), on ? "sad" : "cheer", 0); if (on) burst(...center($("#v1", r))); };
+  $("#v0", r).onclick = () => setv(false); $("#v1", r).onclick = () => setv(true);
+});
+
+// 8. Хто це вирішить
+add("Хто вирішить?", ["#ff4d8d", "#7a5cff"], (r) => quiz(r, {
+  kicker: "🧩 Хто вирішить цю проблему?", char: "fire", host: "Оберіть героя, який упорається!",
+  items: [
+    { q: "Хтось з інтернету «стукає» у закритий порт 23 (Telnet).", o: ["🧱 Фаєрик (фаєрвол)", "🔐 Тунелик (VPN)", "🛡️ Антивірусик", "💾 Бобер-Бекап"], a: 0, w: "Фаєрвол блокує небажані з'єднання за правилами.", char: "fire" },
+    { q: "У листі вкладення <b>invoice.pdf.exe</b>.", o: ["🧱 Фаєрик", "🔐 Тунелик", "🛡️ Антивірусик", "👁️ Сова-Логер"], a: 2, w: "Антивірус перевіряє файли й знаходить шкідливі програми.", char: "av" },
+    { q: "Ти сидиш у кафе й вводиш пароль від банку у публічному Wi-Fi.", o: ["💾 Бобер-Бекап", "🔐 Тунелик (VPN)", "🧱 Фаєрик", "🛡️ Антивірусик"], a: 1, w: "VPN шифрує трафік — підслухати його в кафе не вдасться.", char: "vpn" },
+    { q: "У журналі — 5000 невдалих спроб входу за хвилину.", o: ["👁️ Сова-Логер", "🔐 Тунелик", "💾 Бобер-Бекап", "🛡️ Антивірусик"], a: 0, w: "Моніторинг (IDS/SIEM) помічає аномалії й підіймає тривогу.", char: "owl" },
+    { q: "Шифрувальник заблокував усі файли в комп'ютері.", o: ["🧱 Фаєрик", "💾 Бобер-Бекап", "🔐 Тунелик", "👁️ Сова-Логер"], a: 1, w: "Резервна копія (правило 3-2-1) дозволяє відновити дані без викупу.", char: "beaver" },
+    { q: "Потрібно закрити всі порти, крім 443.", o: ["🛡️ Антивірусик", "💾 Бобер-Бекап", "🧱 Фаєрик", "🔐 Тунелик"], a: 2, w: "Це правило фаєрвола: «усе інше — заборонити».", char: "fire" }
+  ]
+}));
+
+// 9. Фінал + завдання
+add("Фінал", ["#2ee59d", "#ffd23f"], (r) => {
+  r.innerHTML = `<span class="kicker">🏆 Фінал · завдання для групи</span><h2>ВИ — КОМАНДА ЗАХИСТУ!</h2>
+    <div class="final"><div class="card"><div style="font-size:1.6rem;font-weight:900;margin-bottom:.3rem">📝 Завдання (10–15 хвилин)</div><ol style="padding-left:1.4rem;margin:0">
+      <li>Намалюй <b>схему захисту своєї домашньої мережі</b> (роутер, телефон, ноутбук, камера/ТВ).</li>
+      <li>Познач, які засоби ти б використав: <b>фаєрвол, VPN, антивірус, резервні копії, пароль + 2FA</b>.</li>
+      <li>Напиши <b>4–5 речень</b>: чому саме так і що найслабше місце.</li>
+      <li>Здай у Google Classroom (скриншот або файл).</li></ol>
+      <div class="cheer">${["fire", "vpn", "av", "owl", "beaver"].map((k) => `<div class="c">${CH[k]()}</div>`).join("")}</div></div>
+      <div style="display:flex;flex-direction:column;gap:1rem"><div class="card" style="text-align:center"><div style="font-size:1.2rem">⏱ ТАЙМЕР ЗАВДАННЯ</div><div class="timer" id="tm">10:00</div>
+        <div style="display:flex;gap:.6rem;justify-content:center;margin-top:.6rem"><button class="btn" id="tm5">5</button><button class="btn" id="tm10">10</button><button class="btn" id="tm15">15</button><button class="btn g" id="tgo">▶</button><button class="btn r" id="tst">⏸</button></div></div>
+        <div class="card" style="text-align:center;font-size:1.6rem">⭐ ОЧКИ ГРУПИ<div style="font-size:3.4rem;font-weight:900" id="fs"></div></div></div></div>`;
+  $("#fs", r).textContent = `${right} / ${total}`;
+  let sec = 600, tid = null; const draw = () => { $("#tm", r).textContent = `${String(Math.floor(sec / 60)).padStart(2, "0")}:${String(sec % 60).padStart(2, "0")}`; };
+  const stop = () => { clearInterval(tid); tid = null; };
+  const setT = (m) => { stop(); sec = m * 60; draw(); };
+  $("#tm5", r).onclick = () => setT(5); $("#tm10", r).onclick = () => setT(10); $("#tm15", r).onclick = () => setT(15);
+  $("#tst", r).onclick = stop;
+  $("#tgo", r).onclick = () => { if (tid) return; tid = setInterval(() => { sec--; draw(); if (sec <= 0) { stop(); $("#tm", r).textContent = "ЧАС!"; burst(innerWidth / 2, innerHeight / 2); } }, 1000); };
+  burst(innerWidth / 2, innerHeight / 3);
+});
+
+/* ---------- навігація ---------- */
+const main = $("#main"), dots = $("#dots"); let cur = 0; const built = [];
+scenes.forEach((s, i) => {
+  const sec = document.createElement("section"); sec.className = "scene"; main.appendChild(sec); s.root = sec;
+  const d = document.createElement("div"); d.className = "dot"; d.title = s.title; d.onclick = () => go(i); dots.appendChild(d);
+});
+function go(i) {
+  if (i < 0 || i >= scenes.length) return; cur = i;
+  scenes.forEach((s, k) => s.root.classList.toggle("active", k === i));
+  $$(".dot").forEach((d, k) => { d.classList.toggle("on", k === i); d.classList.toggle("done", k < i); });
+  const s = scenes[i]; document.body.style.setProperty("--bg1", s.bg[0]); document.body.style.setProperty("--bg2", s.bg[1]);
+  if (!built[i] || i === scenes.length - 1) { s.build(s.root); built[i] = true; }
+  $("#prev").disabled = i === 0; $("#next").disabled = i === scenes.length - 1;
+}
+$("#prev").onclick = () => go(cur - 1); $("#next").onclick = () => go(cur + 1);
+addEventListener("keydown", (e) => {
+  if (e.key === "ArrowRight" || e.key === "PageDown") go(cur + 1);
+  else if (e.key === "ArrowLeft" || e.key === "PageUp") go(cur - 1);
+  else if (e.key === "f" || e.key === "F" || e.key === "а" || e.key === "А") { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); }
+  else if (e.key === "r" || e.key === "R" || e.key === "к" || e.key === "К") { const s = scenes[cur]; s.build(s.root); }
+});
+go(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Розділ 6. Векторна графіка · Інформатика</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="logo">
+      <svg class="mascot-nav" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <defs><linearGradient id="gNavIdx" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs>
+              <line x1="60" y1="6" x2="60" y2="20" stroke="#c084fc" stroke-width="6" stroke-linecap="round"/>
+              <circle cx="60" cy="6" r="7" fill="#f472b6"/>
+              <rect x="14" y="20" width="92" height="82" rx="28" fill="url(#gNavIdx)"/>
+              <circle cx="10" cy="58" r="9" fill="#f472b6"/><circle cx="110" cy="58" r="9" fill="#f472b6"/>
+              <ellipse cx="42" cy="60" rx="13" ry="16" fill="#fff"/><ellipse cx="78" cy="60" rx="13" ry="16" fill="#fff"/>
+              <circle cx="45" cy="64" r="6.5" fill="#362a52"/><circle cx="81" cy="64" r="6.5" fill="#362a52"/>
+              <circle cx="41" cy="58" r="2.4" fill="#fff"/><circle cx="77" cy="58" r="2.4" fill="#fff"/>
+              <circle cx="28" cy="82" r="6" fill="#fbcfe8" opacity=".85"/><circle cx="92" cy="82" r="6" fill="#fbcfe8" opacity=".85"/>
+              <path d="M48 88 Q60 97 72 88" stroke="#362a52" stroke-width="4" fill="none" stroke-linecap="round"/>
+            </svg>
+      Інформатика
+    </div>
+    <div class="links">
+      <a href="../index.html">Головна</a>
+      <a href="../index.html#rozdily" class="active">Розділи</a>
+      <a href="../pidruchnyk.html">Підручник</a>
+      <a href="../submit.html">Здати роботу</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="eyebrow"><span class="green">✦</span> Розділ 6</div>
+  <h1>Векторна графіка</h1>
+  <p class="lead">Чим векторне зображення відрізняється від растрового, які програми для нього є та як в Adobe Illustrator малювати й редагувати об’єкти.</p>
+  <div class="sec-meta"><span class="tag-pill">7 тем</span><span class="sec-actions"><button class="btn btn-ghost btn-sm" onclick="setAll(true)">Розгорнути все</button><button class="btn btn-ghost btn-sm" onclick="setAll(false)">Згорнути все</button></span></div>
+  <section class="topics">
+<details class="topic" id="tema-01">
+  <summary><span class="num">01</span><span class="t-title">Суть векторного малюнка і його особливості</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+  <div class="topic-body">
+    <p class="t-text">Векторне зображення складається з геометричних об’єктів — ліній, кривих, фігур, — описаних математично. Тому його можна масштабувати без втрати якості: логотип однаково чіткий і на візитці, і на білборді. Векторна графіка ідеальна для логотипів, іконок, схем і шрифтів, але не для фотографій.</p>
+    <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
+      <div><dt>Вектор</dt><dd>зображення, описане формулами кривих і фігур</dd></div>
+      <div><dt>Крива Безьє</dt><dd>крива, яку задають опорні точки та напрямні</dd></div>
+      <div><dt>SVG, AI, EPS, PDF</dt><dd>векторні формати файлів</dd></div>
+    </dl></div>
+    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
+    <div class="slides" data-src=""></div>
+    <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
+      <li><a class="" href="https://bezier.method.ac/" target="_blank" rel="noopener">The Bézier Game</a> — гра: навчись працювати з кривими Безьє</li>
+    </ul></div>
+    <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://inkscape.org/" target="_blank" rel="noopener">Inkscape</a></div></div>
+  </div>
+</details>
+<details class="topic" id="tema-02">
+  <summary><span class="num">02</span><span class="t-title">Огляд програм для роботи з векторною графікою</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+  <div class="topic-body">
+    <p class="t-text">Професійний стандарт — Adobe Illustrator. Безкоштовні альтернативи: Inkscape (комп’ютер), Figma (браузер, зручна для інтерфейсів і іконок), Affinity Designer. Для простих задач підійде онлайн-сервіс Canva або Boxy SVG.</p>
+    <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
+      <div><dt>Растеризація</dt><dd>перетворення вектора на пікселі</dd></div>
+      <div><dt>Монтажна область</dt><dd>«аркуш», на якому малюють в Illustrator</dd></div>
+    </dl></div>
+    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
+    <div class="slides" data-src=""></div>
+    <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
+      <li><a class="" href="https://www.adobe.com/products/illustrator.html" target="_blank" rel="noopener">Adobe Illustrator</a> — сторінка програми</li>
+    </ul></div>
+    <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://inkscape.org/" target="_blank" rel="noopener">Inkscape</a><a class="chip" href="https://www.figma.com/" target="_blank" rel="noopener">Figma</a><a class="chip" href="https://www.canva.com/" target="_blank" rel="noopener">Canva</a></div></div>
+  </div>
+</details>
+<details class="topic" id="tema-03">
+  <summary><span class="num">03</span><span class="t-title">Особливості налаштування розмірів графічного зображення в програмі Adobe Illustrator</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+  <div class="topic-body">
+    <p class="t-text">Під час створення документа задають розмір монтажної області, одиниці виміру (мм для друку, пікселі для екрана) та колірну модель: CMYK для друку, RGB для екрана. Розміри об’єктів змінюють на панелі «Трансформування»; щоб не спотворити пропорції, вмикай значок ланцюжка.</p>
+    <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
+      <div><dt>Монтажна область</dt><dd>сторінка документа в Illustrator</dd></div>
+      <div><dt>CMYK / RGB</dt><dd>колірні моделі для друку / для екрана</dd></div>
+      <div><dt>Блид (виліт)</dt><dd>запас 2–3 мм за краєм для друку</dd></div>
+    </dl></div>
+    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
+    <div class="slides" data-src=""></div>
+    <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
+      <li><a class="" href="https://helpx.adobe.com/illustrator.html" target="_blank" rel="noopener">Довідка Adobe Illustrator</a> — офіційні уроки та інструкції</li>
+    </ul></div>
+    <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.adobe.com/products/illustrator.html" target="_blank" rel="noopener">Adobe Illustrator</a><a class="chip" href="https://inkscape.org/" target="_blank" rel="noopener">Inkscape</a></div></div>
+  </div>
+</details>
+<details class="topic" id="tema-04">
+  <summary><span class="num">04</span><span class="t-title">Практична робота: Створення графічного малюнку у векторі в програмі Adobe Illustrator</span><span class="t-badges"><span class="badge badge-warn">практична</span></span><span class="chev">▾</span></summary>
+  <div class="topic-body">
+    <p class="t-text">Намалюй векторний малюнок (іконку, емблему чи предмет своєї професії) з простих фігур: прямокутник, еліпс, багатокутник, лінії. Збережи файл у форматі .ai та експортуй у PNG.</p>
+    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
+    <div class="slides" data-src=""></div>
+    <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.adobe.com/products/illustrator.html" target="_blank" rel="noopener">Adobe Illustrator</a><a class="chip" href="https://inkscape.org/" target="_blank" rel="noopener">Inkscape</a></div></div>
+  </div>
+</details>
+<details class="topic" id="tema-05">
+  <summary><span class="num">05</span><span class="t-title">Робота з об’єктами: малювання, зміна, розфарбування в програмі Adobe Illustrator</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+  <div class="topic-body">
+    <p class="t-text">Основні інструменти: «Перо» для кривих, фігури, «Олівець», «Виділення» та «Пряме виділення» для зміни форми. Об’єкт має заливку і обведення — кожному можна задати колір, градієнт чи візерунок. Панель «Обробка контурів» (Pathfinder) поєднує фігури: об’єднання, віднімання, перетин.</p>
+    <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
+      <div><dt>Заливка</dt><dd>колір усередині фігури</dd></div>
+      <div><dt>Обведення</dt><dd>контур фігури</dd></div>
+      <div><dt>Pathfinder</dt><dd>логічні операції з фігурами</dd></div>
+      <div><dt>Групування</dt><dd>об’єднання кількох об’єктів для спільного редагування</dd></div>
+    </dl></div>
+    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
+    <div class="slides" data-src=""></div>
+    <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
+      <li><a class="" href="https://shape.method.ac/" target="_blank" rel="noopener">Shape Game</a> — тренажер точного малювання фігур</li>
+      <li><a class="" href="https://color.method.ac/" target="_blank" rel="noopener">Color Game</a> — тренажер відчуття кольору</li>
+    </ul></div>
+    <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.adobe.com/products/illustrator.html" target="_blank" rel="noopener">Adobe Illustrator</a><a class="chip" href="https://inkscape.org/" target="_blank" rel="noopener">Inkscape</a></div></div>
+  </div>
+</details>
+<details class="topic" id="tema-06">
+  <summary><span class="num">06</span><span class="t-title">Практична робота: Створення набору ярликів з дотриманням стилю</span><span class="t-badges"><span class="badge badge-warn">практична</span></span><span class="chev">▾</span></summary>
+  <div class="topic-body">
+    <p class="t-text">Створи набір із 5–6 ярликів (іконок) для теми своєї професії в єдиному стилі: однакова сітка розміру, товщина ліній, палітра й ступінь деталізації.</p>
+    <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
+      <div><dt>Набір іконок</dt><dd>серія значків, виконаних в одному стилі</dd></div>
+    </dl></div>
+    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
+    <div class="slides" data-src=""></div>
+    <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
+      <li><a class="" href="https://thenounproject.com/" target="_blank" rel="noopener">The Noun Project</a> — приклади стильних наборів іконок</li>
+    </ul></div>
+    <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.adobe.com/products/illustrator.html" target="_blank" rel="noopener">Adobe Illustrator</a><a class="chip" href="https://www.figma.com/" target="_blank" rel="noopener">Figma</a></div></div>
+  </div>
+</details>
+<details class="topic" id="tema-07">
+  <summary><span class="num">07</span><span class="t-title">Тематичне оцінювання</span><span class="t-badges"><span class="badge badge-warn">атестація</span></span><span class="chev">▾</span></summary>
+  <div class="topic-body">
+    <p class="t-text">Повтори: відмінність вектора від растра, формати, програми, налаштування документа, інструменти малювання, заливку й обведення, Pathfinder.</p>
+    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
+    <div class="slides" data-src=""></div>
+  </div>
+</details>
+  </section>
+  <div class="sec-nav"><a class="btn btn-ghost" href="../index.html#rozdily">← усі розділи</a><a class="btn btn-ghost" href="../rozdil-05/index.html">‹ Розділ 5</a><a class="btn btn-ghost" href="../rozdil-07/index.html">Розділ 7 ›</a></div>
+  <footer>Інформатика · Київський професійний ліцей транспорту · Розділ 6</footer>
+</div>
+
+<script>
+  // Вбудовування презентацій: data-src="посилання з Google Диска / Google Slides"
+  function embedUrl(u){
+    var m = u.match(/drive\.google\.com\/file\/d\/([^\/?#]+)/);
+    if (m) return 'https://drive.google.com/file/d/' + m[1] + '/preview';
+    m = u.match(/docs\.google\.com\/presentation\/d\/([^\/?#]+)/);
+    if (m) return 'https://docs.google.com/presentation/d/' + m[1] + '/embed';
+    return u;
+  }
+  document.querySelectorAll('.slides').forEach(function(box){
+    var src = (box.getAttribute('data-src') || '').trim();
+    if (!src) return;
+    box.innerHTML = '<h4>Презентація</h4><div class="slides-frame"><iframe src="' + embedUrl(src) +
+      '" allowfullscreen loading="lazy" title="Презентація до теми"></iframe></div>' +
+      '<a class="slides-open" href="' + src + '" target="_blank" rel="noopener">відкрити окремо ↗</a>';
+    box.classList.add('has-slides');
+  });
+  function setAll(open){ document.querySelectorAll('details.topic').forEach(function(d){ d.open = open; }); }
+  if (location.hash){ var d = document.querySelector(location.hash); if (d && d.tagName === 'DETAILS') d.open = true; }
+</script>
+
+</body>
+</html>

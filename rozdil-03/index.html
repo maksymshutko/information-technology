@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Розділ 3. Системи керування базами даних · Інформатика</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="logo">
+      <svg class="mascot-nav" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <defs><linearGradient id="gNavIdx" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs>
+              <line x1="60" y1="6" x2="60" y2="20" stroke="#c084fc" stroke-width="6" stroke-linecap="round"/>
+              <circle cx="60" cy="6" r="7" fill="#f472b6"/>
+              <rect x="14" y="20" width="92" height="82" rx="28" fill="url(#gNavIdx)"/>
+              <circle cx="10" cy="58" r="9" fill="#f472b6"/><circle cx="110" cy="58" r="9" fill="#f472b6"/>
+              <ellipse cx="42" cy="60" rx="13" ry="16" fill="#fff"/><ellipse cx="78" cy="60" rx="13" ry="16" fill="#fff"/>
+              <circle cx="45" cy="64" r="6.5" fill="#362a52"/><circle cx="81" cy="64" r="6.5" fill="#362a52"/>
+              <circle cx="41" cy="58" r="2.4" fill="#fff"/><circle cx="77" cy="58" r="2.4" fill="#fff"/>
+              <circle cx="28" cy="82" r="6" fill="#fbcfe8" opacity=".85"/><circle cx="92" cy="82" r="6" fill="#fbcfe8" opacity=".85"/>
+              <path d="M48 88 Q60 97 72 88" stroke="#362a52" stroke-width="4" fill="none" stroke-linecap="round"/>
+            </svg>
+      Інформатика
+    </div>
+    <div class="links">
+      <a href="../index.html">Головна</a>
+      <a href="../index.html#rozdily" class="active">Розділи</a>
+      <a href="../pidruchnyk.html">Підручник</a>
+      <a href="../submit.html">Здати роботу</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="eyebrow"><span class="green">✦</span> Розділ 3</div>
+  <h1>Системи керування базами даних</h1>
+  <p class="lead">Як влаштовані бази даних, чому таблиці зв’язують між собою та як у СКБД Microsoft Access створювати таблиці, форми, шукати й фільтрувати записи.</p>
+  <div class="sec-meta"><span class="tag-pill">9 тем</span><span class="sec-actions"><button class="btn btn-ghost btn-sm" onclick="setAll(true)">Розгорнути все</button><button class="btn btn-ghost btn-sm" onclick="setAll(false)">Згорнути все</button></span></div>
+  <section class="topics">
+<details class="topic" id="tema-01">
+  <summary><span class="num">01</span><span class="t-title">Система управління базами даних Microsoft Office Access</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+  <div class="topic-body">
+    <p class="t-text">Microsoft Access — настільна СКБД, яка входить до пакета Microsoft 365. Файл бази (.accdb) містить усі об’єкти: таблиці, запити, форми та звіти. Вікно Access складається зі стрічки інструментів, області переходів (список об’єктів) і робочої області.</p>
+    <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
+      <div><dt>СКБД</dt><dd>програма для створення баз даних і роботи з ними</dd></div>
+      <div><dt>Область переходів</dt><dd>панель зі списком об’єктів бази</dd></div>
+      <div><dt>.accdb</dt><dd>формат файлу бази даних Access</dd></div>
+    </dl></div>
+    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
+    <div class="slides" data-src=""></div>
+    <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
+      <li><a class="" href="https://www.microsoft.com/microsoft-365/access" target="_blank" rel="noopener">Microsoft Access</a> — сторінка продукту та навчальні матеріали</li>
+    </ul></div>
+    <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.microsoft.com/microsoft-365/access" target="_blank" rel="noopener">Microsoft Access</a><a class="chip" href="https://www.libreoffice.org/discover/base/" target="_blank" rel="noopener">LibreOffice Base (безкоштовна альтернатива)</a></div></div>
+  </div>
+</details>
+<details class="topic" id="tema-02">
+  <summary><span class="num">02</span><span class="t-title">Системи керування базами даних, їх призначення</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+  <div class="topic-body">
+    <p class="t-text">База даних — це впорядкований набір даних про певну предметну область: клієнти СТО, склад запчастин, розклад рейсів. СКБД дозволяє створювати структуру бази, вводити й змінювати дані, шукати потрібне та захищати дані від втрат. Бази даних працюють за майже кожним сайтом і застосунком — від інтернет-магазину до Нової пошти.</p>
+    <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
+      <div><dt>База даних</dt><dd>організована сукупність даних про предметну область</dd></div>
+      <div><dt>Предметна область</dt><dd>частина реального світу, яку описує база</dd></div>
+      <div><dt>Настільна / серверна СКБД</dt><dd>Access, LibreOffice Base / MySQL, PostgreSQL</dd></div>
+    </dl></div>
+    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
+    <div class="slides" data-src=""></div>
+    <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
+      <li><a class="" href="https://uk.wikipedia.org/wiki/Система_керування_базами_даних" target="_blank" rel="noopener">Вікіпедія: Система керування базами даних</a> — види СКБД і приклади</li>
+    </ul></div>
+    <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.libreoffice.org/discover/base/" target="_blank" rel="noopener">LibreOffice Base</a></div></div>
+  </div>
+</details>
+<details class="topic" id="tema-03">
+  <summary><span class="num">03</span><span class="t-title">Реляційні бази даних, їхні об’єкти</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+  <div class="topic-body">
+    <p class="t-text">У реляційній базі дані зберігаються в таблицях, пов’язаних між собою. Рядок таблиці — запис (один об’єкт), стовпець — поле (одна властивість). Первинний ключ однозначно визначає запис, а зовнішній ключ зв’язує таблиці. Основні об’єкти Access: таблиці, запити, форми, звіти.</p>
+    <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
+      <div><dt>Запис</dt><dd>рядок таблиці — дані про один об’єкт</dd></div>
+      <div><dt>Поле</dt><dd>стовпець таблиці — одна властивість</dd></div>
+      <div><dt>Первинний ключ</dt><dd>поле з унікальними значеннями для кожного запису</dd></div>
+      <div><dt>Зв’язок «один-до-багатьох»</dt><dd>одному запису першої таблиці відповідає багато записів другої</dd></div>
+    </dl></div>
+    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
+    <div class="slides" data-src=""></div>
+    <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
+      <li><a class="" href="https://www.w3schools.com/sql/" target="_blank" rel="noopener">W3Schools SQL</a> — інтерактивний підручник мови запитів SQL</li>
+    </ul></div>
+    <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://sqliteonline.com/" target="_blank" rel="noopener">SQLite Online</a></div></div>
+  </div>
+</details>
+<details class="topic" id="tema-04">
+  <summary><span class="num">04</span><span class="t-title">Створення таблиць бази даних</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+  <div class="topic-body">
+    <p class="t-text">Таблицю зручно створювати в режимі конструктора: задаємо ім’я поля, тип даних і властивості (розмір, формат, обов’язковість). Правильно підібраний тип даних (короткий текст, число, дата/час, грошовий, так/ні) захищає від помилок введення. Не забудь призначити первинний ключ.</p>
+    <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
+      <div><dt>Режим конструктора</dt><dd>режим налаштування структури таблиці</dd></div>
+      <div><dt>Тип даних</dt><dd>вид значень, які можна зберігати в полі</dd></div>
+      <div><dt>Лічильник</dt><dd>тип поля, що автоматично нумерує записи</dd></div>
+    </dl></div>
+    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
+    <div class="slides" data-src=""></div>
+    <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
+      <li><a class="" href="https://support.microsoft.com/access" target="_blank" rel="noopener">Довідка Microsoft Access</a> — офіційні інструкції зі створення таблиць</li>
+    </ul></div>
+    <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.microsoft.com/microsoft-365/access" target="_blank" rel="noopener">Microsoft Access</a></div></div>
+  </div>
+</details>
+<details class="topic" id="tema-05">
+  <summary><span class="num">05</span><span class="t-title">Практична робота. Робота з об’єктами бази даних</span><span class="t-badges"><span class="badge badge-warn">практична</span></span><span class="chev">▾</span></summary>
+  <div class="topic-body">
+    <p class="t-text">Створи базу даних для своєї професії (наприклад, «Автосервіс» або «Кафе»): дві-три таблиці, первинні ключі, зв’язки між таблицями. Перевір, що кожна таблиця відкривається, а зв’язки показано у схемі даних.</p>
+    <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
+      <div><dt>Схема даних</dt><dd>вікно Access, де видно таблиці та зв’язки між ними</dd></div>
+    </dl></div>
+    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
+    <div class="slides" data-src=""></div>
+    <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.microsoft.com/microsoft-365/access" target="_blank" rel="noopener">Microsoft Access</a></div></div>
+  </div>
+</details>
+<details class="topic" id="tema-06">
+  <summary><span class="num">06</span><span class="t-title">Ведення і редагування даних різних типів</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+  <div class="topic-body">
+    <p class="t-text">Дані вводять у режимі таблиці або через форму. Під час редагування можна додавати, змінювати й видаляти записи, копіювати значення. Маска введення та умова на значення допомагають уникнути помилок (наприклад, номер телефону в правильному форматі). Видалення записів у базі незворотне — будь уважним.</p>
+    <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
+      <div><dt>Маска введення</dt><dd>шаблон, за яким вводяться дані (телефон, дата)</dd></div>
+      <div><dt>Умова на значення</dt><dd>правило, яке перевіряє введені дані</dd></div>
+      <div><dt>Підстановка</dt><dd>вибір значення зі списку замість ручного введення</dd></div>
+    </dl></div>
+    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
+    <div class="slides" data-src=""></div>
+    <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.microsoft.com/microsoft-365/access" target="_blank" rel="noopener">Microsoft Access</a></div></div>
+  </div>
+</details>
+<details class="topic" id="tema-07">
+  <summary><span class="num">07</span><span class="t-title">Практична робота. Створення бази даних у середовищі СУБД, створення форм і введення даних</span><span class="t-badges"><span class="badge badge-warn">практична</span></span><span class="chev">▾</span></summary>
+  <div class="topic-body">
+    <p class="t-text">Створи форму для зручного введення даних у свою таблицю за допомогою майстра форм, налаштуй її вигляд і внеси щонайменше 10 записів.</p>
+    <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
+      <div><dt>Форма</dt><dd>об’єкт для зручного введення та перегляду записів по одному</dd></div>
+      <div><dt>Майстер форм</dt><dd>покроковий помічник створення форми</dd></div>
+    </dl></div>
+    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
+    <div class="slides" data-src=""></div>
+    <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.microsoft.com/microsoft-365/access" target="_blank" rel="noopener">Microsoft Access</a></div></div>
+  </div>
+</details>
+<details class="topic" id="tema-08">
+  <summary><span class="num">08</span><span class="t-title">Впорядкування, пошук і фільтрування даних</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+  <div class="topic-body">
+    <p class="t-text">Сортування впорядковує записи за зростанням або спаданням значень поля. Пошук знаходить потрібний запис, а фільтр показує лише записи, що відповідають умові (наприклад, усі авто марки «Renault»). Для складних і повторюваних відборів створюють запити.</p>
+    <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
+      <div><dt>Сортування</dt><dd>впорядкування записів за значенням поля</dd></div>
+      <div><dt>Фільтр</dt><dd>тимчасове приховування записів, що не відповідають умові</dd></div>
+      <div><dt>Запит</dt><dd>збережене правило відбору й обчислення даних</dd></div>
+    </dl></div>
+    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
+    <div class="slides" data-src=""></div>
+    <div class="t-block"><h4>Корисні ресурси</h4><ul class="t-res">
+      <li><a class="" href="https://www.w3schools.com/sql/sql_where.asp" target="_blank" rel="noopener">W3Schools SQL: WHERE та ORDER BY</a> — як фільтрують дані мовою SQL</li>
+    </ul></div>
+    <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.microsoft.com/microsoft-365/access" target="_blank" rel="noopener">Microsoft Access</a></div></div>
+  </div>
+</details>
+<details class="topic" id="tema-09">
+  <summary><span class="num">09</span><span class="t-title">Тематична атестація</span><span class="t-badges"><span class="badge badge-warn">атестація</span></span><span class="chev">▾</span></summary>
+  <div class="topic-body">
+    <p class="t-text">Повтори: призначення СКБД, поняття таблиці, запису, поля, ключа, типи даних, створення таблиць і форм, сортування та фільтрування.</p>
+    <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
+    <div class="slides" data-src=""></div>
+  </div>
+</details>
+  </section>
+  <div class="sec-nav"><a class="btn btn-ghost" href="../index.html#rozdily">← усі розділи</a><a class="btn btn-ghost" href="../rozdil-02/index.html">‹ Розділ 2</a><a class="btn btn-ghost" href="../rozdil-04/index.html">Розділ 4 ›</a></div>
+  <footer>Інформатика · Київський професійний ліцей транспорту · Розділ 3</footer>
+</div>
+
+<script>
+  // Вбудовування презентацій: data-src="посилання з Google Диска / Google Slides"
+  function embedUrl(u){
+    var m = u.match(/drive\.google\.com\/file\/d\/([^\/?#]+)/);
+    if (m) return 'https://drive.google.com/file/d/' + m[1] + '/preview';
+    m = u.match(/docs\.google\.com\/presentation\/d\/([^\/?#]+)/);
+    if (m) return 'https://docs.google.com/presentation/d/' + m[1] + '/embed';
+    return u;
+  }
+  document.querySelectorAll('.slides').forEach(function(box){
+    var src = (box.getAttribute('data-src') || '').trim();
+    if (!src) return;
+    box.innerHTML = '<h4>Презентація</h4><div class="slides-frame"><iframe src="' + embedUrl(src) +
+      '" allowfullscreen loading="lazy" title="Презентація до теми"></iframe></div>' +
+      '<a class="slides-open" href="' + src + '" target="_blank" rel="noopener">відкрити окремо ↗</a>';
+    box.classList.add('has-slides');
+  });
+  function setAll(open){ document.querySelectorAll('details.topic').forEach(function(d){ d.open = open; }); }
+  if (location.hash){ var d = document.querySelector(location.hash); if (d && d.tagName === 'DETAILS') d.open = true; }
+</script>
+
+</body>
+</html>

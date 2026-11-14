@@ -85,6 +85,7 @@
   /* short answer */
   .fill-row{ display:flex; align-items:center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
   .fill-row label{ font-size: 13.8px; flex: 1 1 300px; }
+  .fill-row select{ padding: 8px 10px; border-radius: 10px; border: 2px solid var(--line); font-size: 13.5px; }
   .fill-row input[type=text]{
     flex: 0 0 150px; padding: 8px 10px; border-radius: 10px; border: 2px solid var(--line); font-family: var(--font-mono); font-size: 13.5px;
   }
@@ -137,7 +138,7 @@
     </div>
     <div class="links">
       <a href="../index.html">Головна</a>
-      <a href="index.html" class="active">10 клас</a>
+      <a href="../index.html#rozdily" class="active">Розділи</a>
       <a href="../pidruchnyk.html">Підручник</a>
       <a href="../submit.html">Здати роботу</a>
     </div>
@@ -155,7 +156,7 @@
 <div class="wrap">
 
   <div class="hero">
-    <div class="eyebrow">Тематичне оцінювання · Тема 2</div>
+    <div class="eyebrow">Тематичне оцінювання · Розділ 2</div>
     <h1>Місія аналітика даних</h1>
     <p>Тобі потрібно пройти 4 етапи розслідування — кожен перевіряє свою частину теми «Моделі і моделювання. Аналіз та візуалізація даних». Місію можна пройти лише один раз: правильні й неправильні відповіді підсвітяться тільки після кнопки «Завершити місію», і тоді ж результат автоматично піде вчителю.</p>
     <div class="stage-pips">
@@ -177,7 +178,7 @@
     <p class="q-text">Перш ніж почати — вкажи, хто здає роботу. Місію можна пройти лише один раз: після кнопки «Завершити місію» відповіді заблокуються і результат одразу піде вчителю.</p>
     <div class="fill-row"><label style="flex:0 0 110px;">Прізвище</label><input type="text" id="studentLastname" style="flex:1 1 220px;" placeholder="Шевченко"></div>
     <div class="fill-row"><label style="flex:0 0 110px;">Ім'я</label><input type="text" id="studentFirstname" style="flex:1 1 220px;" placeholder="Тарас"></div>
-    <div class="fill-row"><label style="flex:0 0 110px;">Клас</label><input type="text" id="studentKlass" style="flex:1 1 220px;" placeholder="10-А"></div>
+    <div class="fill-row"><label style="flex:0 0 110px;">Група</label><select id="studentKlass" style="flex:1 1 220px;"><option value="" disabled selected>Обери групу</option><option>102</option><option>105</option><option>109</option><option>110</option><option>201</option><option>202</option><option>205</option><option>209</option><option>210</option><option>301</option><option>310</option></select></div>
     <p class="intro-error" id="introError">Заповни, будь ласка, всі три поля.</p>
     <button class="finish-btn" onclick="startMission()" style="margin-top:10px;">Розпочати місію</button>
   </div>
@@ -399,7 +400,7 @@
   </div>
 
   <footer>
-    Руденко В.Д. «Інформатика. 10 (11) клас» (рівень стандарту) · Тема 2. Моделі і моделювання. Аналіз та візуалізація даних · Тематичне оцінювання
+    Інформатика · Розділ 2. Моделі та моделювання. Аналіз та візуалізація даних · Тематичне оцінювання
   </footer>
 
 </div>
@@ -648,7 +649,7 @@
       lastname: studentInfo.lastname,
       firstname: studentInfo.firstname,
       klass: studentInfo.klass,
-      lesson: "Урок 15 — Тематичне оцінювання (Місія аналітика)",
+      lesson: "Розділ 2 — Тематичне оцінювання (Місія аналітика)",
       worktype: "Тематичне оцінювання (авто)",
       link: '',
       answer: result.total + '/' + TOTAL_POINTS + ' балів — ' + rank +
