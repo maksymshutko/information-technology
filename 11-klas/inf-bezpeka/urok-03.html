@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Урок 3 · Розпізнай загрозу</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<script src="../../assets/config.js"></script>
+<style>
+  .case-card{ background: var(--panel); border: 2px solid var(--border); border-radius: 18px; padding: 18px 20px; margin-bottom: 14px; }
+  .case-msg{
+    background: var(--panel-soft); border: 2px solid var(--border); border-radius: 12px; padding: 12px 14px;
+    font-size: 13.5px; color: var(--ink); margin-bottom: 14px; line-height:1.6; white-space: pre-line; font-weight:600;
+  }
+  .case-btns{ display:flex; gap: 8px; flex-wrap: wrap; }
+  .case-btn{
+    padding: 9px 16px; border-radius: 999px; border: 2px solid var(--border); background: var(--panel-soft);
+    color: var(--ink); font-family: var(--font-display); font-weight:700; font-size: 12.8px; cursor:pointer; transition: all .15s ease;
+  }
+  .case-btn:hover{ border-color: var(--purple); }
+  .case-btn.correct{ background: var(--green-bg); border-color: var(--green); color: var(--green); }
+  .case-btn.wrong{ background: var(--red-bg); border-color: var(--red); color: var(--red); }
+  .case-btn:disabled{ cursor: default; }
+  .case-explain{ display:none; margin-top: 12px; font-size: 13px; color: var(--muted); border-top: 2px dashed var(--border); padding-top: 12px; line-height:1.6; font-weight:600; }
+  .case-explain.show{ display:block; }
+
+  .scoretrack{
+    position: sticky; top:0; z-index: 50; background: rgba(26,19,48,0.92); backdrop-filter: blur(3px);
+    padding: 14px 20px; border-bottom: 1px solid var(--border);
+  }
+  .scoretrack-inner{ max-width: 780px; margin:0 auto; display:flex; align-items:center; gap: 16px; }
+  .scoretrack .name{ font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); white-space:nowrap; }
+  .scoretrack .track{ flex:1; height: 10px; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid var(--border); overflow:hidden; }
+  .scoretrack .fill{ height:100%; background: var(--grad-brand); width:0%; transition: width .3s ease; }
+  .scoretrack .score{ font-family: var(--font-mono); font-size: 13.5px; font-weight: 700; color: var(--ink); white-space:nowrap; }
+
+  .q-card{ background: var(--panel); border: 2px solid var(--border); border-radius: 18px; padding: 18px 20px; margin-bottom: 14px; }
+  .q-card .q-text{ font-size: 14.5px; margin: 0 0 12px; line-height: 1.5; font-weight:700; }
+  .intro-error{ color: var(--red); font-size: 13px; font-weight: 700; margin: 4px 0 0; display:none; }
+
+  .finish-zone{ text-align:center; padding: 30px 0 10px; }
+  .finish-btn{
+    background: var(--grad-brand); color: #fff; border:none; padding: 14px 34px; border-radius: 999px; font-size: 15px; font-weight: 800; cursor:pointer;
+    font-family: var(--font-display); box-shadow: var(--shadow-pop);
+  }
+  .finish-btn:active{ transform: translateY(2px); }
+  .finish-btn:disabled{ opacity:.55; cursor:not-allowed; }
+
+  .result-panel{ display:none; background: var(--panel); border: 2px solid var(--border); border-radius: 22px; padding: 34px 30px; text-align:center; margin-top: 20px; }
+  .result-panel.show{ display:block; }
+  .result-panel .rank{ font-family: var(--font-mono); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; }
+  .result-panel .rank-title{ font-family: var(--font-display); font-size: 24px; font-weight: 800; margin-bottom: 12px; }
+  .result-panel .final-score{ font-family: var(--font-mono); font-size: 40px; font-weight: 800; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="logo">
+      <svg class="mascot-nav" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="gNavU3b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs>
+        <line x1="60" y1="6" x2="60" y2="20" stroke="#c084fc" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="60" cy="6" r="7" fill="#f472b6"/>
+        <rect x="14" y="20" width="92" height="82" rx="28" fill="url(#gNavU3b)"/>
+        <circle cx="10" cy="58" r="9" fill="#f472b6"/><circle cx="110" cy="58" r="9" fill="#f472b6"/>
+        <ellipse cx="42" cy="60" rx="13" ry="16" fill="#fff"/><ellipse cx="78" cy="60" rx="13" ry="16" fill="#fff"/>
+        <circle cx="45" cy="64" r="6.5" fill="#362a52"/><circle cx="81" cy="64" r="6.5" fill="#362a52"/>
+        <circle cx="41" cy="58" r="2.4" fill="#fff"/><circle cx="77" cy="58" r="2.4" fill="#fff"/>
+        <circle cx="28" cy="82" r="6" fill="#fbcfe8" opacity=".85"/><circle cx="92" cy="82" r="6" fill="#fbcfe8" opacity=".85"/>
+        <path d="M48 88 Q60 97 72 88" stroke="#362a52" stroke-width="4" fill="none" stroke-linecap="round"/>
+      </svg>
+      Інформатика
+    </div>
+    <div class="links">
+      <a href="../../index.html">Головна</a>
+      <a href="../../10-klas/index.html">10 клас</a>
+      <a href="../index.html" class="active">11 клас</a>
+      <a href="../../pidruchnyk.html">Підручник</a>
+      <a href="../../submit.html">Здати роботу</a>
+    </div>
+  </div>
+</nav>
+
+<div class="scoretrack" id="scoreBar" style="display:none;">
+  <div class="scoretrack-inner">
+    <span class="name">РОЗПІЗНАНО</span>
+    <div class="track"><div class="fill" id="scoreFill"></div></div>
+    <span class="score" id="scoreLabel">0 / 15</span>
+  </div>
+</div>
+
+<div class="wrap narrow">
+
+  <div class="eyebrow"><span class="green">✦</span> Інформаційна безпека · Урок 3</div>
+  <h1>Урок 3. Розпізнай <span class="green">загрозу</span></h1>
+  <p class="lead">Шкідливе ПЗ, інтернет-шахрайство, спам-розсилки — і випадки, де насправді все гаразд. Для кожної з 15 ситуацій визнач, що це. Вправу можна пройти лише один раз: кожна відповідь одразу підсвічується (зелений/червоний) і після цього її вже не змінити, а фінальний результат автоматично піде вчителю.</p>
+
+  <div class="result-panel show" id="alreadyDonePanel" style="display:none;">
+    <div class="rank">Вправу вже завершено</div>
+    <div class="rank-title" id="alreadyRank"></div>
+    <div class="final-score" id="alreadyScore"></div>
+    <p style="color:var(--muted); font-size:13.5px; max-width:480px; margin:0 auto;">Цю вправу можна пройти лише один раз. Результат уже надіслано вчителю — повторно пройти її на цьому пристрої не можна.</p>
+  </div>
+
+  <div class="q-card" id="introGate" style="max-width:560px;">
+    <p class="q-text">Перш ніж почати — вкажи, хто здає роботу. Кожна ситуація дає лише одну спробу: щойно обереш варіант, він одразу підсвітиться і його вже не змінити, а результат автоматично піде вчителю.</p>
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
+      <label style="flex:0 0 110px; font-size:13.8px;">Прізвище</label>
+      <input type="text" id="studentLastname" style="flex:1 1 220px; padding:8px 10px; border-radius:10px; border:2px solid var(--border); font-size:13.5px;" placeholder="Шевченко">
+    </div>
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
+      <label style="flex:0 0 110px; font-size:13.8px;">Ім'я</label>
+      <input type="text" id="studentFirstname" style="flex:1 1 220px; padding:8px 10px; border-radius:10px; border:2px solid var(--border); font-size:13.5px;" placeholder="Тарас">
+    </div>
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
+      <label style="flex:0 0 110px; font-size:13.8px;">Клас</label>
+      <input type="text" id="studentKlass" style="flex:1 1 220px; padding:8px 10px; border-radius:10px; border:2px solid var(--border); font-size:13.5px;" placeholder="11-А">
+    </div>
+    <p class="intro-error" id="introError">Заповни, будь ласка, всі три поля.</p>
+    <button class="finish-btn" onclick="startExercise()" style="margin-top:10px;">Розпочати вправу</button>
+  </div>
+
+  <div id="missionContent" style="display:none;">
+    <section id="cases"></section>
+
+    <div class="finish-zone">
+      <button class="finish-btn" id="finishBtn" onclick="finishExercise()">Завершити вправу</button>
+    </div>
+
+    <div class="result-panel" id="resultPanel">
+      <div class="rank">Результат вправи</div>
+      <div class="rank-title" id="rankTitle"></div>
+      <div class="final-score" id="finalScore"></div>
+      <p style="color:var(--muted); font-size:13.5px; max-width:480px; margin:0 auto;">Результат уже надіслано вчителю автоматично.</p>
+    </div>
+  </div>
+
+  <a class="btn btn-ghost" href="index.html">← до модуля</a>
+
+  <footer>Вибірковий модуль «Інформаційна безпека» · Тема 1, Урок 3</footer>
+</div>
+
+<script>
+  const cases = [
+    {
+      msg: "СМС: «Ваша посилка Нова Пошта затримана через несплату мита 19 грн. Оплатіть за посиланням: novaposhta-pay.top/track, інакше посилку буде повернено відправнику протягом 24 год.»",
+      correct: "phishing",
+      explain: "Фішинг: підроблена терміновість, дивна адреса сайту (не nova.poshta.ua), прохання щось терміново оплатити за посиланням."
+    },
+    {
+      msg: "Друг у майстерні дав тобі флешку з «класною програмою для обліку запчастин, качав з торента». Після встановлення комп'ютер почав дуже повільно працювати, а антивірус пише про підозрілий процес у фоні.",
+      correct: "malware",
+      explain: "Шкідливе ПЗ: піратське/неперевірене ПЗ з торента — типовий спосіб поширення троянів і шпигунського ПЗ."
+    },
+    {
+      msg: "Лист на пошту: «ВІТАЄМО! Ви виграли iPhone 16 у розіграші від нашого магазину! Щоб отримати приз, надішліть 150 грн за доставку на картку 5169....»",
+      correct: "phishing",
+      explain: "Шахрайство/фішинг: класична схема «виграш без участі в розіграші» + прохання передоплати."
+    },
+    {
+      msg: "На особисту пошту щодня приходить 15–20 листів з рекламою автозапчастин, кухонної техніки й курсів заробітку, на які ти ніколи не підписувався.",
+      correct: "spam",
+      explain: "Спам: масові небажані розсилки. Сама по собі не завжди шкідлива, але часто «доставляє» фішинг чи malware."
+    },
+    {
+      msg: "Дзвінок «зі служби підтримки банку»: «Ми зафіксували підозрілу транзакцію на вашій картці. Продиктуйте код з СМС, щоб ми могли її скасувати.»",
+      correct: "phishing",
+      explain: "Соціальна інженерія / фішинг: банк ніколи не просить диктувати коди з СМС по телефону — це прямий доступ до рахунку."
+    },
+    {
+      msg: "Ти відкрив файл «Прайс_2026.xlsx.exe», надісланий нібито постачальником запчастин. Файл виглядав як таблиця Excel, але після відкриття запустилась чорна консоль і зникла.",
+      correct: "malware",
+      explain: "Шкідливе ПЗ: подвійне розширення (.xlsx.exe) — класична маскування виконуваного файлу під документ."
+    },
+    {
+      msg: "Лист від Нової Пошти на офіційну адресу no-reply@novaposhta.ua з реальним номером ТТН, який справді збігається з номером у твоєму СМС від магазину. Посилання веде на novaposhta.ua.",
+      correct: "safe",
+      explain: "Усе гаразд: офіційний домен, номер ТТН підтверджується у справжньому додатку — ознак шахрайства немає."
+    },
+    {
+      msg: "Вночі ноутбук сам перезавантажився один раз, а вранці Windows показав повідомлення: «Оновлення завершено. Востаннє встановлено: оновлення безпеки Windows.»",
+      correct: "safe",
+      explain: "Усе гаразд: це штатне автоматичне оновлення операційної системи, а не стороннє втручання."
+    },
+    {
+      msg: "Знайомий з автомайстерні скинув у месенджер посилання на YouTube-відео «Як прокачати ГБЦ» з підписом «глянь, корисно для роботи».",
+      correct: "safe",
+      explain: "Усе гаразд: звичайне посилання на публічне відео відомого сервісу, без прохань щось встановити чи ввести дані."
+    },
+    {
+      msg: "Постійний клієнт телефонує в кафе й запитує, чи готове його замовлення на винос, яке він робив годину тому через сайт закладу.",
+      correct: "safe",
+      explain: "Усе гаразд: звичайна робоча комунікація з реальним клієнтом, жодних ознак загрози."
+    },
+    {
+      msg: "На форумі автомеханіків хтось виклав «активатор» для платної діагностичної програми — файл «Setup_ключ_активації.exe», який нібито знімає перевірку ліцензії.",
+      correct: "malware",
+      explain: "Шкідливе ПЗ: зламані «активатори» й «кряки» — один з найпоширеніших способів поширення троянів і шпигунського ПЗ."
+    },
+    {
+      msg: "На незнайомому сайті з рецептами раптом з'являється яскравий банер на весь екран: «Увага! Ваш браузер застарів і вразливий! Натисніть, щоб оновити зараз» — і одразу починається завантаження файлу.",
+      correct: "malware",
+      explain: "Шкідливе ПЗ: справжні браузери оновлюються самі, без банерів на сторонніх сайтах. Це класична приманка для встановлення malware."
+    },
+    {
+      msg: "Лист нібито від бухгалтерії: «Для нарахування зарплати за цей місяць терміново підтвердіть номер картки й термін дії за посиланням pay-confirm-ua.info».",
+      correct: "phishing",
+      explain: "Фішинг: прохання ввести реквізити картки на сторонньому сайті — жодна легальна бухгалтерія так дані не запитує."
+    },
+    {
+      msg: "На пошту щодня приходять листи «Заробляй 500$ на день на криптовалюті, приєднуйся за посиланням», хоча ти ніколи не залишав свою адресу на подібних сайтах.",
+      correct: "spam",
+      explain: "Спам: масова нав'язлива розсилка «легкого заробітку». Сама розсилка — спам, а перехід за посиланням може вже вести до шахрайства."
+    },
+    {
+      msg: "На телефон з невідомого короткого номера приходять СМС про «розпродаж шин -70%» кілька разів на тиждень, хоча номер ніде не залишався.",
+      correct: "spam",
+      explain: "Спам: масова рекламна розсилка на невідомий номер — типовий спам-трафік, не адресований особисто тобі."
+    },
+  ];
+
+  const labelMap = { malware: 'Шкідливе ПЗ', phishing: 'Фішинг / шахрайство', spam: 'Спам', safe: 'Усе гаразд' };
+
+  let score = 0;
+  let studentInfo = null;
+  let missionLocked = false;
+  const solved = new Array(cases.length).fill(false);
+
+  function renderCases(){
+    const container = document.getElementById('cases');
+    container.innerHTML = cases.map((c, i) => `
+      <div class="case-card">
+        <div class="hr-comment">ситуація ${i + 1} з ${cases.length}</div>
+        <div class="case-msg">${c.msg}</div>
+        <div class="case-btns" id="btns-${i}">
+          <button class="case-btn" onclick="check(${i}, 'malware')">Шкідливе ПЗ</button>
+          <button class="case-btn" onclick="check(${i}, 'phishing')">Фішинг / шахрайство</button>
+          <button class="case-btn" onclick="check(${i}, 'spam')">Спам</button>
+          <button class="case-btn" onclick="check(${i}, 'safe')">Усе гаразд</button>
+        </div>
+        <div class="case-explain" id="explain-${i}">${c.explain}</div>
+      </div>
+    `).join('');
+  }
+
+  /* одна спроба на ситуацію: перший клік одразу підсвічує й блокує кнопки */
+  function check(i, choice){
+    if (missionLocked || solved[i]) return;
+    const c = cases[i];
+    const btnsDiv = document.getElementById('btns-' + i);
+    const btns = Array.from(btnsDiv.querySelectorAll('.case-btn'));
+
+    solved[i] = true;
+    btns.forEach(b => { b.disabled = true; });
+
+    const chosenBtn = btns.find(b => b.textContent === labelMap[choice]);
+    const correctBtn = btns.find(b => b.textContent === labelMap[c.correct]);
+
+    if (choice === c.correct) {
+      chosenBtn.classList.add('correct');
+      score++;
+    } else {
+      chosenBtn.classList.add('wrong');
+      correctBtn.classList.add('correct');
+    }
+
+    document.getElementById('explain-' + i).classList.add('show');
+    updateScore();
+  }
+
+  function updateScore(){
+    document.getElementById('scoreLabel').textContent = score + ' / ' + cases.length;
+    document.getElementById('scoreFill').style.width = Math.round((score / cases.length) * 100) + '%';
+  }
+
+  function getVerdict(sc, total){
+    const pct = sc / total;
+    if (pct >= 0.8) return 'Відмінно розпізнаєш загрози!';
+    if (pct >= 0.5) return 'Непогано, але є ще прогалини.';
+    return 'Варто ще раз повторити цю тему.';
+  }
+
+  /* ---------- СТАРТ ВПРАВИ (форма з іменем) ---------- */
+  function startExercise(){
+    const lastname = document.getElementById('studentLastname').value.trim();
+    const firstname = document.getElementById('studentFirstname').value.trim();
+    const klass = document.getElementById('studentKlass').value.trim();
+    const err = document.getElementById('introError');
+
+    if (!lastname || !firstname || !klass) {
+      err.style.display = 'block';
+      return;
+    }
+    err.style.display = 'none';
+
+    studentInfo = { lastname, firstname, klass };
+    document.getElementById('introGate').style.display = 'none';
+    document.getElementById('missionContent').style.display = 'block';
+    document.getElementById('scoreBar').style.display = '';
+    renderCases();
+    updateScore();
+  }
+
+  /* ---------- ВІДПРАВКА РЕЗУЛЬТАТУ ВЧИТЕЛЮ ---------- */
+  function sendResult(sc, total, verdict){
+    if (typeof SCRIPT_URL === 'undefined' || SCRIPT_URL.indexOf('ВСТАВ_СЮДИ') !== -1) return;
+
+    const data = new URLSearchParams({
+      lastname: studentInfo.lastname,
+      firstname: studentInfo.firstname,
+      klass: studentInfo.klass,
+      lesson: "Урок 3 — Розпізнай загрозу (Інформаційна безпека)",
+      worktype: "Практична вправа (авто)",
+      link: '',
+      answer: sc + '/' + total + ' — ' + verdict,
+      timestamp: new Date().toLocaleString('uk-UA')
+    });
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: data.toString()
+    }).catch(function(){ /* результат уже показано учню й збережено локально, мовчки ігноруємо збій мережі */ });
+  }
+
+  function finishExercise(){
+    if (missionLocked) return;
+    const confirmed = confirm('Завершити вправу? Після цього відповіді заблокуються, а результат буде надіслано вчителю. Пройти вправу повторно не можна.');
+    if (!confirmed) return;
+    missionLocked = true;
+
+    /* усі ще не відповідані ситуації рахуються як неправильні й одразу розкриваються */
+    cases.forEach((c, i) => {
+      if (solved[i]) return;
+      solved[i] = true;
+      const btnsDiv = document.getElementById('btns-' + i);
+      const btns = Array.from(btnsDiv.querySelectorAll('.case-btn'));
+      btns.forEach(b => { b.disabled = true; });
+      const correctBtn = btns.find(b => b.textContent === labelMap[c.correct]);
+      correctBtn.classList.add('correct');
+      document.getElementById('explain-' + i).classList.add('show');
+    });
+
+    document.getElementById('finishBtn').disabled = true;
+
+    const verdict = getVerdict(score, cases.length);
+    const panel = document.getElementById('resultPanel');
+    panel.classList.add('show');
+    document.getElementById('rankTitle').textContent = verdict;
+    document.getElementById('finalScore').textContent = score + ' / ' + cases.length;
+
+    sendResult(score, cases.length, verdict);
+    localStorage.setItem('urok03_done', JSON.stringify({ score: score, total: cases.length, verdict: verdict }));
+
+    panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  /* ---------- ПЕРЕВІРКА ПРИ ЗАВАНТАЖЕННІ: чи вже здано з цього браузера ---------- */
+  (function initExercise(){
+    const saved = localStorage.getItem('urok03_done');
+    if (!saved) return;
+    let info;
+    try { info = JSON.parse(saved); } catch (e) { return; }
+
+    document.getElementById('introGate').style.display = 'none';
+    const panel = document.getElementById('alreadyDonePanel');
+    panel.style.display = 'block';
+    document.getElementById('alreadyRank').textContent = info.verdict;
+    document.getElementById('alreadyScore').textContent = info.score + ' / ' + info.total;
+  })();
+</script>
+
+</body>
+</html>

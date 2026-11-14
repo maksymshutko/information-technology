@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Урок 5 · ПР1. Аудит захищеності робочого місця</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+  .gauge-wrap{ background: var(--panel); border: 2px solid var(--border); border-radius: 20px; padding: 26px; margin: 18px 0 28px; text-align:center; }
+  .gauge-value{ font-family: var(--font-mono); font-size: 42px; font-weight: 800; margin-bottom: 4px; }
+  .gauge-label{ font-family: var(--font-display); font-size: 12.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 14px; font-weight:800; }
+  .gauge-bar{ height: 12px; border-radius: 999px; background: var(--panel-soft); border: 1px solid var(--border); overflow:hidden; }
+  .gauge-fill{ height:100%; width:0%; transition: width .3s ease; background: var(--red); }
+  .gauge-verdict{ margin-top: 12px; font-size: 13.5px; color: var(--muted); font-weight:600; }
+
+  .check-item{
+    display:flex; align-items:flex-start; gap: 12px; padding: 14px 16px; border-radius: 14px;
+    border: 2px solid var(--border); background: var(--panel); margin-bottom: 10px; cursor:pointer; transition: all .15s ease;
+  }
+  .check-item:hover{ border-color: var(--purple); }
+  .check-item.checked{ border-color: var(--green); background: var(--green-bg); }
+  .check-item input{ margin-top: 3px; accent-color: var(--green); flex-shrink:0; }
+  .check-item .body h4{ margin: 0 0 4px; font-size: 13.8px; color: var(--ink); font-family: var(--font-display); font-weight:700; }
+  .check-item .body p{ margin:0; font-size: 12.6px; color: var(--muted); line-height:1.5; font-weight:600; }
+  .check-weight{ margin-left:auto; font-family: var(--font-mono); font-size: 11px; color: var(--muted); flex-shrink:0; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="logo">
+      <svg class="mascot-nav" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="gNavU5b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs>
+        <line x1="60" y1="6" x2="60" y2="20" stroke="#c084fc" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="60" cy="6" r="7" fill="#f472b6"/>
+        <rect x="14" y="20" width="92" height="82" rx="28" fill="url(#gNavU5b)"/>
+        <circle cx="10" cy="58" r="9" fill="#f472b6"/><circle cx="110" cy="58" r="9" fill="#f472b6"/>
+        <ellipse cx="42" cy="60" rx="13" ry="16" fill="#fff"/><ellipse cx="78" cy="60" rx="13" ry="16" fill="#fff"/>
+        <circle cx="45" cy="64" r="6.5" fill="#362a52"/><circle cx="81" cy="64" r="6.5" fill="#362a52"/>
+        <circle cx="41" cy="58" r="2.4" fill="#fff"/><circle cx="77" cy="58" r="2.4" fill="#fff"/>
+        <circle cx="28" cy="82" r="6" fill="#fbcfe8" opacity=".85"/><circle cx="92" cy="82" r="6" fill="#fbcfe8" opacity=".85"/>
+        <path d="M48 88 Q60 97 72 88" stroke="#362a52" stroke-width="4" fill="none" stroke-linecap="round"/>
+      </svg>
+      Інформатика
+    </div>
+    <div class="links">
+      <a href="../../index.html">Головна</a>
+      <a href="../../10-klas/index.html">10 клас</a>
+      <a href="../index.html" class="active">11 клас</a>
+      <a href="../../pidruchnyk.html">Підручник</a>
+      <a href="../../submit.html">Здати роботу</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap narrow">
+
+  <div class="eyebrow"><span class="green">✦</span> Інформаційна безпека · Урок 5 · ПР1</div>
+  <h1>Урок 5. Практична робота 1</h1>
+  <p class="lead">Аудит рівня захищеності свого робочого місця/ОС. Пройди чек-лист чесно — познач лише те, що дійсно виконано на твоєму пристрої зараз.</p>
+
+  <div class="gauge-wrap">
+    <div class="gauge-value" id="gaugeValue" style="color: var(--red);">0%</div>
+    <div class="gauge-label">Рівень захищеності</div>
+    <div class="gauge-bar"><div class="gauge-fill" id="gaugeFill"></div></div>
+    <div class="gauge-verdict" id="gaugeVerdict">Постав перші позначки нижче, щоб побачити оцінку.</div>
+  </div>
+
+  <section id="checklist"></section>
+
+  <section>
+    <div class="section-title"><h2>Звіт для практичної роботи</h2></div>
+    <div class="panel panel-warn">
+      <h3>📝 Що записати у звіт</h3>
+      <p>1. Скріншот або опис результату цієї сторінки (скільки пунктів виконано з 8).</p>
+      <p>2. Які саме пункти НЕ виконані — і чому (немає антивірусу, не встановлено пароль тощо).</p>
+      <p>3. Мінімум 2 конкретні кроки, які ти зробиш після уроку, щоб підняти рівень захищеності.</p>
+      <p>Збережи звіт як <code>ПР1_Прізвище</code> у текстовому редакторі й здай через сторінку <a href="../../submit.html">submit.html</a>.</p>
+    </div>
+  </section>
+
+  <a class="btn btn-ghost" href="index.html">← до модуля</a>
+
+  <footer>Вибірковий модуль «Інформаційна безпека» · Тема 1, Урок 5 · Практична робота 1</footer>
+</div>
+
+<script>
+  const items = [
+    { id: 'c1', title: 'Пароль/PIN на вхід у комп\'ютер', desc: 'Пристрій не можна розблокувати без коду доступу.' },
+    { id: 'c2', title: 'Пароль/біометрія на телефоні', desc: 'Аналогічний захист на мобільному пристрої.' },
+    { id: 'c3', title: 'Антивірус встановлено й оновлено', desc: 'Windows Defender або інший антивірус активний, бази свіжі.' },
+    { id: 'c4', title: 'Захист браузера від небезпечних сайтів увімкнено', desc: 'Google Safe Browsing чи аналог в налаштуваннях безпеки браузера.' },
+    { id: 'c5', title: 'Паролі в браузері — не однакові для всіх сайтів', desc: 'Немає одного «універсального» пароля на все.' },
+    { id: 'c6', title: 'Двофакторна автентифікація хоча б на пошті', desc: 'Вхід в акаунт вимагає ще й код із СМС/застосунку.' },
+    { id: 'c7', title: 'Приватність в соцмережах налаштована', desc: 'Особисті дані не видно широкому колу незнайомців.' },
+    { id: 'c8', title: 'Регулярне резервне копіювання важливих файлів', desc: 'Є копія фото/документів не лише в одному місці.' },
+  ];
+
+  function renderChecklist(){
+    const container = document.getElementById('checklist');
+    container.innerHTML = items.map(it => `
+      <label class="check-item" id="item-${it.id}">
+        <input type="checkbox" onchange="toggle('${it.id}')">
+        <div class="body">
+          <h4>${it.title}</h4>
+          <p>${it.desc}</p>
+        </div>
+        <span class="check-weight">+${Math.round(100 / items.length)}%</span>
+      </label>
+    `).join('');
+  }
+
+  function toggle(id){
+    const el = document.getElementById('item-' + id);
+    el.classList.toggle('checked');
+    updateGauge();
+  }
+
+  function updateGauge(){
+    const checked = document.querySelectorAll('.check-item.checked').length;
+    const pct = Math.round((checked / items.length) * 100);
+    const fill = document.getElementById('gaugeFill');
+    const value = document.getElementById('gaugeValue');
+    const verdict = document.getElementById('gaugeVerdict');
+
+    fill.style.width = pct + '%';
+    value.textContent = pct + '%';
+
+    let color, text;
+    if (pct < 40) { color = 'var(--red)'; text = 'Низький рівень — робоче місце вразливе, варто закрити основні прогалини вже сьогодні.'; }
+    else if (pct < 75) { color = 'var(--amber)'; text = 'Середній рівень — базовий захист є, але лишились важливі прогалини.'; }
+    else { color = 'var(--green)'; text = 'Високий рівень — робоче місце добре захищене!'; }
+
+    fill.style.background = color;
+    value.style.color = color;
+    verdict.textContent = text;
+  }
+
+  renderChecklist();
+</script>
+
+</body>
+</html>

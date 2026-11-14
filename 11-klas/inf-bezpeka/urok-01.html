@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Урок 1 · Поняття інформаційної безпеки</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+  .footprint-tool{ background: var(--panel); border: 2px solid var(--border); border-radius: 18px; padding: 20px 22px; margin: 18px 0 28px; }
+  .fp-input-row{ display:flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+  .fp-input-row input, .fp-input-row select{
+    padding: 10px 12px; background: var(--panel-soft); border: 2px solid var(--border); border-radius: 10px;
+    color: var(--ink); font-family: var(--font-body); font-size: 13.5px;
+  }
+  .fp-input-row input{ flex: 1 1 220px; }
+  .fp-input-row select{ flex: 0 0 180px; }
+  .fp-list{ display:flex; flex-direction:column; gap: 8px; }
+  .fp-item{
+    display:flex; justify-content:space-between; align-items:center; gap: 10px; padding: 10px 14px;
+    border-radius: 12px; border-left: 4px solid var(--border); background: var(--panel-soft); font-size: 13.5px; font-weight:600;
+  }
+  .fp-item .who{ color: var(--muted); font-size: 12px; font-weight:700; }
+  .fp-item.risk-low{ border-left-color: var(--green); }
+  .fp-item.risk-mid{ border-left-color: var(--amber); }
+  .fp-item.risk-high{ border-left-color: var(--red); }
+  .fp-empty{ color: var(--muted); font-size: 13px; font-style: italic; }
+  .fp-del{ background:none; border:none; color: var(--muted); cursor:pointer; font-size:15px; }
+  .fp-del:hover{ color: var(--red); }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="logo">
+      <svg class="mascot-nav" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="gNavU1b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs>
+        <line x1="60" y1="6" x2="60" y2="20" stroke="#c084fc" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="60" cy="6" r="7" fill="#f472b6"/>
+        <rect x="14" y="20" width="92" height="82" rx="28" fill="url(#gNavU1b)"/>
+        <circle cx="10" cy="58" r="9" fill="#f472b6"/><circle cx="110" cy="58" r="9" fill="#f472b6"/>
+        <ellipse cx="42" cy="60" rx="13" ry="16" fill="#fff"/><ellipse cx="78" cy="60" rx="13" ry="16" fill="#fff"/>
+        <circle cx="45" cy="64" r="6.5" fill="#362a52"/><circle cx="81" cy="64" r="6.5" fill="#362a52"/>
+        <circle cx="41" cy="58" r="2.4" fill="#fff"/><circle cx="77" cy="58" r="2.4" fill="#fff"/>
+        <circle cx="28" cy="82" r="6" fill="#fbcfe8" opacity=".85"/><circle cx="92" cy="82" r="6" fill="#fbcfe8" opacity=".85"/>
+        <path d="M48 88 Q60 97 72 88" stroke="#362a52" stroke-width="4" fill="none" stroke-linecap="round"/>
+      </svg>
+      Інформатика
+    </div>
+    <div class="links">
+      <a href="../../index.html">Головна</a>
+      <a href="../../10-klas/index.html">10 клас</a>
+      <a href="../index.html" class="active">11 клас</a>
+      <a href="../../pidruchnyk.html">Підручник</a>
+      <a href="../../submit.html">Здати роботу</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap narrow">
+
+  <div class="eyebrow"><span class="green">✦</span> Інформаційна безпека · Урок 1</div>
+  <h1>Урок 1. Поняття <span class="green">інформаційної безпеки</span></h1>
+  <p class="lead">Інформація та інформаційні відносини, їх суб'єкти.</p>
+
+  <section>
+    <div class="panel panel-note">
+      <h3>Інформаційна безпека</h3>
+      <p>Стан захищеності інформації та інфраструктури, що її обробляє, від випадкових чи навмисних впливів, які можуть завдати шкоди власникам або користувачам цієї інформації. Це стосується не лише «айтішників» — кожен, хто веде облік клієнтів чи користується банківською карткою, є учасником інформаційних відносин.</p>
+    </div>
+    <div class="panel panel-note">
+      <h3>Інформаційні відносини</h3>
+      <p>Стосунки, що виникають між людьми, організаціями та державою з приводу створення, збирання, зберігання, використання й поширення інформації.</p>
+    </div>
+    <div class="panel panel-note">
+      <h3>Суб'єкти інформаційних відносин</h3>
+      <p><b>Власник</b> — зацікавлений у конфіденційності (власник кав'ярні, майстерні). <b>Користувач</b> — має доступ до частини даних для роботи. <b>Зловмисник</b> — намагається отримати доступ для власної вигоди. <b>Держава</b> — встановлює правила захисту даних.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title"><h2>Практична вправа: «Що з мого цифрового життя має ціну?»</h2></div>
+    <div class="hr-comment">додай пункт зі свого телефону/комп'ютера й обери, хто теоретично міг би цим зацікавитись</div>
+
+    <div class="footprint-tool">
+      <div class="fp-input-row">
+        <input type="text" id="fpText" placeholder="напр. фото з відпустки, паролі в браузері, робочі контакти клієнтів...">
+        <select id="fpWho">
+          <option value="Шахрай">Кому цікаво: шахрай</option>
+          <option value="Роботодавець-конкурент">Кому цікаво: конкурент</option>
+          <option value="Знайомий">Кому цікаво: знайомий</option>
+          <option value="Випадкова людина">Кому цікаво: випадкова людина</option>
+        </select>
+        <select id="fpRisk">
+          <option value="low">Ризик: низький</option>
+          <option value="mid" selected>Ризик: середній</option>
+          <option value="high">Ризик: високий</option>
+        </select>
+      </div>
+      <button class="btn" onclick="addFootprint()">+ Додати</button>
+
+      <div class="fp-list" id="fpList" style="margin-top:18px;">
+        <div class="fp-empty">Список порожній — додай перший пункт вище.</div>
+      </div>
+    </div>
+
+    <p class="caption" style="color:var(--muted); font-size:13px;">Мета вправи — не заповнити список правильно чи неправильно, а обговорити в класі: чому одні дані ризикованіші за інші, і хто саме міг би ними скористатись у вашій майбутній професії (кухар / слюсар / автомеханік).</p>
+  </section>
+
+  <section>
+    <div class="section-title"><h2>Питання для закріплення</h2></div>
+    <div class="task"><span class="mark">☐</span><div class="body"><h4>Що таке інформаційна безпека?</h4></div></div>
+    <div class="task"><span class="mark">☐</span><div class="body"><h4>Наведи приклад інформаційних відносин зі свого майбутнього фаху</h4></div></div>
+    <div class="task"><span class="mark">☐</span><div class="body"><h4>Хто такі суб'єкти інформаційних відносин?</h4><p>Наведи приклад кожного.</p></div></div>
+  </section>
+
+  <a class="btn btn-ghost" href="index.html">← до модуля</a>
+
+  <footer>Вибірковий модуль «Інформаційна безпека» · Тема 1, Урок 1</footer>
+</div>
+
+<script>
+  const items = [];
+
+  function addFootprint(){
+    const text = document.getElementById('fpText').value.trim();
+    const who = document.getElementById('fpWho').value;
+    const risk = document.getElementById('fpRisk').value;
+    if (text === '') return;
+    items.push({ text, who, risk });
+    document.getElementById('fpText').value = '';
+    render();
+  }
+
+  function removeFootprint(idx){
+    items.splice(idx, 1);
+    render();
+  }
+
+  function render(){
+    const list = document.getElementById('fpList');
+    if (items.length === 0) {
+      list.innerHTML = '<div class="fp-empty">Список порожній — додай перший пункт вище.</div>';
+      return;
+    }
+    list.innerHTML = items.map((it, idx) => `
+      <div class="fp-item risk-${it.risk}">
+        <span>${it.text}</span>
+        <span class="who">${it.who}</span>
+        <button class="fp-del" onclick="removeFootprint(${idx})">✕</button>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById('fpText').addEventListener('keydown', function(e){
+    if (e.key === 'Enter') addFootprint();
+  });
+</script>
+
+</body>
+</html>
