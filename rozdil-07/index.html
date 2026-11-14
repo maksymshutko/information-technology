@@ -3,28 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Розділ 7. Растрова графіка · Інформатика</title>
+<title>Розділ 7. Растрова графіка · Інформатика КПЛТ</title>
+<meta name="description" content="Як влаштоване растрове зображення, які програми й онлайн-сервіси для нього є та як в Adobe Photoshop змінювати розмір, колір, робити колажі й банери.">
+<link rel="icon" href="../assets/logo.png">
 <link rel="stylesheet" href="../assets/style.css">
 </head>
-<body>
+<body data-sec="rozdil-07">
 
 <nav class="topnav">
   <div class="topnav-inner">
-    <div class="logo">
-      <svg class="mascot-nav" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-              <defs><linearGradient id="gNavIdx" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs>
-              <line x1="60" y1="6" x2="60" y2="20" stroke="#c084fc" stroke-width="6" stroke-linecap="round"/>
-              <circle cx="60" cy="6" r="7" fill="#f472b6"/>
-              <rect x="14" y="20" width="92" height="82" rx="28" fill="url(#gNavIdx)"/>
-              <circle cx="10" cy="58" r="9" fill="#f472b6"/><circle cx="110" cy="58" r="9" fill="#f472b6"/>
-              <ellipse cx="42" cy="60" rx="13" ry="16" fill="#fff"/><ellipse cx="78" cy="60" rx="13" ry="16" fill="#fff"/>
-              <circle cx="45" cy="64" r="6.5" fill="#362a52"/><circle cx="81" cy="64" r="6.5" fill="#362a52"/>
-              <circle cx="41" cy="58" r="2.4" fill="#fff"/><circle cx="77" cy="58" r="2.4" fill="#fff"/>
-              <circle cx="28" cy="82" r="6" fill="#fbcfe8" opacity=".85"/><circle cx="92" cy="82" r="6" fill="#fbcfe8" opacity=".85"/>
-              <path d="M48 88 Q60 97 72 88" stroke="#362a52" stroke-width="4" fill="none" stroke-linecap="round"/>
-            </svg>
-      Інформатика
-    </div>
+    <a class="logo" href="../index.html">
+      <img src="../assets/logo.png" alt="Логотип КПЛТ">
+      <span class="brand"><b>Інформатика</b><small>КПЛТ</small></span>
+    </a>
     <div class="links">
       <a href="../index.html">Головна</a>
       <a href="../index.html#rozdily" class="active">Розділи</a>
@@ -34,14 +25,16 @@
   </div>
 </nav>
 
-<div class="wrap">
-  <div class="eyebrow"><span class="green">✦</span> Розділ 7</div>
-  <h1>Растрова графіка</h1>
-  <p class="lead">Як влаштоване растрове зображення, які програми й онлайн-сервіси для нього є та як в Adobe Photoshop змінювати розмір, колір, робити колажі й банери.</p>
-  <div class="sec-meta"><span class="tag-pill">9 тем</span><span class="sec-actions"><button class="btn btn-ghost btn-sm" onclick="setAll(true)">Розгорнути все</button><button class="btn btn-ghost btn-sm" onclick="setAll(false)">Згорнути все</button></span></div>
+<main class="wrap">
+  <div class="eyebrow">Розділ 07</div>
+  <div class="sec-hero"><div class="sec-ico-big">🖼️</div><div>
+    <h1>Растрова графіка</h1>
+    <p class="lead">Як влаштоване растрове зображення, які програми й онлайн-сервіси для нього є та як в Adobe Photoshop змінювати розмір, колір, робити колажі й банери.</p>
+  </div></div>
+  <div class="sec-meta"><span class="tag-pill">9 тем</span><div class="progress"><i id="secBar"></i></div><span class="progress-label" id="secPct"></span><span class="sec-actions"><a class="btn btn-sm" href="../kartky.html?r=7">🃏 Картки розділу</a><button class="btn btn-ghost btn-sm" onclick="setAll(true)">Розгорнути все</button><button class="btn btn-ghost btn-sm" onclick="setAll(false)">Згорнути все</button></span></div>
   <section class="topics">
-<details class="topic" id="tema-01">
-  <summary><span class="num">01</span><span class="t-title">Суть растрового малюнка і його особливості</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+<details class="topic" id="tema-01" data-i="1">
+  <summary><span class="num"><span>01</span></span><span class="t-title">Суть растрового малюнка і його особливості</span><span class="t-badges"></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Растрове зображення — це сітка з пікселів, кожен з яких має свій колір. Так зберігаються фотографії. Якість залежить від роздільної здатності: чим більше пікселів, тим більше деталей і тим більший файл. При збільшенні растр «розсипається» на квадратики.</p>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
@@ -55,10 +48,11 @@
       <li><a class="" href="https://squoosh.app/" target="_blank" rel="noopener">Squoosh</a> — порівняй формати та якість стиснення</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.gimp.org/" target="_blank" rel="noopener">GIMP</a></div></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
 </details>
-<details class="topic" id="tema-02">
-  <summary><span class="num">02</span><span class="t-title">Огляд програм для роботи з растровою графікою</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+<details class="topic" id="tema-02" data-i="2">
+  <summary><span class="num"><span>02</span></span><span class="t-title">Огляд програм для роботи з растровою графікою</span><span class="t-badges"></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Професійний редактор — Adobe Photoshop. Безкоштовні альтернативи: GIMP та Krita (для малювання). Програми відрізняються інструментами, підтримкою шарів, форматів і платформ.</p>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
@@ -71,10 +65,11 @@
       <li><a class="" href="https://www.adobe.com/products/photoshop.html" target="_blank" rel="noopener">Adobe Photoshop</a> — сторінка програми</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.gimp.org/" target="_blank" rel="noopener">GIMP</a><a class="chip" href="https://krita.org/" target="_blank" rel="noopener">Krita</a></div></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
 </details>
-<details class="topic" id="tema-03">
-  <summary><span class="num">03</span><span class="t-title">Огляд онлайн платформ та мобільних застосунків для роботи з растровою графікою</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+<details class="topic" id="tema-03" data-i="3">
+  <summary><span class="num"><span>03</span></span><span class="t-title">Огляд онлайн платформ та мобільних застосунків для роботи з растровою графікою</span><span class="t-badges"></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Для швидкої обробки встановлювати програму не обов’язково: Photopea повторює інтерфейс Photoshop прямо в браузері, Pixlr і Canva мають прості фільтри та шаблони. На телефоні — Snapseed, Adobe Lightroom Mobile, PicsArt.</p>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
@@ -84,10 +79,11 @@
     <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
     <div class="slides" data-src=""></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.photopea.com/" target="_blank" rel="noopener">Photopea</a><a class="chip" href="https://pixlr.com/" target="_blank" rel="noopener">Pixlr</a><a class="chip" href="https://www.canva.com/" target="_blank" rel="noopener">Canva</a><a class="chip" href="https://www.remove.bg/" target="_blank" rel="noopener">remove.bg — видалення фону</a></div></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
 </details>
-<details class="topic" id="tema-04">
-  <summary><span class="num">04</span><span class="t-title">Особливості налаштування розмірів графічного зображення в програмі Adobe Photoshop</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+<details class="topic" id="tema-04" data-i="4">
+  <summary><span class="num"><span>04</span></span><span class="t-title">Особливості налаштування розмірів графічного зображення в програмі Adobe Photoshop</span><span class="t-badges"></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Команда «Розмір зображення» змінює кількість пікселів, а «Розмір полотна» — розмір робочої області без масштабування вмісту. Для екрана достатньо 72–96 ppi, для друку — 300 ppi. Збільшення растру понад оригінал погіршує якість.</p>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
@@ -101,10 +97,11 @@
       <li><a class="" href="https://helpx.adobe.com/photoshop.html" target="_blank" rel="noopener">Довідка Adobe Photoshop</a> — офіційні уроки та інструкції</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.adobe.com/products/photoshop.html" target="_blank" rel="noopener">Adobe Photoshop</a><a class="chip" href="https://www.photopea.com/" target="_blank" rel="noopener">Photopea</a></div></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
 </details>
-<details class="topic" id="tema-05">
-  <summary><span class="num">05</span><span class="t-title">Практична робота: Створення графічного зображення способом поєднання 3-4 уже існуючих зображень в програмі Adobe Photoshop</span><span class="t-badges"><span class="badge badge-warn">практична</span></span><span class="chev">▾</span></summary>
+<details class="topic" id="tema-05" data-i="5">
+  <summary><span class="num"><span>05</span></span><span class="t-title">Практична робота: Створення графічного зображення способом поєднання 3-4 уже існуючих зображень в програмі Adobe Photoshop</span><span class="t-badges"><span class="badge badge-warn">практична</span></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Створи колаж із 3–4 зображень: виріж об’єкти, розмісти їх на окремих шарах, підбери розмір і освітлення, щоб вони виглядали як єдина сцена. Використовуй лише фото з вільною ліцензією.</p>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
@@ -113,10 +110,11 @@
     <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
     <div class="slides" data-src=""></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.adobe.com/products/photoshop.html" target="_blank" rel="noopener">Adobe Photoshop</a><a class="chip" href="https://www.photopea.com/" target="_blank" rel="noopener">Photopea</a><a class="chip" href="https://unsplash.com/" target="_blank" rel="noopener">Unsplash</a><a class="chip" href="https://www.pexels.com/" target="_blank" rel="noopener">Pexels</a></div></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
 </details>
-<details class="topic" id="tema-06">
-  <summary><span class="num">06</span><span class="t-title">Робота з колористикою в Adobe Photoshop</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+<details class="topic" id="tema-06" data-i="6">
+  <summary><span class="num"><span>06</span></span><span class="t-title">Робота з колористикою в Adobe Photoshop</span><span class="t-badges"></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Колористика — це робота з кольором: яскравість, контраст, насиченість, баланс білого, тонування. Коригувальні шари (Рівні, Криві, Колірний тон/Насиченість) змінюють колір, не псуючи оригінал. Гармонійні палітри підбирають за колірним колом.</p>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
@@ -131,10 +129,11 @@
       <li><a class="" href="https://color.method.ac/" target="_blank" rel="noopener">Color Game</a> — потренуй відчуття кольору</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.adobe.com/products/photoshop.html" target="_blank" rel="noopener">Adobe Photoshop</a><a class="chip" href="https://www.photopea.com/" target="_blank" rel="noopener">Photopea</a></div></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
 </details>
-<details class="topic" id="tema-07">
-  <summary><span class="num">07</span><span class="t-title">Робота з об’єктами в Adobe Photoshop</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+<details class="topic" id="tema-07" data-i="7">
+  <summary><span class="num"><span>07</span></span><span class="t-title">Робота з об’єктами в Adobe Photoshop</span><span class="t-badges"></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Щоб працювати з частиною зображення, її виділяють: «Ласо», «Чарівна паличка», «Виділення об’єкта». Виділене можна перемістити на новий шар, трансформувати (Ctrl+T), ретушувати «Штампом» чи «Відновлювальним пензлем».</p>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
@@ -145,32 +144,42 @@
     <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
     <div class="slides" data-src=""></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.adobe.com/products/photoshop.html" target="_blank" rel="noopener">Adobe Photoshop</a><a class="chip" href="https://www.photopea.com/" target="_blank" rel="noopener">Photopea</a></div></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
 </details>
-<details class="topic" id="tema-08">
-  <summary><span class="num">08</span><span class="t-title">Практична робота: Створення графічного банера</span><span class="t-badges"><span class="badge badge-warn">практична</span></span><span class="chev">▾</span></summary>
+<details class="topic" id="tema-08" data-i="8">
+  <summary><span class="num"><span>08</span></span><span class="t-title">Практична робота: Створення графічного банера</span><span class="t-badges"><span class="badge badge-warn">практична</span></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Створи рекламний банер (наприклад, 1200×628 px для соцмереж) для ліцею або своєї професії: фото, заголовок, короткий текст і заклик до дії. Збережи робочий PSD і готовий JPG/PNG.</p>
     <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
     <div class="slides" data-src=""></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.adobe.com/products/photoshop.html" target="_blank" rel="noopener">Adobe Photoshop</a><a class="chip" href="https://www.photopea.com/" target="_blank" rel="noopener">Photopea</a><a class="chip" href="https://www.canva.com/" target="_blank" rel="noopener">Canva</a></div></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
 </details>
-<details class="topic" id="tema-09">
-  <summary><span class="num">09</span><span class="t-title">Тематичне оцінювання</span><span class="t-badges"><span class="badge badge-warn">атестація</span></span><span class="chev">▾</span></summary>
+<details class="topic" id="tema-09" data-i="9">
+  <summary><span class="num"><span>09</span></span><span class="t-title">Тематичне оцінювання</span><span class="t-badges"><span class="badge badge-note">атестація</span></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Повтори: піксель і роздільну здатність, растрові формати, програми та онлайн-сервіси, розмір зображення й полотна, шари, виділення, колірну корекцію.</p>
     <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
     <div class="slides" data-src=""></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
 </details>
   </section>
-  <div class="sec-nav"><a class="btn btn-ghost" href="../index.html#rozdily">← усі розділи</a><a class="btn btn-ghost" href="../rozdil-06/index.html">‹ Розділ 6</a><a class="btn btn-ghost" href="../rozdil-08/index.html">Розділ 8 ›</a></div>
-  <footer>Інформатика · Київський професійний ліцей транспорту · Розділ 7</footer>
-</div>
+  <div class="sec-nav"><a class="btn btn-ghost" href="../index.html#rozdily">← усі розділи</a><span class="spacer"></span><a class="btn btn-ghost" href="../rozdil-06/index.html">‹ Розділ 6</a><a class="btn btn-ghost" href="../rozdil-08/index.html">Розділ 8 ›</a></div>
+</main>
+
+<footer class="site-footer">
+  <div class="sf-inner">
+    <div class="sf-brand"><img src="../assets/logo.png" alt=""><div><b>Інформатика</b><small>Київський професійний ліцей транспорту</small></div></div>
+    <div class="sf-teacher">Викладач інформатики — <b>Шутько Максим Олександрович</b></div>
+    <div class="sf-links"><a href="../index.html#rozdily">Розділи</a><a href="../submit.html">Здати роботу</a><a href="../qr-quest/index.html">QR-квест</a></div>
+  </div>
+</footer>
 
 <script>
-  // Вбудовування презентацій: data-src="посилання з Google Диска / Google Slides"
+  // Вбудовування презентацій: у data-src блоку .slides вставити посилання з Google Диска / Google Slides
   function embedUrl(u){
     var m = u.match(/drive\.google\.com\/file\/d\/([^\/?#]+)/);
     if (m) return 'https://drive.google.com/file/d/' + m[1] + '/preview';
@@ -188,6 +197,30 @@
   });
   function setAll(open){ document.querySelectorAll('details.topic').forEach(function(d){ d.open = open; }); }
   if (location.hash){ var d = document.querySelector(location.hash); if (d && d.tagName === 'DETAILS') d.open = true; }
+
+  // Прогрес «вивчено» — зберігається лише в цьому браузері
+
+  var PKEY = 'inf-progress';
+  function loadProgress(){ try { return JSON.parse(localStorage.getItem(PKEY)) || {}; } catch (e) { return {}; } }
+  function saveProgress(p){ try { localStorage.setItem(PKEY, JSON.stringify(p)); } catch (e) {} }
+  var SEC = document.body.getAttribute('data-sec');
+  function renderProgress(){
+    var done = loadProgress()[SEC] || [], all = document.querySelectorAll('details.topic');
+    all.forEach(function(d){
+      var on = done.indexOf(+d.getAttribute('data-i')) !== -1;
+      d.classList.toggle('done', on);
+      var b = d.querySelector('.t-done .btn'); if (b) b.textContent = on ? '✓ Вивчено — зняти позначку' : '✓ Позначити як вивчене';
+    });
+    var n = all.length ? Math.round(100 * done.length / all.length) : 0;
+    document.getElementById('secBar').style.width = n + '%';
+    document.getElementById('secPct').textContent = done.length + ' з ' + all.length + ' вивчено';
+  }
+  function toggleDone(btn){
+    var i = +btn.closest('details.topic').getAttribute('data-i'), p = loadProgress(), a = p[SEC] || [];
+    var k = a.indexOf(i); if (k === -1) a.push(i); else a.splice(k, 1);
+    p[SEC] = a; saveProgress(p); renderProgress();
+  }
+  renderProgress();
 </script>
 
 </body>

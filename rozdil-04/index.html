@@ -3,28 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Розділ 4. Мультимедійні та гіпертекстові документи · Інформатика</title>
+<title>Розділ 4. Мультимедійні та гіпертекстові документи · Інформатика КПЛТ</title>
+<meta name="description" content="Як опрацьовують звук, відео й зображення, як створюють сайти — від конструктора WordPress до мови HTML — і як зробити сайт зручним та помітним у пошуку.">
+<link rel="icon" href="../assets/logo.png">
 <link rel="stylesheet" href="../assets/style.css">
 </head>
-<body>
+<body data-sec="rozdil-04">
 
 <nav class="topnav">
   <div class="topnav-inner">
-    <div class="logo">
-      <svg class="mascot-nav" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-              <defs><linearGradient id="gNavIdx" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs>
-              <line x1="60" y1="6" x2="60" y2="20" stroke="#c084fc" stroke-width="6" stroke-linecap="round"/>
-              <circle cx="60" cy="6" r="7" fill="#f472b6"/>
-              <rect x="14" y="20" width="92" height="82" rx="28" fill="url(#gNavIdx)"/>
-              <circle cx="10" cy="58" r="9" fill="#f472b6"/><circle cx="110" cy="58" r="9" fill="#f472b6"/>
-              <ellipse cx="42" cy="60" rx="13" ry="16" fill="#fff"/><ellipse cx="78" cy="60" rx="13" ry="16" fill="#fff"/>
-              <circle cx="45" cy="64" r="6.5" fill="#362a52"/><circle cx="81" cy="64" r="6.5" fill="#362a52"/>
-              <circle cx="41" cy="58" r="2.4" fill="#fff"/><circle cx="77" cy="58" r="2.4" fill="#fff"/>
-              <circle cx="28" cy="82" r="6" fill="#fbcfe8" opacity=".85"/><circle cx="92" cy="82" r="6" fill="#fbcfe8" opacity=".85"/>
-              <path d="M48 88 Q60 97 72 88" stroke="#362a52" stroke-width="4" fill="none" stroke-linecap="round"/>
-            </svg>
-      Інформатика
-    </div>
+    <a class="logo" href="../index.html">
+      <img src="../assets/logo.png" alt="Логотип КПЛТ">
+      <span class="brand"><b>Інформатика</b><small>КПЛТ</small></span>
+    </a>
     <div class="links">
       <a href="../index.html">Головна</a>
       <a href="../index.html#rozdily" class="active">Розділи</a>
@@ -34,14 +25,16 @@
   </div>
 </nav>
 
-<div class="wrap">
-  <div class="eyebrow"><span class="green">✦</span> Розділ 4</div>
-  <h1>Мультимедійні та гіпертекстові документи</h1>
-  <p class="lead">Як опрацьовують звук, відео й зображення, як створюють сайти — від конструктора WordPress до мови HTML — і як зробити сайт зручним та помітним у пошуку.</p>
-  <div class="sec-meta"><span class="tag-pill">10 тем</span><span class="sec-actions"><button class="btn btn-ghost btn-sm" onclick="setAll(true)">Розгорнути все</button><button class="btn btn-ghost btn-sm" onclick="setAll(false)">Згорнути все</button></span></div>
+<main class="wrap">
+  <div class="eyebrow">Розділ 04</div>
+  <div class="sec-hero"><div class="sec-ico-big">🖥️</div><div>
+    <h1>Мультимедійні та гіпертекстові документи</h1>
+    <p class="lead">Як опрацьовують звук, відео й зображення, як створюють сайти — від конструктора WordPress до мови HTML — і як зробити сайт зручним та помітним у пошуку.</p>
+  </div></div>
+  <div class="sec-meta"><span class="tag-pill">10 тем</span><div class="progress"><i id="secBar"></i></div><span class="progress-label" id="secPct"></span><span class="sec-actions"><a class="btn btn-sm" href="../kartky.html?r=4">🃏 Картки розділу</a><button class="btn btn-ghost btn-sm" onclick="setAll(true)">Розгорнути все</button><button class="btn btn-ghost btn-sm" onclick="setAll(false)">Згорнути все</button></span></div>
   <section class="topics">
-<details class="topic" id="tema-01">
-  <summary><span class="num">01</span><span class="t-title">Технології опрацювання мультимедійних даних</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+<details class="topic" id="tema-01" data-i="1">
+  <summary><span class="num"><span>01</span></span><span class="t-title">Технології опрацювання мультимедійних даних</span><span class="t-badges"></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Мультимедіа — це поєднання тексту, зображень, звуку, відео й анімації. Кожен вид даних має свої формати: JPG/PNG/WebP для зображень, MP3/WAV для звуку, MP4 для відео. Стиснення зменшує розмір файлу: з втратами (JPG, MP3) — менше місця, але гірша якість; без втрат (PNG, FLAC) — якість зберігається.</p>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
@@ -55,10 +48,11 @@
       <li><a class="" href="https://squoosh.app/" target="_blank" rel="noopener">Squoosh</a> — наочне порівняння форматів і якості стиснення зображень</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.audacityteam.org/" target="_blank" rel="noopener">Audacity — звук</a><a class="chip" href="https://handbrake.fr/" target="_blank" rel="noopener">HandBrake — відео</a><a class="chip" href="https://squoosh.app/" target="_blank" rel="noopener">Squoosh — зображення</a></div></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
 </details>
-<details class="topic" id="tema-02">
-  <summary><span class="num">02</span><span class="t-title">Системи керування вмістом для веб-ресурсів</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+<details class="topic" id="tema-02" data-i="2">
+  <summary><span class="num"><span>02</span></span><span class="t-title">Системи керування вмістом для веб-ресурсів</span><span class="t-badges"></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Система керування вмістом (CMS) дозволяє створити й наповнювати сайт без програмування: вибираєш тему, додаєш сторінки та записи у візуальному редакторі. Найпопулярніша CMS у світі — WordPress; також є конструктори Google Sites, Wix, Tilda.</p>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
@@ -72,10 +66,11 @@
       <li><a class="" href="https://wordpress.org/" target="_blank" rel="noopener">WordPress.org</a> — офіційний сайт CMS WordPress</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://wordpress.com/" target="_blank" rel="noopener">WordPress.com</a><a class="chip" href="https://sites.google.com/" target="_blank" rel="noopener">Google Сайти</a><a class="chip" href="https://www.wix.com/" target="_blank" rel="noopener">Wix</a></div></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
 </details>
-<details class="topic" id="tema-03">
-  <summary><span class="num">03</span><span class="t-title">Етапи створення веб-сайтів. Основи веб-дизайну</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+<details class="topic" id="tema-03" data-i="3">
+  <summary><span class="num"><span>03</span></span><span class="t-title">Етапи створення веб-сайтів. Основи веб-дизайну</span><span class="t-badges"></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Створення сайту: мета й аудиторія → структура (карта сторінок) → дизайн-макет → наповнення → публікація → підтримка. Хороший веб-дизайн — це зрозуміла навігація, читабельний текст, контрастні кольори та адаптивність до телефонів.</p>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
@@ -89,10 +84,11 @@
       <li><a class="" href="https://www.figma.com/community" target="_blank" rel="noopener">Figma Community</a> — тисячі безкоштовних макетів сайтів для натхнення</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.figma.com/" target="_blank" rel="noopener">Figma</a><a class="chip" href="https://coolors.co/" target="_blank" rel="noopener">Coolors — палітри</a></div></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
 </details>
-<details class="topic" id="tema-04">
-  <summary><span class="num">04</span><span class="t-title">Особливості створення та адміністрування сайту</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+<details class="topic" id="tema-04" data-i="4">
+  <summary><span class="num"><span>04</span></span><span class="t-title">Особливості створення та адміністрування сайту</span><span class="t-badges"></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Щоб сайт був доступний в Інтернеті, потрібні хостинг (місце на сервері) і доменне ім’я (адреса). Адміністратор оновлює вміст, керує користувачами та їхніми правами, робить резервні копії й стежить за безпекою (оновлення, надійні паролі).</p>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
@@ -103,19 +99,21 @@
     <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
     <div class="slides" data-src=""></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://wordpress.com/" target="_blank" rel="noopener">WordPress.com</a><a class="chip" href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a></div></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
 </details>
-<details class="topic" id="tema-05">
-  <summary><span class="num">05</span><span class="t-title">Практична робота: Автоматизоване створення веб-сайта (WordPress)</span><span class="t-badges"><span class="badge badge-warn">практична</span></span><span class="chev">▾</span></summary>
+<details class="topic" id="tema-05" data-i="5">
+  <summary><span class="num"><span>05</span></span><span class="t-title">Практична робота: Автоматизоване створення веб-сайта (WordPress)</span><span class="t-badges"><span class="badge badge-warn">практична</span></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Створи на WordPress.com (або Google Сайтах) сайт-візитку своєї професії: головна сторінка, «Про професію», «Галерея», «Контакти». Обери тему, додай меню, зображення та щонайменше один запис.</p>
     <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
     <div class="slides" data-src=""></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://wordpress.com/" target="_blank" rel="noopener">WordPress.com</a><a class="chip" href="https://sites.google.com/" target="_blank" rel="noopener">Google Сайти</a><a class="chip" href="https://unsplash.com/" target="_blank" rel="noopener">Unsplash — фото</a></div></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
 </details>
-<details class="topic" id="tema-06">
-  <summary><span class="num">06</span><span class="t-title">Поняття про мову розмітки гіпертекстового документа</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+<details class="topic" id="tema-06" data-i="6">
+  <summary><span class="num"><span>06</span></span><span class="t-title">Поняття про мову розмітки гіпертекстового документа</span><span class="t-badges"></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Веб-сторінки описуються мовою HTML. Теги розмічають структуру: заголовки &lt;h1&gt;, абзаци &lt;p&gt;, посилання &lt;a&gt;, зображення &lt;img&gt;, списки &lt;ul&gt;. Гіпертекст — це текст із посиланнями на інші документи. Зовнішній вигляд сторінки задає мова стилів CSS.</p>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
@@ -131,10 +129,11 @@
       <li><a class="" href="https://developer.mozilla.org/" target="_blank" rel="noopener">MDN Web Docs</a> — довідник веб-технологій від Mozilla</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://codepen.io/" target="_blank" rel="noopener">CodePen — редактор у браузері</a></div></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
 </details>
-<details class="topic" id="tema-07">
-  <summary><span class="num">07</span><span class="t-title">Ергономіка розміщення відомостей на веб-сторінці</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+<details class="topic" id="tema-07" data-i="7">
+  <summary><span class="num"><span>07</span></span><span class="t-title">Ергономіка розміщення відомостей на веб-сторінці</span><span class="t-badges"></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Ергономічна сторінка — зручна: важливе вгорі, логічні блоки, достатньо вільного простору, великі кнопки для пальців на телефоні. Користувачі «сканують» сторінку за F-подібною траєкторією, тому заголовки й ключові слова мають бути зліва та вгорі. Доступність: контраст тексту, підписи до зображень, зрозумілі посилання.</p>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
@@ -148,10 +147,11 @@
       <li><a class="" href="https://pagespeed.web.dev/" target="_blank" rel="noopener">PageSpeed Insights</a> — перевірка швидкості та зручності сторінки</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://www.figma.com/" target="_blank" rel="noopener">Figma</a></div></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
 </details>
-<details class="topic" id="tema-08">
-  <summary><span class="num">08</span><span class="t-title">Поняття пошукової оптимізації та просування веб-сайтів</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+<details class="topic" id="tema-08" data-i="8">
+  <summary><span class="num"><span>08</span></span><span class="t-title">Поняття пошукової оптимізації та просування веб-сайтів</span><span class="t-badges"></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Пошукова оптимізація (SEO) — це дії, щоб сайт був вище в результатах Google: корисний вміст, ключові слова, правильні заголовки, швидкість і мобільна версія. Просування — це реклама, соцмережі, email-розсилки, співпраця з іншими сайтами.</p>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
@@ -166,10 +166,11 @@
       <li><a class="" href="https://trends.google.com/" target="_blank" rel="noopener">Google Trends</a> — що й коли шукають люди</li>
     </ul></div>
     <div class="t-block"><h4>Інструменти</h4><div class="t-tools"><a class="chip" href="https://pagespeed.web.dev/" target="_blank" rel="noopener">PageSpeed Insights</a></div></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
 </details>
-<details class="topic" id="tema-09">
-  <summary><span class="num">09</span><span class="t-title">Роль електронних медійних засобів у житті людини</span><span class="t-badges"></span><span class="chev">▾</span></summary>
+<details class="topic" id="tema-09" data-i="9">
+  <summary><span class="num"><span>09</span></span><span class="t-title">Роль електронних медійних засобів у житті людини</span><span class="t-badges"></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Онлайн-медіа, соцмережі, подкасти й відеоплатформи — головне джерело новин для більшості людей. Вони дають швидкий доступ до інформації та можливість кожному стати автором, але й поширюють фейки та викликають залежність. Медіагігієна: обмежувати час, перевіряти джерела, підписуватися на перевірені медіа.</p>
     <div class="t-block"><h4>Ключові поняття</h4><dl class="t-terms">
@@ -183,23 +184,32 @@
       <li><a class="" href="https://filter.mkip.gov.ua/" target="_blank" rel="noopener">Фільтр — проєкт з медіаграмотності</a> — матеріали з медіаграмотності</li>
       <li><a class="" href="https://www.stopfake.org/" target="_blank" rel="noopener">StopFake</a> — як розпізнати маніпуляцію</li>
     </ul></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
 </details>
-<details class="topic" id="tema-10">
-  <summary><span class="num">10</span><span class="t-title">Тематична атестація</span><span class="t-badges"><span class="badge badge-warn">атестація</span></span><span class="chev">▾</span></summary>
+<details class="topic" id="tema-10" data-i="10">
+  <summary><span class="num"><span>10</span></span><span class="t-title">Тематична атестація</span><span class="t-badges"><span class="badge badge-note">атестація</span></span><span class="chev">▼</span></summary>
   <div class="topic-body">
     <p class="t-text">Повтори: формати мультимедійних даних, CMS, етапи створення сайту, основні теги HTML, ергономіку веб-сторінки та SEO.</p>
     <!-- Презентація: встав у data-src посилання з Google Диска або Google Slides -->
     <div class="slides" data-src=""></div>
+    <div class="t-done"><button class="btn btn-sm" type="button" onclick="toggleDone(this)">✓ Позначити як вивчене</button></div>
   </div>
 </details>
   </section>
-  <div class="sec-nav"><a class="btn btn-ghost" href="../index.html#rozdily">← усі розділи</a><a class="btn btn-ghost" href="../rozdil-03/index.html">‹ Розділ 3</a><a class="btn btn-ghost" href="../rozdil-05/index.html">Розділ 5 ›</a></div>
-  <footer>Інформатика · Київський професійний ліцей транспорту · Розділ 4</footer>
-</div>
+  <div class="sec-nav"><a class="btn btn-ghost" href="../index.html#rozdily">← усі розділи</a><span class="spacer"></span><a class="btn btn-ghost" href="../rozdil-03/index.html">‹ Розділ 3</a><a class="btn btn-ghost" href="../rozdil-05/index.html">Розділ 5 ›</a></div>
+</main>
+
+<footer class="site-footer">
+  <div class="sf-inner">
+    <div class="sf-brand"><img src="../assets/logo.png" alt=""><div><b>Інформатика</b><small>Київський професійний ліцей транспорту</small></div></div>
+    <div class="sf-teacher">Викладач інформатики — <b>Шутько Максим Олександрович</b></div>
+    <div class="sf-links"><a href="../index.html#rozdily">Розділи</a><a href="../submit.html">Здати роботу</a><a href="../qr-quest/index.html">QR-квест</a></div>
+  </div>
+</footer>
 
 <script>
-  // Вбудовування презентацій: data-src="посилання з Google Диска / Google Slides"
+  // Вбудовування презентацій: у data-src блоку .slides вставити посилання з Google Диска / Google Slides
   function embedUrl(u){
     var m = u.match(/drive\.google\.com\/file\/d\/([^\/?#]+)/);
     if (m) return 'https://drive.google.com/file/d/' + m[1] + '/preview';
@@ -217,6 +227,30 @@
   });
   function setAll(open){ document.querySelectorAll('details.topic').forEach(function(d){ d.open = open; }); }
   if (location.hash){ var d = document.querySelector(location.hash); if (d && d.tagName === 'DETAILS') d.open = true; }
+
+  // Прогрес «вивчено» — зберігається лише в цьому браузері
+
+  var PKEY = 'inf-progress';
+  function loadProgress(){ try { return JSON.parse(localStorage.getItem(PKEY)) || {}; } catch (e) { return {}; } }
+  function saveProgress(p){ try { localStorage.setItem(PKEY, JSON.stringify(p)); } catch (e) {} }
+  var SEC = document.body.getAttribute('data-sec');
+  function renderProgress(){
+    var done = loadProgress()[SEC] || [], all = document.querySelectorAll('details.topic');
+    all.forEach(function(d){
+      var on = done.indexOf(+d.getAttribute('data-i')) !== -1;
+      d.classList.toggle('done', on);
+      var b = d.querySelector('.t-done .btn'); if (b) b.textContent = on ? '✓ Вивчено — зняти позначку' : '✓ Позначити як вивчене';
+    });
+    var n = all.length ? Math.round(100 * done.length / all.length) : 0;
+    document.getElementById('secBar').style.width = n + '%';
+    document.getElementById('secPct').textContent = done.length + ' з ' + all.length + ' вивчено';
+  }
+  function toggleDone(btn){
+    var i = +btn.closest('details.topic').getAttribute('data-i'), p = loadProgress(), a = p[SEC] || [];
+    var k = a.indexOf(i); if (k === -1) a.push(i); else a.splice(k, 1);
+    p[SEC] = a; saveProgress(p); renderProgress();
+  }
+  renderProgress();
 </script>
 
 </body>
