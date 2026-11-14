@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Друк QR-кодів квесту</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="quest.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<style>
+  @page { size: A4 portrait; margin: 0; }
+  .panel { max-width: 560px; margin: 0 auto; padding: 20px 16px; }
+  .sheet {
+    width: 210mm; height: 148.5mm; margin: 0 auto 10px; background: #fff; position: relative;
+    display: grid; grid-template-columns: 1fr 92mm; align-items: center; gap: 8mm;
+    padding: 12mm 14mm; overflow: hidden; border: 1px dashed #ccc; break-inside: avoid;
+  }
+  .sheet::before {
+    content: ''; position: absolute; inset: 0 0 auto 0; height: 9mm;
+    background: linear-gradient(90deg, var(--brand), var(--brand-2));
+  }
+  .sheet .num {
+    font-size: 64pt; font-weight: 800; line-height: 1; color: var(--brand);
+  }
+  .sheet .num small { display: block; font-size: 15pt; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+  .sheet h3 { font-size: 22pt; margin: 6mm 0 3mm; line-height: 1.15; }
+  .sheet p { font-size: 12pt; color: var(--muted); margin: 0; }
+  .sheet .org { display: flex; align-items: center; gap: 3mm; font-size: 10.5pt; color: var(--muted); line-height: 1.3; }
+  .sheet .org img { width: 15mm; height: auto; }
+  .sheet .org b { color: var(--ink); }
+  .sheet .qr svg { width: 92mm; height: 92mm; display: block; }
+  .sheet .place { position: absolute; bottom: 5mm; left: 14mm; font-size: 8pt; color: #aaa; }
+  .sheet .scan { margin-top: 5mm; display: inline-block; background: #f1ecff; color: var(--brand);
+                 font-weight: 800; font-size: 13pt; padding: 3mm 5mm; border-radius: 4mm; }
+  @media print {
+    body { background: #fff !important; }
+    .panel { display: none; }
+    .sheet { margin: 0; border: 0; border-bottom: 1px dashed #ddd; }
+    .sheet:nth-of-type(2n) { break-after: page; border-bottom: 0; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  @media screen and (max-width: 840px) { .sheet { zoom: .45; } }
+</style>
+</head>
+<body>
+<div class="panel">
+  <div class="top"><img class="logo" src="logo.png" alt="КПЛТ">
+    <div><h1>Друк QR-кодів</h1><small>2 таблички на аркуш А4 · розріжте навпіл</small></div></div>
+  <div id="demo" class="demo hidden">🧪 Демо-режим: буде згенеровано 3 тестові коди.</div>
+  <div class="card">
+    <label class="f" for="pw">Пароль організатора (ADMIN_KEY з Code.gs)</label>
+    <input type="text" id="pw" autocomplete="off">
+    <button class="btn" id="go">Згенерувати QR-коди</button>
+    <button class="btn ghost hidden" id="pr" onclick="print()">🖨️ Друкувати</button>
+    <div class="err" id="err"></div>
+  </div>
+</div>
+<div id="sheets"></div>
+<script src="config.js"></script>
+<script src="api.js"></script>
+<script>
+if (QuestAPI.demo) document.getElementById('demo').classList.remove('hidden');
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+document.getElementById('go').onclick = async () => {
+  const err = document.getElementById('err'); err.textContent = '';
+  const r = await QuestAPI.call({ action: 'qrlist', admin: document.getElementById('pw').value.trim() });
+  if (!r.ok) { err.textContent = r.error; return; }
+  document.getElementById('sheets').innerHTML = r.points.map(pt => {
+    const q = qrcode(0, 'M'); q.addData(pt.url); q.make();
+    return `<div class="sheet">
+      <div>
+        <div class="num"><small>Точка</small>${pt.n}</div>
+        <h3>QR-квест<br>«Цифрова грамотність»</h3>
+        <div class="org"><img src="logo.png" alt=""><span>Київський професійний<br>ліцей транспорту<br><b>23–27 листопада 2026</b></span></div>
+        <div class="scan">📱 Скануй камерою телефону</div>
+      </div>
+      <div class="qr">${q.createSvgTag({ cellSize: 8, margin: 2, scalable: true })}</div>
+      <div class="place">${esc(pt.topic)}${pt.place ? ' · ' + esc(pt.place) : ''}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('pr').classList.remove('hidden');
+};
+</script>
+</body>
+</html>

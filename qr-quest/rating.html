@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ТОП-10 QR-квесту · КПЛТ</title>
+<link rel="icon" href="logo.png">
+<meta name="theme-color" content="#6d4aff">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="quest.css">
+<style>
+  .wrap { max-width: 1100px; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 14px; }
+  .tabs button {
+    flex: 1; font: inherit; font-weight: 800; font-size: 15px; padding: 12px; border-radius: 14px;
+    border: 2px solid var(--line); background: #fff; color: var(--muted); cursor: pointer;
+  }
+  .tabs button.on { border-color: var(--brand); color: var(--brand); background: #f1ecff; }
+  .cols { display: grid; gap: 16px; }
+  .col h2 { display: flex; justify-content: space-between; align-items: baseline; }
+  .col h2 small { font-size: 13px; color: var(--muted); font-weight: 600; }
+  .row { display: grid; grid-template-columns: 38px 1fr auto; gap: 10px; align-items: center;
+         padding: 10px 0; border-top: 1px solid var(--line); }
+  .row:first-of-type { border-top: 0; }
+  .pos { width: 34px; height: 34px; border-radius: 11px; background: var(--idle); display: grid;
+         place-items: center; font-weight: 800; font-size: 14px; color: var(--muted); }
+  .p1 .pos { background: #ffd54a; color: #6b4b00; font-size: 18px; }
+  .p2 .pos { background: #dfe3ec; color: #4a5164; font-size: 18px; }
+  .p3 .pos { background: #f3c29b; color: #6e3a12; font-size: 18px; }
+  .nm b { display: block; font-size: 15px; }
+  .nm span { font-size: 12px; color: var(--muted); }
+  .sc { text-align: right; font-weight: 800; font-size: 18px; }
+  .sc span { display: block; font-size: 11px; color: var(--muted); font-weight: 600; }
+  .empty { color: var(--muted); text-align: center; padding: 24px 0; }
+  .upd { text-align: center; font-size: 12px; color: var(--muted); }
+  @media (min-width: 860px) {
+    .tabs { display: none; }
+    .cols { grid-template-columns: 1fr 1fr; }
+    .col.hidden { display: block !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <img class="logo" src="logo.png" alt="КПЛТ">
+    <div><h1>🏆 ТОП-10 QR-квесту «Цифрова грамотність»</h1>
+      <small>КПЛТ · 23–27 листопада 2026 · оновлюється автоматично</small></div>
+  </div>
+  <div id="demo" class="demo hidden">🧪 Демо-режим: показано лише дані з цього браузера.</div>
+  <div class="tabs">
+    <button class="on" data-t="students">🎓 Студенти</button>
+    <button data-t="staff">👩‍🏫 Працівники</button>
+  </div>
+  <div class="cols">
+    <div class="card col" id="students"><h2>🎓 Студенти <small></small></h2><div class="list"><div class="spinner"></div></div></div>
+    <div class="card col hidden" id="staff"><h2>👩‍🏫 Працівники <small></small></h2><div class="list"><div class="spinner"></div></div></div>
+  </div>
+  <p class="upd" id="upd"></p>
+  <p class="foot"><a href="./">← До квесту</a></p>
+</div>
+<script src="config.js"></script>
+<script src="api.js"></script>
+<script>
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+if (QuestAPI.demo) document.getElementById('demo').classList.remove('hidden');
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('on', x === b));
+  document.querySelectorAll('.col').forEach(c => c.classList.toggle('hidden', c.id !== b.dataset.t));
+});
+const MEDAL = ['🥇', '🥈', '🥉'];
+function render(id, list, total, count) {
+  const box = document.querySelector('#' + id + ' .list');
+  document.querySelector('#' + id + ' small').textContent = count ? 'усього учасників: ' + count : '';
+  if (!list.length) { box.innerHTML = '<div class="empty">Поки що ніхто не відповів.<br>Будь першим!</div>'; return; }
+  box.innerHTML = list.slice(0, 10).map((x, i) => `
+    <div class="row ${i < 3 ? 'p' + (i + 1) : ''}">
+      <div class="pos">${i < 3 ? MEDAL[i] : i + 1}</div>
+      <div class="nm"><b>${esc(x.name)}</b><span>${esc(x.sub || '')}</span></div>
+      <div class="sc">${x.correct}<span>з ${x.answered} знайд. · всього ${total}</span></div>
+    </div>`).join('');
+}
+async function load() {
+  const r = await QuestAPI.call({ action: 'rating' });
+  if (!r.ok) { document.getElementById('upd').textContent = r.error; return; }
+  render('students', r.students, r.total, r.studentsCount ?? r.students.length);
+  render('staff', r.staff, r.total, r.staffCount ?? r.staff.length);
+  document.getElementById('upd').textContent = 'Оновлено о ' + new Date().toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' });
+}
+load();
+setInterval(load, 60000);
+</script>
+</body>
+</html>

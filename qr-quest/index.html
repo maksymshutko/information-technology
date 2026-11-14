@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR-квест · Цифрова грамотність · КПЛТ</title>
+<link rel="icon" href="logo.png">
+<meta name="theme-color" content="#6d4aff">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="quest.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <img class="logo" src="logo.png" alt="КПЛТ">
+    <div>
+      <h1>QR-квест «Цифрова грамотність»</h1>
+      <small>КПЛТ · 23–27 листопада 2026</small>
+      <small id="who" class="who hidden"></small>
+    </div>
+  </div>
+  <div id="demo" class="demo hidden">🧪 Демо-режим: сервер ще не підключено, дані зберігаються лише в цьому браузері.</div>
+  <main id="app"><div class="spinner"></div></main>
+  <p class="foot"><a href="rating.html">🏆 Рейтинг</a> · <a href="#" id="notme" class="hidden">Це не я</a></p>
+</div>
+
+<script src="config.js"></script>
+<script src="api.js"></script>
+<script>
+const $app = document.getElementById('app');
+const qs = new URLSearchParams(location.search);
+const P = qs.get('p'), K = qs.get('k');
+const LS = 'qrq_id';
+const store = {
+  get() { try { return localStorage.getItem(LS); } catch (e) { return window._id || null; } },
+  set(v) { try { localStorage.setItem(LS, v); } catch (e) { window._id = v; } },
+  del() { try { localStorage.removeItem(LS); } catch (e) { window._id = null; } }
+};
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const LETTERS = 'АБВГДЕ';
+
+if (QuestAPI.demo) document.getElementById('demo').classList.remove('hidden');
+document.getElementById('notme').onclick = e => {
+  e.preventDefault();
+  if (confirm('Вийти з цього профілю? Потім можна зареєструватися з тими ж даними — прогрес збережеться.')) { store.del(); location.reload(); }
+};
+
+function view(html) { $app.innerHTML = html; window.scrollTo(0, 0); }
+function errorView(msg) {
+  view(`<div class="card result bad"><div class="big">⚠️</div><h2>Упс</h2><p>${esc(msg)}</p>
+        <button class="btn ghost" onclick="location.reload()">Спробувати ще раз</button></div>`);
+}
+
+function gridHTML(pr, cur) {
+  let h = '';
+  for (let i = 1; i <= pr.total; i++) {
+    const v = pr.done[i];
+    h += `<div class="${v === true ? 'g' : v === false ? 'r' : ''} ${String(i) === String(cur) ? 'cur' : ''}">${i}</div>`;
+  }
+  return `<div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <b>Ваш прогрес</b><span class="muted">знайдено ${pr.answered} з ${pr.total}</span></div>
+    <div class="bar"><i style="width:${Math.round(pr.answered / pr.total * 100)}%"></i></div>
+    <div class="muted">Правильних відповідей: <b style="color:var(--ink)">${pr.correct}</b></div>
+    <div class="grid">${h}</div>
+    <div class="legend"><span><i style="background:var(--ok)"></i>правильно</span>
+      <span><i style="background:var(--bad)"></i>помилка</span>
+      <span><i style="background:var(--idle)"></i>ще не знайдено</span></div>
+  </div>`;
+}
+
+// ── Реєстрація ───────────────────────────────────────────────
+function registerView(then) {
+  view(`<div class="card">
+    <span class="chip">Крок 1 · Реєстрація</span>
+    <h2>Привіт! Хто проходить квест?</h2>
+    <p class="muted">Заповніть один раз — далі телефон вас запам’ятає.</p>
+    <label class="f">Хто ви</label>
+    <div class="roles" id="roles">
+      <button type="button" data-r="student"><span>🎓</span>Студент</button>
+      <button type="button" data-r="master"><span>🛠️</span>Майстер в/н</button>
+      <button type="button" data-r="teacher"><span>📚</span>Викладач</button>
+      <button type="button" data-r="worker"><span>🏫</span>Працівник ліцею</button>
+    </div>
+    <label class="f" for="last">Прізвище</label>
+    <input type="text" id="last" autocomplete="family-name" maxlength="40" placeholder="Шевченко">
+    <label class="f" for="first">Ім’я</label>
+    <input type="text" id="first" autocomplete="given-name" maxlength="40" placeholder="Олена">
+    <div id="groupBox" class="hidden">
+      <label class="f" for="group">Група</label>
+      <input type="text" id="group" maxlength="15" placeholder="напр. 21-Е">
+    </div>
+    <label class="check"><input type="checkbox" id="agree">
+      <span>Погоджуюся, що моє прізвище, ім’я та група/посада будуть використані для підрахунку результатів квесту і показані в рейтингу.</span></label>
+    <button class="btn" id="go" disabled>Почати квест →</button>
+    <div class="err" id="err"></div>
+  </div>`);
+  let role = null;
+  const $ = id => document.getElementById(id);
+  const check = () => {
+    $('go').disabled = !(role && $('last').value.trim().length > 1 && $('first').value.trim().length > 1 &&
+      (role !== 'student' || $('group').value.trim()) && $('agree').checked);
+  };
+  document.querySelectorAll('#roles button').forEach(b => b.onclick = () => {
+    document.querySelectorAll('#roles button').forEach(x => x.classList.remove('on'));
+    b.classList.add('on'); role = b.dataset.r;
+    $('groupBox').classList.toggle('hidden', role !== 'student');
+    check();
+  });
+  ['last', 'first', 'group', 'agree'].forEach(id => { $(id).oninput = check; $(id).onchange = check; });
+  $('go').onclick = async () => {
+    $('go').disabled = true; $('go').textContent = 'Зберігаю…'; $('err').textContent = '';
+    const r = await QuestAPI.call({ action: 'register', role, last: $('last').value.trim(),
+      first: $('first').value.trim(), group: $('group').value.trim() });
+    if (!r.ok) { $('err').textContent = r.error; $('go').textContent = 'Почати квест →'; check(); return; }
+    store.set(r.id);
+    then();
+  };
+}
+
+// ── Запитання ────────────────────────────────────────────────
+async function questionFlow() {
+  view('<div class="spinner"></div>');
+  const [q, pr] = await Promise.all([
+    QuestAPI.call({ action: 'question', p: P, k: K }),
+    QuestAPI.call({ action: 'progress', id: store.get() })
+  ]);
+  if (pr.reRegister) { store.del(); return registerView(questionFlow); }
+  if (!q.ok) return errorView(q.error);
+  if (!pr.ok) return errorView(pr.error);
+  setWho(pr);
+  const pt = q.point;
+  const was = pr.progress.done[pt.n];
+  if (was !== undefined) return alreadyView(pt, was, pr.progress);
+
+  view(`<div class="card">
+      <span class="chip">Точка ${pt.n} з ${q.total} · ${esc(pt.topic)}</span>
+      <h2>${esc(pt.q)}</h2>
+      <div class="opts" id="opts">${pt.options.map((o, i) =>
+        `<button class="opt" data-i="${i}"><b>${LETTERS[i]}</b><span>${esc(o)}</span></button>`).join('')}</div>
+      <p class="muted" style="margin-top:12px">Увага: відповісти можна лише один раз.</p>
+      <button class="btn" id="send" disabled>Відповісти</button>
+      <div class="err" id="err"></div>
+    </div>` + gridHTML(pr.progress, pt.n));
+
+  let choice = null;
+  const opts = [...document.querySelectorAll('.opt')];
+  opts.forEach(b => b.onclick = () => {
+    opts.forEach(x => x.classList.remove('on')); b.classList.add('on');
+    choice = Number(b.dataset.i); document.getElementById('send').disabled = false;
+  });
+  document.getElementById('send').onclick = async () => {
+    const send = document.getElementById('send');
+    send.disabled = true; send.textContent = 'Перевіряю…';
+    opts.forEach(x => x.disabled = true);
+    const r = await QuestAPI.call({ action: 'answer', id: store.get(), p: P, k: K, choice });
+    if (!r.ok) {
+      if (r.reRegister) { store.del(); return registerView(questionFlow); }
+      document.getElementById('err').textContent = r.error;
+      send.disabled = false; send.textContent = 'Відповісти'; opts.forEach(x => x.disabled = false);
+      return;
+    }
+    resultView(pt, r, choice);
+  };
+}
+
+function resultView(pt, r, choice) {
+  const pr = r.progress;
+  const finished = pr.answered >= pr.total;
+  view(`<div class="card result ${r.correct ? 'ok' : 'bad'}">
+      <div class="big">${r.correct ? '🎉' : '🤔'}</div>
+      <h2>${r.already ? 'Ви вже відповідали тут' : r.correct ? 'Правильно!' : 'Неправильно'}</h2>
+      <p class="muted">Точка ${pt.n} · ${esc(pt.topic)}${choice != null && !r.already ? ' · ваша відповідь: ' + LETTERS[choice] : ''}</p>
+      <div class="explain">💡 ${esc(r.explain)}</div>
+    </div>
+    ${finished ? `<div class="card result ok"><div class="big">🏆</div><h2>Квест пройдено!</h2>
+      <p>Ви знайшли всі ${pr.total} точок і маєте <b>${pr.correct}</b> правильних відповідей.</p>
+      <a class="btn" href="rating.html">Подивитися рейтинг</a></div>`
+    : `<div class="card"><b>Шукайте наступний QR-код!</b>
+      <p class="muted" style="margin:4px 0 0">Коди розклеєні по всьому ліцею — порядок не важливий.</p></div>`}
+    ${gridHTML(pr, pt.n)}`);
+}
+
+function alreadyView(pt, correct, pr) {
+  resultView(pt, { correct, already: true, explain: 'Цю точку вже зараховано. Шукайте інші QR-коди!', progress: pr }, null);
+}
+
+function setWho(pr) {
+  const who = document.getElementById('who');
+  who.textContent = '👤 ' + pr.name + ' · ' + (pr.group || pr.role);
+  who.classList.remove('hidden');
+  document.getElementById('notme').classList.remove('hidden');
+}
+
+// ── Головна (без QR у посиланні) ─────────────────────────────
+async function homeFlow() {
+  let progressHTML = '';
+  if (store.get()) {
+    const pr = await QuestAPI.call({ action: 'progress', id: store.get() });
+    if (pr.ok) { setWho(pr); progressHTML = gridHTML(pr.progress); }
+    else if (pr.reRegister) store.del();
+  }
+  view(`<div class="card">
+    <span class="chip">Тиждень цифрової грамотності · 23–27 листопада</span>
+    <h2>Знайди всі QR-коди в ліцеї</h2>
+    <p class="muted">Київський професійний ліцей транспорту</p>
+    <ol class="rules">
+      <li>По території ліцею розклеєно <b>20 QR-кодів</b>. Квест триває <b>з 23 по 27 листопада 2026</b> року включно.</li>
+      <li>Відскануйте код камерою телефону — відкриється запитання.</li>
+      <li>При першому скануванні вкажіть прізвище, ім’я та хто ви.</li>
+      <li>На кожне запитання — <b>одна спроба</b>. Порядок точок не важливий.</li>
+      <li>Вище в рейтингу той, хто має більше правильних відповідей. При рівності — хто впорався швидше.</li>
+      <li>Окремі <b>ТОП-10</b> для <b>студентів</b> і для <b>працівників</b> ліцею (викладачі, майстри в/н, працівники).</li>
+    </ol>
+  </div>${progressHTML}
+  <a class="btn ghost" href="rating.html">🏆 Рейтинг учасників</a>`);
+}
+
+if (P && K) { store.get() ? questionFlow() : registerView(questionFlow); }
+else homeFlow();
+</script>
+</body>
+</html>
