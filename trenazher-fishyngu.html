@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<script>/*clean-url*/(function(){if(location.protocol==="file:")return;var p=location.pathname,q=p.replace(/\/index\.html$/,"/").replace(/\.html$/,"");if(q!==p)history.replaceState(null,"",q+location.search+location.hash);})();</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Фішинг-тренажер · Інформатика КПЛТ</title>
+<meta name="description" content="Тренажер: навчись розпізнавати фішингові листи, SMS, сайти й повідомлення.">
+<link rel="icon" href="assets/logo.png">
+<link rel="stylesheet" href="assets/style.css?v=d575c993">
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="logo" href="./">
+      <img src="assets/logo.png" alt="Логотип КПЛТ">
+      <span class="brand"><b>Інформатика</b><small>КПЛТ</small></span>
+    </a>
+    <div class="links">
+      <a href="./">Головна</a>
+      <a href="./#rozdily">Розділи</a>
+      <a href="pidruchnyk">Підручник</a>
+      <a href="submit">Здати роботу</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap ph-page">
+  <div id="phIntro">
+    <div class="fc-pick-head"><div>
+      <div class="eyebrow">Тренажер</div>
+      <h1>Фішинг <span class="grad">чи ні?</span></h1>
+      <p class="lead">Перед тобою 10 листів, SMS, сайтів і повідомлень. Для кожного вирішуй: безпечно чи фішинг. Після відповіді підсвітимо всі ознаки. Порада: наводь курсор на кнопки й посилання — унизу з’явиться справжня адреса.</p>
+      <button class="btn" type="button" id="phStart">🎣 Почати тренування</button>
+    </div><img class="fc-pick-illu" src="assets/illu/ask-online.svg" alt=""></div>
+    <div class="ph-cheat card-glass">
+      <h2>5 ознак фішингу</h2>
+      <ol>
+        <li><b>Чужий домен</b> — адреса відправника чи сайту лише схожа на справжню.</li>
+        <li><b>Терміновість і страх</b> — «24 години», «заблоковано», «видалимо».</li>
+        <li><b>Запит секретів</b> — пароль, CVV, PIN, код з SMS.</li>
+        <li><b>Надто добре, щоб бути правдою</b> — виграші, виплати, бонуси.</li>
+        <li><b>Посилання й вкладення</b> — адреса посилання інша, ніж текст; файли .exe.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div id="phPlay" hidden>
+    <div class="fc-head"><span class="fc-title">🎣 Фішинг чи ні?</span><span class="progress-label" id="phPos"></span></div>
+    <div class="fc-dots" id="phDots"></div>
+    <div class="ph-stage">
+      <div class="ph-mock" id="phMock"></div>
+      <div class="ph-status" id="phStatus">Наведи курсор на посилання, щоб побачити справжню адресу</div>
+    </div>
+    <div class="fc-controls" id="phAsk">
+      <button type="button" class="btn fc-yes" id="phSafe">✅ Безпечно</button>
+      <button type="button" class="btn fc-no" id="phPhish">🎣 Фішинг</button>
+    </div>
+    <div class="ph-feedback" id="phFb" hidden>
+      <div class="ph-verdict" id="phVerdict"></div>
+      <ol class="ph-flags" id="phFlags"></ol>
+      <p class="ph-sum" id="phSum"></p>
+      <button type="button" class="btn" id="phNext">Далі →</button>
+    </div>
+  </div>
+
+  <div id="phDone" hidden>
+    <div class="fc-result card-glass">
+      <img class="fc-result-illu" id="phIllu" src="assets/illu/ss-success-factors-bro.svg" alt="">
+      <div class="fc-score"><b id="phScore"></b><span id="phOf"></span></div>
+      <div><h2 id="phTitle"></h2><p class="progress-label" id="phNote"></p>
+        <div class="fc-result-actions"><button type="button" class="btn" id="phAgain">🔀 Ще раз</button><a class="btn btn-ghost" href="rozdil-01/#tema-06">📘 Тема «Загрози в Інтернеті»</a></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="sf-inner">
+    <div class="sf-brand"><img src="assets/logo.png" alt=""><div><b>Інформатика</b><small>Київський професійний ліцей транспорту</small></div></div>
+    <div class="sf-teacher">Викладач інформатики — <b>Шутько Максим Олександрович</b></div>
+    <div class="sf-links"><a href="./#rozdily">Розділи</a><a href="submit">Здати роботу</a><a href="qr-quest/">QR-квест</a><a href="https://kplt.in.ua/" target="_blank" rel="noopener">Сайт ліцею ↗</a></div>
+    <div class="sf-credits">Ілюстрації: <a href="https://storyset.com/" target="_blank" rel="noopener">Storyset</a>, <a href="https://undraw.co/" target="_blank" rel="noopener">unDraw</a></div>
+  </div>
+</footer>
+
+<script>
+  var S = [{"type": "email", "phish": true, "from": "<span data-f=\"1\">Служба підтримки Гривня+ &lt;support@hryvnia-plus.secure-login.top&gt;</span>", "subject": "<span data-f=\"2\">⚠️ Ваш рахунок ЗАБЛОКОВАНО! Підтвердіть дані протягом 24 годин</span>", "body": "<p><span data-f=\"3\">Шановний клієнте!</span></p><p>Ми виявили підозрілу активність. <span data-f=\"2\">Якщо ви не підтвердите дані протягом 24 годин, рахунок буде закрито назавжди.</span></p><p><a class=\"m-btn\" data-f=\"4\" data-href=\"http://hryvnia-plus.secure-verify.top/login\">Підтвердити дані</a></p><p>З повагою, служба безпеки</p>", "flags": ["Адреса відправника не належить банку: справжній домен підмінено на «secure-login.top».", "Тиск і погрози: «24 години», «закрито назавжди». Шахраї не дають часу подумати.", "Безособове звертання «Шановний клієнте» — банк звертається на ім’я.", "Наведи курсор на кнопку: посилання веде на сторонній сайт «secure-verify.top»."], "sum": "Класичний фішинговий лист «від банку». Ніколи не переходь за такими посиланнями — відкрий застосунок банку сам."}, {"type": "email", "phish": false, "from": "<span data-f=\"1\">Платформа «Знання» &lt;noreply@znannia.org.ua&gt;</span>", "subject": "Новий вхід у ваш акаунт", "body": "<p><span data-f=\"2\">Вітаємо, Олено!</span></p><p>Виконано вхід у ваш акаунт: Windows, Київ, 15 листопада, 10:42.</p><p><span data-f=\"3\">Якщо це були ви — нічого робити не потрібно.</span> Якщо ні — змініть пароль у налаштуваннях акаунта.</p><p>Команда «Знання»</p>", "flags": ["Адреса відправника збігається з офіційним доменом сервісу.", "Звертання на ім’я.", "Лист нічого не вимагає: немає посилань «терміново увійдіть» і запитів пароля."], "sum": "Звичайне сповіщення безпеки. Але навіть тут краще змінити пароль, відкривши сайт самостійно, а не через лист."}, {"type": "sms", "phish": true, "from": "<span data-f=\"1\">+380 97 541 22 08</span>", "text": "УкрЕкспрес: ваша посилка затримана на складі. <span data-f=\"2\">Сплатіть мито 32 грн</span> до кінця дня: <a data-f=\"3\" data-href=\"https://ukrexpres-dostavka.top/pay\">ukrexpres-dostavka.top/pay</a>", "flags": ["Служби доставки пишуть з іменного відправника, а не зі звичайного мобільного номера.", "Невелика сума — щоб жертва не замислювалась. Насправді шахраї отримають дані картки.", "Домен «.top» не належить службі доставки. Статус посилки перевіряй в офіційному застосунку."], "sum": "Популярна схема «сплатіть мито». Невелика сума — приманка, мета — дані твоєї картки."}, {"type": "sms", "phish": false, "from": "<span data-f=\"1\">HRYVNIA+</span>", "text": "Код для входу: 482916. <span data-f=\"2\">Нікому не повідомляйте цей код, навіть працівникам банку.</span>", "flags": ["Іменний відправник банку.", "Банк сам попереджає не передавати код і не дає жодних посилань."], "sum": "Справжнє SMS з кодом. Безпечно, якщо ти сам зараз входиш у банк. Якщо ні — нікому код не кажи."}, {"type": "site", "phish": true, "url": "<span data-f=\"1\">http://hryvnia-plus.login-secure.top/auth</span>", "lock": false, "brand": "Гривня+ Банк", "form": "<label>Номер картки<input value=\"5375 41•• •••• ••••\" disabled></label><label data-f=\"2\">CVV-код<input value=\"•••\" disabled></label><label data-f=\"2\">PIN-код<input value=\"••••\" disabled></label><button class=\"m-btn\" disabled>Увійти</button>", "flags": ["Не той домен і немає замка (http, а не https): це не сайт банку.", "Сайт просить CVV і PIN. Справжній банк ніколи не питає їх для входу."], "sum": "Фішинговий сайт-двійник. Головна ознака — адреса в рядку браузера та запит CVV/PIN."}, {"type": "site", "phish": false, "url": "<span data-f=\"1\">https://znannia.org.ua/login</span>", "lock": true, "brand": "Платформа «Знання»", "form": "<label>Електронна пошта<input value=\"olena@ukr.net\" disabled></label><label>Пароль<input value=\"••••••••\" disabled></label><button class=\"m-btn\" disabled>Увійти</button><p class=\"m-small\" data-f=\"2\">Забули пароль? · Увійти через Дію</p>", "flags": ["Правильний домен сервісу та захищене з’єднання (https).", "Сайт просить лише логін і пароль — без даних картки чи кодів із SMS."], "sum": "Справжня сторінка входу. Звичка перевіряти адресу перед введенням пароля — найкращий захист."}, {"type": "chat", "phish": true, "name": "Андрій (друг)", "msgs": ["Привіт! Є хвилинка?", "<span data-f=\"1\">Терміново позич 1500 грн до вечора</span>, мама в лікарні 😢", "<span data-f=\"2\">Не можу зараз говорити</span>, скинь на цю карту: <span data-f=\"3\">4441 11•• •••• 7310</span>, вона не моя, мені так швидше"], "flags": ["Терміновість і емоційний тиск.", "Відмовляється від дзвінка — бо акаунт зламаний і пишуть шахраї.", "Чужа картка «бо так швидше». Перш ніж переказувати, зателефонуй другові."], "sum": "Акаунт друга могли зламати. Завжди перевіряй такі прохання дзвінком або особистим питанням."}, {"type": "chat", "phish": true, "name": "Розіграші 🎁 Official", "msgs": ["<span data-f=\"1\">Вітаємо! Ви виграли iPhone 16 у нашому розіграші!</span>", "Щоб отримати приз, <span data-f=\"2\">оплатіть доставку 199 грн</span> на сайті: <a data-f=\"3\" data-href=\"https://giveaway-prize-ua.top/claim\">giveaway-prize-ua.top/claim</a>"], "flags": ["Ти не брав участі в розіграші, а вже «виграв».", "Приз, за який треба заплатити, — головна ознака шахрайства.", "Підозрілий сайт на домені «.top»."], "sum": "«Виграш без участі» + оплата доставки = шахрайство на 100 %."}, {"type": "email", "phish": true, "from": "<span data-f=\"1\">Бухгалтерія &lt;buh.otdel2026@gmail.com&gt;</span>", "subject": "Рахунок за листопад — терміново оплатити", "body": "<p>Добрий день! У вкладенні рахунок за послуги. Прохання оплатити сьогодні.</p>", "attach": "<span data-f=\"2\">📎 Rahunok_lystopad.pdf.exe</span>", "flags": ["Організація не пише з безкоштовної поштової скриньки gmail.com.", "Подвійне розширення «.pdf.exe»: це програма, яка лише прикидається документом."], "sum": "Вкладення-троян. Не відкривай файли .exe, .scr, .js з листів, навіть якщо назва схожа на документ."}, {"type": "email", "phish": false, "from": "<span data-f=\"1\">Класрум &lt;no-reply@classroom.znannia.org.ua&gt;</span>", "subject": "Нове завдання: Практична робота «Буклет»", "body": "<p><span data-f=\"2\">Шутько М. О. додав нове завдання в курс «Інформатика».</span></p><p>Термін здачі: 20 листопада, 23:59.</p><p><a class=\"m-btn\" data-f=\"3\" data-href=\"https://classroom.znannia.org.ua/c/inf-202/a/18\">Відкрити завдання</a></p>", "flags": ["Офіційна адреса навчальної платформи.", "Конкретний викладач, курс і завдання, яких ти очікуєш.", "Посилання веде на той самий домен, що й адреса відправника."], "sum": "Звичайне сповіщення від навчальної платформи. Посилання й відправник — на одному офіційному домені."}, {"type": "site", "phish": true, "url": "<span data-f=\"1\">https://free-skins-gamestore.top/bonus</span>", "lock": true, "brand": "🎮 GameStore — 5000 монет безкоштовно!", "form": "<p class=\"m-small\"><span data-f=\"2\">Увійди акаунтом GameStore, щоб отримати бонус</span></p><label>Логін<input value=\"gamer2009\" disabled></label><label>Пароль<input value=\"••••••••\" disabled></label><button class=\"m-btn\" disabled>Отримати</button>", "flags": ["Замок є, але домен чужий. HTTPS лише шифрує з’єднання й не гарантує чесності сайту.", "«Безкоштовні монети» в обмін на логін і пароль — так крадуть ігрові акаунти."], "sum": "Замок у браузері не робить сайт справжнім. Дивись на сам домен."}, {"type": "chat", "phish": true, "name": "Служба безпеки банку", "msgs": ["Добрий день! Вас турбує служба безпеки Гривня+ Банку.", "<span data-f=\"1\">З вашої картки зараз намагаються списати кошти!</span>", "Щоб зберегти гроші, <span data-f=\"2\">переведіть їх на безпечний рахунок</span> і <span data-f=\"3\">назвіть код, який прийде в SMS</span>."], "flags": ["Залякування, щоб ти діяв не думаючи.", "«Безпечний рахунок» — вигадка: банк ніколи не просить переказувати гроші.", "Код із SMS — ключ від твого рахунку. Його не можна нікому називати."], "sum": "Поклади слухавку або закрий чат і сам зателефонуй у банк за номером, вказаним на картці."}, {"type": "sms", "phish": true, "from": "<span data-f=\"1\">E-Dopomoga</span>", "text": "Вам нараховано державну виплату <span data-f=\"2\">6500 грн</span>. Для отримання <span data-f=\"3\">введіть дані картки</span>: <a data-f=\"4\" data-href=\"https://e-dopomoga-vyplata.com/form\">e-dopomoga-vyplata.com</a>", "flags": ["Ім’я відправника легко підробити — воно нічого не гарантує.", "Несподівані «виплати» й «компенсації» — популярна приманка.", "Держава не просить вводити дані картки за посиланням із SMS.", "Неофіційний домен .com замість державного gov.ua."], "sum": "Державні послуги отримують лише в офіційних застосунках і на сайтах gov.ua."}, {"type": "email", "phish": false, "from": "<span data-f=\"1\">Інтернет-магазин «ТехноДім» &lt;orders@tekhnodim.ua&gt;</span>", "subject": "Замовлення № 48213 прийнято", "body": "<p><span data-f=\"2\">Дякуємо, Максиме!</span> Ваше замовлення № 48213 (навушники, 899 грн) прийнято.</p><p>Оплата: при отриманні. Очікувана доставка: 18 листопада.</p><p><span data-f=\"3\">Статус можна переглянути в особистому кабінеті на сайті магазину.</span></p>", "flags": ["Домен магазину, у якому ти справді зробив замовлення.", "Конкретні дані твого замовлення.", "Немає вимог терміново щось оплатити чи ввести дані картки."], "sum": "Звичайне підтвердження замовлення, якого ти чекаєш."}, {"type": "site", "phish": true, "url": "<span data-f=\"1\">https://parking-kyiv.pay-now.top</span>", "lock": true, "brand": "🅿️ Оплата паркування (QR-код)", "form": "<p class=\"m-small\">Ви відсканували QR-код на паркоматі.</p><label>Номер картки<input value=\"•••• •••• •••• ••••\" disabled></label><label data-f=\"2\">Термін дії і CVV<input value=\"•• / •• · •••\" disabled></label><button class=\"m-btn\" disabled>Сплатити 20 грн</button>", "flags": ["Шахраї наклеюють свої QR-коди поверх справжніх. Перевіряй адресу, яку відкриває камера.", "Сторонній сайт збирає повні дані картки."], "sum": "QR-код — це просто посилання. Перед оплатою дивись, на який сайт він веде."}, {"type": "email", "phish": true, "from": "<span data-f=\"1\">Fotogram Support &lt;fotogram.support.team@gmail.com&gt;</span>", "subject": "<span data-f=\"2\">Ваш акаунт буде ВИДАЛЕНО за порушення авторських прав</span>", "body": "<p>На ваш допис надійшла скарга. Якщо ви не оскаржите рішення протягом 12 годин, акаунт буде видалено.</p><p><a class=\"m-btn\" data-f=\"3\" data-href=\"https://fotogram-appeal-center.com/verify\">Оскаржити рішення</a></p>", "flags": ["Соцмережа не пише з адреси gmail.com.", "Залякування видаленням акаунта й короткий термін.", "Посилання на сторонній сайт «appeal-center», де попросять логін і пароль."], "sum": "Так крадуть акаунти блогерів. Перевіряй повідомлення в самому застосунку соцмережі."}], ROUND = 10, deck = [], pos = 0, score = 0, res = [];
+  var $ = function(id){ return document.getElementById(id); };
+  function shuffle(a){ for (var i = a.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function show(id){ ['phIntro', 'phPlay', 'phDone'].forEach(function(x){ $(x).hidden = x !== id; }); window.scrollTo(0, 0); }
+  function render(s){
+    if (s.type === 'email') return '<div class="m-email"><div class="m-row"><b>Від:</b> ' + s.from + '</div><div class="m-row"><b>Тема:</b> ' + s.subject + '</div><div class="m-body">' + s.body + (s.attach ? '<div class="m-attach">' + s.attach + '</div>' : '') + '</div></div>';
+    if (s.type === 'sms') return '<div class="m-phone"><div class="m-sms-from">' + s.from + '</div><div class="m-bubble">' + s.text + '</div></div>';
+    if (s.type === 'site') return '<div class="m-browser"><div class="m-bar"><span class="m-lock">' + (s.lock ? '🔒' : '⚠️ Не захищено') + '</span> ' + s.url + '</div><div class="m-site"><div class="m-brand">' + s.brand + '</div><div class="m-form">' + s.form + '</div></div></div>';
+    return '<div class="m-phone m-chat"><div class="m-chat-head">👤 ' + s.name + '</div>' + s.msgs.map(function(m){ return '<div class="m-bubble m-in">' + m + '</div>'; }).join('') + '</div>';
+  }
+  function start(){
+    var ph = shuffle(S.filter(function(s){ return s.phish; })), ok = shuffle(S.filter(function(s){ return !s.phish; }));
+    deck = shuffle(ok.slice(0, 3).concat(ph.slice(0, ROUND - 3)));
+    pos = 0; score = 0; res = [];
+    $('phDots').innerHTML = deck.map(function(){ return '<i></i>'; }).join('');
+    show('phPlay'); next();
+  }
+  function next(){
+    var s = deck[pos];
+    $('phMock').className = 'ph-mock'; $('phMock').innerHTML = render(s);
+    $('phStatus').textContent = 'Наведи курсор на посилання, щоб побачити справжню адресу';
+    $('phMock').querySelectorAll('a[data-href]').forEach(function(a){
+      a.href = '#'; a.addEventListener('click', function(e){ e.preventDefault(); $('phStatus').textContent = '🔗 ' + a.getAttribute('data-href') + '  — у тренажері посилання не відкриваються'; });
+      a.addEventListener('mouseenter', function(){ $('phStatus').textContent = '🔗 ' + a.getAttribute('data-href'); });
+    });
+    $('phAsk').hidden = false; $('phFb').hidden = true;
+    $('phPos').textContent = (pos + 1) + ' з ' + deck.length;
+    $('phDots').querySelectorAll('i').forEach(function(d, i){ d.className = i < pos ? (res[i] ? 'ok' : 'no') : (i === pos ? 'cur' : ''); });
+  }
+  function answer(saysPhish){
+    var s = deck[pos], ok = saysPhish === s.phish; res.push(ok); if (ok) score++;
+    $('phMock').classList.add('reveal', s.phish ? 'is-phish' : 'is-safe');
+    $('phVerdict').className = 'ph-verdict ' + (ok ? 'good' : 'bad');
+    $('phVerdict').textContent = (ok ? '✅ Правильно! ' : '❌ Помилка. ') + (s.phish ? 'Це фішинг.' : 'Це безпечне повідомлення.');
+    $('phFlags').className = 'ph-flags ' + (s.phish ? 'red' : 'green');
+    $('phFlags').innerHTML = s.flags.map(function(f){ return '<li>' + f + '</li>'; }).join('');
+    $('phSum').textContent = s.sum;
+    $('phAsk').hidden = true; $('phFb').hidden = false;
+    $('phNext').textContent = pos + 1 < deck.length ? 'Далі →' : 'Результат →';
+    $('phNext').focus({preventScroll: true});
+  }
+  function finish(){
+    $('phScore').textContent = score; $('phOf').textContent = 'з ' + deck.length;
+    var r = score / deck.length;
+    $('phTitle').textContent = r === 1 ? 'Тебе не обдуриш! 🛡️' : r >= 0.7 ? 'Добре чуття на шахраїв 💪' : r >= 0.4 ? 'Непогано, але будь уважнішим 🙂' : 'Шахраї були б раді… Повтори ознаки фішингу 📘';
+    $('phNote').textContent = 'Пропущено фішингових: ' + deck.filter(function(s, i){ return s.phish && !res[i]; }).length + ' · Зайва тривога: ' + deck.filter(function(s, i){ return !s.phish && !res[i]; }).length;
+    $('phIllu').src = 'assets/illu/' + (r >= 0.7 ? 'ss-success-factors-bro' : 'meditation') + '.svg';
+    show('phDone');
+  }
+  $('phStart').addEventListener('click', start);
+  $('phAgain').addEventListener('click', start);
+  $('phSafe').addEventListener('click', function(){ answer(false); });
+  $('phPhish').addEventListener('click', function(){ answer(true); });
+  $('phNext').addEventListener('click', function(){ if (++pos < deck.length) next(); else finish(); });
+</script>
+
+</body>
+</html>

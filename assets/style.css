@@ -572,3 +572,60 @@ a.eyebrow:hover{ color: #9ff5dc; border-color: rgba(62,230,181,.5); }
   .tip-card{ flex-direction: column; align-items: stretch; padding: 18px; gap: 10px; }
   .tip-illu{ width: 100%; max-height: 120px; }
 }
+
+/* ==========================================================
+   ФІШИНГ-ТРЕНАЖЕР (trenazher-fishyngu.html)
+   ========================================================== */
+.ph-page [hidden]{ display:none !important; }
+.ph-cheat{ margin-top: 26px; padding: 22px 26px; }
+.ph-cheat h2{ margin: 0 0 10px; font-family: var(--font-display); font-size: 18px; }
+.ph-cheat ol{ margin: 0; padding-left: 22px; display:grid; gap: 6px; color: #d9def5; font-weight: 500; }
+.ph-cheat b{ color: var(--mint); }
+#phPlay{ max-width: 760px; margin: 0 auto; }
+#phPlay .fc-dots{ margin-bottom: 16px; }
+.ph-stage{ background: #e9edf7; border-radius: 22px; padding: 22px; box-shadow: var(--shadow-md); margin-bottom: 16px; color: #1b2235; }
+.ph-status{ margin-top: 12px; font-family: var(--font-mono); font-size: 12px; color: #4a5578; background: #dde3f1; border-radius: 8px; padding: 6px 10px; word-break: break-all; }
+.ph-mock{ font-family: var(--font-body); font-size: 14.5px; line-height: 1.6; counter-reset: f; }
+.ph-mock a[data-href]{ color: #2456c9; text-decoration: underline; cursor: pointer; font-weight: 700; }
+.ph-mock .m-btn{ display:inline-block; background: #2456c9; color: #fff !important; text-decoration: none !important; padding: 9px 18px; border-radius: 8px; font-weight: 800; border: 0; }
+/* лист */
+.m-email{ background: #fff; border-radius: 14px; overflow: hidden; border: 1px solid #cfd6e8; }
+.m-row{ padding: 9px 16px; border-bottom: 1px solid #e3e8f3; font-size: 13.5px; }
+.m-row b{ color: #6a7493; font-weight: 700; margin-right: 6px; }
+.m-body{ padding: 14px 16px; }
+.m-body p{ margin: 0 0 10px; }
+.m-attach{ display:inline-block; margin-top: 4px; padding: 7px 12px; background: #eef1f8; border-radius: 8px; font-weight: 700; font-size: 13px; }
+/* телефон: SMS і чат */
+.m-phone{ max-width: 360px; margin: 0 auto; background: #fff; border-radius: 26px; padding: 16px; border: 6px solid #1b2235; }
+.m-sms-from{ text-align:center; font-weight: 800; font-size: 13px; color: #6a7493; margin-bottom: 12px; }
+.m-bubble{ background: #e9edf5; border-radius: 16px 16px 16px 4px; padding: 10px 13px; margin-bottom: 8px; font-size: 14px; }
+.m-chat-head{ font-weight: 800; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #e3e8f3; }
+/* браузер */
+.m-browser{ background: #fff; border-radius: 14px; overflow: hidden; border: 1px solid #cfd6e8; }
+.m-bar{ background: #eef1f8; padding: 9px 14px; font-family: var(--font-mono); font-size: 12.5px; border-bottom: 1px solid #dde3f1; }
+.m-lock{ font-family: var(--font-body); font-size: 12px; font-weight: 800; color: #6a7493; margin-right: 4px; }
+.m-site{ padding: 18px 22px 22px; }
+.m-brand{ font-family: var(--font-display); font-weight: 700; font-size: 17px; margin-bottom: 12px; }
+.m-form{ display:grid; gap: 10px; max-width: 320px; }
+.m-form label{ display:grid; gap: 4px; font-size: 12.5px; font-weight: 700; color: #4a5578; }
+.m-form input{ padding: 8px 10px; border: 1px solid #cfd6e8; border-radius: 8px; background: #f7f9fd; font: inherit; color: #1b2235; }
+.m-small{ font-size: 12.5px; color: #6a7493; margin: 0; }
+/* підсвічування ознак після відповіді */
+.ph-mock.reveal [data-f]{ position: relative; border-radius: 6px; outline: 2px solid #e5484d; outline-offset: 2px; background: rgba(229,72,77,.1); }
+.ph-mock.reveal.is-safe [data-f]{ outline-color: #12a77a; background: rgba(18,167,122,.1); }
+.ph-mock.reveal [data-f]::after{ content: attr(data-f); position: absolute; top: -11px; right: -11px; width: 20px; height: 20px; border-radius: 50%;
+  display:grid; place-items:center; font: 800 11px/1 var(--font-mono); color: #fff; background: #e5484d; z-index: 2; }
+.ph-mock.reveal.is-safe [data-f]::after{ background: #12a77a; }
+.ph-mock.reveal label[data-f], .ph-mock.reveal span[data-f]{ display:inline-block; }
+.ph-mock.reveal label[data-f]{ display:grid; }
+/* розбір */
+.ph-feedback{ background: var(--panel); border: 1px solid var(--border); border-radius: 18px; padding: 18px 22px; }
+.ph-verdict{ font-family: var(--font-display); font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+.ph-verdict.good{ color: var(--mint); } .ph-verdict.bad{ color: var(--red); }
+.ph-flags{ margin: 0 0 10px; padding-left: 0; list-style: none; counter-reset: fl; display:grid; gap: 8px; }
+.ph-flags li{ counter-increment: fl; position: relative; padding-left: 32px; color: #d9def5; font-weight: 500; line-height: 1.6; }
+.ph-flags li::before{ content: counter(fl); position:absolute; left: 0; top: 1px; width: 22px; height: 22px; border-radius: 50%; display:grid; place-items:center; font: 800 11px/1 var(--font-mono); color: #fff; background: #e5484d; }
+.ph-flags.green li::before{ background: #12a77a; }
+.ph-sum{ margin: 0 0 14px; color: var(--muted); font-weight: 600; }
+@media (max-width: 640px){ .ph-stage{ padding: 12px; } .m-phone{ border-width: 4px; } }
+.ph-mock.reveal .m-btn[data-f]{ background: #2456c9; }
