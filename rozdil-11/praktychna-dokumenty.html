@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<script>/*clean-url*/(function(){if(location.protocol==="file:")return;var p=location.pathname,q=p.replace(/\/index\.html$/,"/").replace(/\.html$/,"");if(q!==p)history.replaceState(null,"",q+location.search+location.hash);})();</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Практична: класифікація документів і реквізити наказу · Інформатика КПЛТ</title>
+<meta name="description" content="Розділ 11, тема 2: класифікуй документи й склади наказ із реквізитами, надішли відповіді вчителю.">
+<link rel="icon" href="../assets/logo.png">
+<link rel="stylesheet" href="../assets/style.css?v=d575c993">
+<style>
+  .ed{ --coral:#ff7a59; --sun:#ffd166; --sky:#4cc9f0; --grape:#a78bfa; --lime:#3ee6b5; }
+  .ed-hero{ position:relative; overflow:hidden; border-radius: 28px; padding: 30px 32px; margin-bottom: 26px;
+    background: linear-gradient(120deg, rgba(255,122,89,.25), rgba(167,139,250,.28) 50%, rgba(76,201,240,.25)), var(--panel);
+    border: 1px solid rgba(255,209,102,.35); display:flex; gap: 24px; align-items:center; }
+  .ed-hero h1{ margin: 6px 0 10px; }
+  .ed-hero h1 .grad{ background: linear-gradient(90deg, var(--sun), var(--coral), var(--grape)); -webkit-background-clip:text; background-clip:text; color: transparent; }
+  .ed-hero img{ width: 230px; max-height: 170px; object-fit: contain; flex-shrink:0; }
+  .ed-steps{ display:flex; gap: 8px; flex-wrap: wrap; }
+  .ed-steps a{ padding: 7px 13px; border-radius: 12px; font-size: 13px; font-weight: 800; color: #10172e; }
+  .ed-steps a:nth-child(1){ background: var(--sun); } .ed-steps a:nth-child(2){ background: var(--coral); } .ed-steps a:nth-child(3){ background: var(--sky); } .ed-steps a:nth-child(4){ background: var(--lime); }
+  .ed-step{ margin-bottom: 34px; }
+  .ed-step > h2{ display:flex; align-items:center; gap: 12px; font-family: var(--font-display); font-size: 21px; margin: 0 0 6px; }
+  .ed-step > h2 i{ font-style: normal; width: 38px; height: 38px; border-radius: 12px; display:grid; place-items:center; color: #10172e; font-size: 18px; }
+  .ed-step > p.ed-sub{ margin: 0 0 16px; color: var(--muted); font-weight: 500; }
+  #s1 h2 i{ background: var(--sun); } #s2 h2 i{ background: var(--coral); } #s3 h2 i{ background: var(--sky); } #s4 h2 i{ background: var(--lime); }
+  .ed-legend{ display:flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .ed-legend span{ font-size: 12.5px; font-weight: 700; padding: 5px 11px; border-radius: 999px; background: rgba(255,255,255,.05); border: 1px solid var(--border-strong); color: #d9def5; }
+  .doc-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 16px; }
+  .doc{ background: var(--panel); border: 1px solid var(--border); border-radius: 20px; overflow:hidden; display:flex; flex-direction:column; }
+  .doc:nth-child(6n+1){ --c: var(--sun); } .doc:nth-child(6n+2){ --c: var(--coral); } .doc:nth-child(6n+3){ --c: var(--sky); }
+  .doc:nth-child(6n+4){ --c: var(--grape); } .doc:nth-child(6n+5){ --c: var(--lime); } .doc:nth-child(6n+6){ --c: #f472b6; }
+  .doc{ border-top: 5px solid var(--c); }
+  .doc-img{ background: #fff; height: 170px; overflow:hidden; cursor: zoom-in; position: relative; border: 0; padding: 0; width: 100%; display:block; }
+  .doc-img img{ width: 100%; height: 100%; object-fit: cover; object-position: top; display:block; }
+  .doc-img::after{ content: "🔍 збільшити"; position:absolute; right: 8px; bottom: 8px; font: 800 11px var(--font-body); background: rgba(16,23,46,.8); color: #fff; padding: 4px 8px; border-radius: 8px; }
+  .doc-body{ padding: 14px 16px 16px; display:grid; gap: 10px; flex: 1; }
+  .doc-body h3{ margin: 0; font-family: var(--font-display); font-size: 15.5px; display:flex; gap: 8px; align-items:baseline; }
+  .doc-body h3 b{ color: var(--c); font-family: var(--font-mono); font-size: 13px; }
+  .doc-body small{ color: var(--muted); font-weight: 600; margin-top: -6px; }
+  .doc-body label{ display:grid; gap: 4px; font-size: 12px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; }
+  .doc-body select, .ed-form input, .ed-form textarea, .req-row select, .ed-who input, .ed-who select{
+    padding: 9px 11px; background: var(--panel-soft); border: 1px solid var(--border-strong); border-radius: 10px; color: var(--ink); font: 600 14px var(--font-body); width: 100%; }
+  .doc-body select:focus, .ed-form input:focus, .ed-form textarea:focus, .req-row select:focus{ outline: none; border-color: var(--c, var(--lime)); }
+  select.ok{ border-color: #12a77a !important; background: rgba(18,167,122,.15); } select.bad{ border-color: #e5484d !important; background: rgba(229,72,77,.13); }
+  .doc-why{ display:none; font-size: 13.3px; line-height: 1.6; color: #d9def5; background: rgba(255,255,255,.04); border-left: 3px solid var(--c); border-radius: 8px; padding: 9px 11px; }
+  .checked .doc-why{ display:block; }
+  .zoom{ position: fixed; inset: 0; z-index: 300; background: rgba(5,8,18,.9); display:none; align-items:center; justify-content:center; padding: 20px; cursor: zoom-out; }
+  .zoom.show{ display:flex; } .zoom img{ max-width: min(1100px, 100%); max-height: 100%; border-radius: 10px; background: #fff; }
+  .ed-two{ display:grid; grid-template-columns: 1fr 1.1fr; gap: 20px; align-items:start; }
+  .ed-form{ background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 18px; display:grid; gap: 10px; }
+  .ed-form label{ display:grid; gap: 4px; font-size: 12px; font-weight: 800; color: var(--muted); }
+  .ed-form .row2{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .ed-form textarea{ min-height: 60px; resize: vertical; }
+  .ed-form button.fill{ justify-self: start; }
+  .a4{ position: sticky; top: 92px; background: #fff; color: #111; border-radius: 6px; padding: 34px 34px 40px 46px; font: 14.5px/1.45 "Times New Roman", Times, serif;
+    box-shadow: 0 18px 40px rgba(0,0,0,.45); min-height: 560px; }
+  .a4 .r{ position: relative; } .a4 .m{ position:absolute; left: -32px; top: 0; width: 22px; height: 22px; border-radius: 50%; background: var(--coral); color: #fff;
+    font: 800 11px/22px var(--font-mono); text-align:center; }
+  .a4 .mi{ position: static; display:inline-block; margin-right: 6px; vertical-align: 1px; }
+  .a4 .c{ text-align:center; } .a4 .b{ font-weight: 700; } .a4 .up{ text-transform: uppercase; }
+  .a4 .line3{ display:flex; justify-content: space-between; margin: 18px 0; } .a4 .line3 .r{ flex: 1; } .a4 .line3 .r:nth-child(2){ text-align:center; } .a4 .line3 .r:nth-child(3){ text-align:right; }
+  .a4 ol{ margin: 6px 0 0; padding-left: 22px; } .a4 .sign{ display:flex; justify-content: space-between; margin-top: 30px; }
+  .a4 .empty{ color: #9aa3b8; }
+  .req-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 10px; margin-top: 18px; }
+  .req-row{ display:flex; align-items:center; gap: 10px; background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 8px 10px; }
+  .req-row b{ flex-shrink:0; width: 26px; height: 26px; border-radius: 50%; background: var(--coral); color:#fff; display:grid; place-items:center; font: 800 12px var(--font-mono); }
+  .ed-who{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .ed-who label{ display:grid; gap: 4px; font-size: 12px; font-weight: 800; color: var(--muted); }
+  .ed-result{ display:none; margin-top: 14px; padding: 14px 16px; border-radius: 14px; background: rgba(62,230,181,.08); border: 1px solid rgba(62,230,181,.35); font-weight: 600; }
+  .ed-result.show{ display:block; } .ed-actions{ display:flex; gap: 10px; flex-wrap: wrap; }
+  @media (max-width: 900px){ .ed-two{ grid-template-columns: 1fr; } .a4{ position: static; } .ed-hero img{ display:none; } .ed-who{ grid-template-columns: 1fr; } }
+  @media (max-width: 640px){ .doc-grid{ grid-template-columns: 1fr; } .a4{ padding: 22px 16px 26px 38px; font-size: 13.5px; } .ed-form .row2{ grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="logo" href="../">
+      <img src="../assets/logo.png" alt="Логотип КПЛТ">
+      <span class="brand"><b>Інформатика</b><small>КПЛТ</small></span>
+    </a>
+    <div class="links">
+      <a href="../">Головна</a>
+      <a href="../#rozdily" class="active">Розділи</a>
+      <a href="../pidruchnyk">Підручник</a>
+      <a href="../submit">Здати роботу</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap ed">
+  <section class="ed-hero">
+    <div>
+      <div class="eyebrow">Розділ 11 · Тема 2 · Практична робота</div>
+      <h1>Документи: <span class="grad">класифікація і реквізити</span></h1>
+      <p class="lead" style="margin-bottom:14px">Переглянь презентацію, класифікуй 6 документів і склади власний наказ. Наприкінці надішли відповіді вчителю — усе на цій сторінці.</p>
+      <nav class="ed-steps"><a href="#s1">1 · Презентація</a><a href="#s2">2 · Класифікація</a><a href="#s3">3 · Наказ</a><a href="#s4">4 · Надіслати</a></nav>
+    </div>
+    <img src="../assets/illu/document-review.svg" alt="">
+  </section>
+
+  <section class="ed-step" id="s1">
+    <h2><i>📊</i> Крок 1. Переглянь презентацію</h2>
+    <p class="ed-sub">Згадай, що таке реквізити, як класифікують документи та скільки їх зберігають.</p>
+    <div class="slides has-slides"><div class="slides-frame"><iframe src="https://docs.google.com/presentation/d/e/2PACX-1vQ5-XSYfIFEJJ8NhqotBVMRRCZddiJ5IUO9cE7Ds2iKMVRlj6xbtW76G6eMJvWmjw/pubembed?start=false&loop=false&delayms=10000" allowfullscreen loading="lazy" title="Презентація до уроку"></iframe></div></div>
+  </section>
+
+  <section class="ed-step" id="s2">
+    <h2><i>🗂️</i> Крок 2. Завдання 1 — «Класифікація документів»</h2>
+    <p class="ed-sub">Для кожного документа обери ① напрям, ② групу за змістом, ③ орієнтовний строк зберігання. Напрям обирай з погляду організації, яка документ створила. Натисни на зразок, щоб збільшити.</p>
+    <div class="ed-legend"><span>📥 Вхідний — надійшов від іншої організації</span><span>📤 Вихідний — надсилається іншій організації</span><span>🏢 Внутрішній — не виходить за межі підприємства</span></div>
+    <div class="doc-grid" id="docs">
+    <div class="doc" data-id="nakaz">
+      <button type="button" class="doc-img" data-src="../assets/img/docs/nakaz.webp" aria-label="Збільшити зразок"><img src="../assets/img/docs/nakaz.webp" alt="Зразок: Наказ про прийняття на роботу" loading="lazy"></button>
+      <div class="doc-body">
+        <h3><b>01</b>Наказ про прийняття на роботу</h3><small>ТОВ «Вікторія»</small>
+        <label>① Напрям<select data-k="dir"><option value="">— оберіть —</option><option>Вхідний</option><option>Вихідний</option><option>Внутрішній</option></select></label>
+        <label>② Група за змістом<select data-k="group"><option value="">— оберіть —</option><option>Розпорядчий</option><option>Організаційний</option><option>Інформаційно-довідковий</option><option>З особового складу (кадровий)</option><option>Обліково-фінансовий</option><option>Господарсько-договірний</option></select></label>
+        <label>③ Строк зберігання<select data-k="keep"><option value="">— оберіть —</option><option>Постійно</option><option>Тривало (понад 10 років)</option><option>Тимчасово (до 10 років)</option></select></label>
+        <div class="doc-why">💡 Наказ видає керівник для працівників свого підприємства — внутрішній. Це розпорядчий документ з особового складу; накази про прийняття на роботу зберігають 75 років.</div>
+      </div>
+    </div>
+    <div class="doc" data-id="lyst">
+      <button type="button" class="doc-img" data-src="../assets/img/docs/lyst.webp" aria-label="Збільшити зразок"><img src="../assets/img/docs/lyst.webp" alt="Зразок: Лист-відповідь партнеру" loading="lazy"></button>
+      <div class="doc-body">
+        <h3><b>02</b>Лист-відповідь партнеру</h3><small>ТОВ «Вітамін» → ТОВ «Яблуниця»</small>
+        <label>① Напрям<select data-k="dir"><option value="">— оберіть —</option><option>Вхідний</option><option>Вихідний</option><option>Внутрішній</option></select></label>
+        <label>② Група за змістом<select data-k="group"><option value="">— оберіть —</option><option>Розпорядчий</option><option>Організаційний</option><option>Інформаційно-довідковий</option><option>З особового складу (кадровий)</option><option>Обліково-фінансовий</option><option>Господарсько-договірний</option></select></label>
+        <label>③ Строк зберігання<select data-k="keep"><option value="">— оберіть —</option><option>Постійно</option><option>Тривало (понад 10 років)</option><option>Тимчасово (до 10 років)</option></select></label>
+        <div class="doc-why">💡 Для «Вітаміну», що надіслав лист, він вихідний, для «Яблуниці» — вхідний. Службові листи — інформаційно-довідкові документи, ділове листування зберігають кілька років.</div>
+      </div>
+    </div>
+    <div class="doc" data-id="nakladna">
+      <button type="button" class="doc-img" data-src="../assets/img/docs/nakladna.webp" aria-label="Збільшити зразок"><img src="../assets/img/docs/nakladna.webp" alt="Зразок: Видаткова накладна" loading="lazy"></button>
+      <div class="doc-body">
+        <h3><b>03</b>Видаткова накладна</h3><small>ТОВ «Едельвейс» → ТОВ «Орхідея»</small>
+        <label>① Напрям<select data-k="dir"><option value="">— оберіть —</option><option>Вхідний</option><option>Вихідний</option><option>Внутрішній</option></select></label>
+        <label>② Група за змістом<select data-k="group"><option value="">— оберіть —</option><option>Розпорядчий</option><option>Організаційний</option><option>Інформаційно-довідковий</option><option>З особового складу (кадровий)</option><option>Обліково-фінансовий</option><option>Господарсько-договірний</option></select></label>
+        <label>③ Строк зберігання<select data-k="keep"><option value="">— оберіть —</option><option>Постійно</option><option>Тривало (понад 10 років)</option><option>Тимчасово (до 10 років)</option></select></label>
+        <div class="doc-why">💡 Для постачальника накладна вихідна, для покупця — вхідна. Це первинний бухгалтерський (обліково-фінансовий) документ, його зберігають кілька років (зазвичай 3).</div>
+      </div>
+    </div>
+    <div class="doc" data-id="zaiava">
+      <button type="button" class="doc-img" data-src="../assets/img/docs/zaiava.webp" aria-label="Збільшити зразок"><img src="../assets/img/docs/zaiava.webp" alt="Зразок: Заява на відпустку" loading="lazy"></button>
+      <div class="doc-body">
+        <h3><b>04</b>Заява на відпустку</h3><small>економіст → директор ТОВ «Вікторія»</small>
+        <label>① Напрям<select data-k="dir"><option value="">— оберіть —</option><option>Вхідний</option><option>Вихідний</option><option>Внутрішній</option></select></label>
+        <label>② Група за змістом<select data-k="group"><option value="">— оберіть —</option><option>Розпорядчий</option><option>Організаційний</option><option>Інформаційно-довідковий</option><option>З особового складу (кадровий)</option><option>Обліково-фінансовий</option><option>Господарсько-договірний</option></select></label>
+        <label>③ Строк зберігання<select data-k="keep"><option value="">— оберіть —</option><option>Постійно</option><option>Тривало (понад 10 років)</option><option>Тимчасово (до 10 років)</option></select></label>
+        <div class="doc-why">💡 Заява працівника директору свого підприємства — внутрішній документ з особового складу. Заяви про відпустки зберігають обмежений строк.</div>
+      </div>
+    </div>
+    <div class="doc" data-id="protokol">
+      <button type="button" class="doc-img" data-src="../assets/img/docs/protokol.webp" aria-label="Збільшити зразок"><img src="../assets/img/docs/protokol.webp" alt="Зразок: Протокол зборів учасників" loading="lazy"></button>
+      <div class="doc-body">
+        <h3><b>05</b>Протокол зборів учасників</h3><small>ТОВ (загальні збори)</small>
+        <label>① Напрям<select data-k="dir"><option value="">— оберіть —</option><option>Вхідний</option><option>Вихідний</option><option>Внутрішній</option></select></label>
+        <label>② Група за змістом<select data-k="group"><option value="">— оберіть —</option><option>Розпорядчий</option><option>Організаційний</option><option>Інформаційно-довідковий</option><option>З особового складу (кадровий)</option><option>Обліково-фінансовий</option><option>Господарсько-договірний</option></select></label>
+        <label>③ Строк зберігання<select data-k="keep"><option value="">— оберіть —</option><option>Постійно</option><option>Тривало (понад 10 років)</option><option>Тимчасово (до 10 років)</option></select></label>
+        <div class="doc-why">💡 Протокол фіксує хід і рішення зборів усередині товариства. Протоколи загальних зборів учасників мають велике значення для історії підприємства — зберігаються постійно.</div>
+      </div>
+    </div>
+    <div class="doc" data-id="dohovir">
+      <button type="button" class="doc-img" data-src="../assets/img/docs/dohovir.webp" aria-label="Збільшити зразок"><img src="../assets/img/docs/dohovir.webp" alt="Зразок: Договір постачання фруктів і овочів" loading="lazy"></button>
+      <div class="doc-body">
+        <h3><b>06</b>Договір постачання фруктів і овочів</h3><small>Постачальник ↔ Покупець</small>
+        <label>① Напрям<select data-k="dir"><option value="">— оберіть —</option><option>Вхідний</option><option>Вихідний</option><option>Внутрішній</option></select></label>
+        <label>② Група за змістом<select data-k="group"><option value="">— оберіть —</option><option>Розпорядчий</option><option>Організаційний</option><option>Інформаційно-довідковий</option><option>З особового складу (кадровий)</option><option>Обліково-фінансовий</option><option>Господарсько-договірний</option></select></label>
+        <label>③ Строк зберігання<select data-k="keep"><option value="">— оберіть —</option><option>Постійно</option><option>Тривало (понад 10 років)</option><option>Тимчасово (до 10 років)</option></select></label>
+        <div class="doc-why">💡 Договір підписують дві організації: для однієї він вихідний, для іншої — вхідний. Господарські договори зберігають кілька років після закінчення строку дії (зазвичай 3).</div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <section class="ed-step" id="s3">
+    <h2><i>📝</i> Крок 3. Завдання 2 — «Реквізити наказу»</h2>
+    <p class="ed-sub">Заповни бланк вигаданими даними вигаданого підприємства — праворуч одразу з’явиться наказ. Додай 2–3 пункти тексту. Потім підпиши реквізити: для кожного номера на бланку обери його назву (потрібно щонайменше 8).</p>
+    <div class="ed-two">
+      <div class="ed-form" id="orderForm">
+        <label>Найменування підприємства<input data-o="org" placeholder="ТОВ «Сонячний автосервіс»"></label>
+        <div class="row2"><label>Код за ЄДРПОУ<input data-o="code" placeholder="12345678" inputmode="numeric"></label><label>Місце видання<input data-o="place" placeholder="Київ"></label></div>
+        <div class="row2"><label>Дата<input data-o="date" placeholder="15.11.2026"></label><label>Реєстраційний номер<input data-o="num" placeholder="№ 25"></label></div>
+        <label>Заголовок до тексту<input data-o="title" placeholder="Про проведення тижня безпеки праці"></label>
+        <label>Вступна частина (підстава/мета)<input data-o="intro" placeholder="З метою підвищення безпеки праці"></label>
+        <label>Пункт 1<textarea data-o="p1" placeholder="Провести інструктаж з охорони праці для всіх працівників до 20.11.2026."></textarea></label>
+        <label>Пункт 2<textarea data-o="p2" placeholder="Начальнику цеху Петренку О. П. перевірити справність обладнання."></textarea></label>
+        <label>Пункт 3 (необов’язково)<textarea data-o="p3" placeholder="Контроль за виконанням наказу залишаю за собою."></textarea></label>
+        <div class="row2"><label>Посада керівника<input data-o="pos" placeholder="Директор"></label><label>Ім’я та ПРІЗВИЩЕ<input data-o="boss" placeholder="Ірина КОВАЛЬ"></label></div>
+        <button type="button" class="btn btn-ghost btn-sm fill" id="fillDemo">✨ Заповнити прикладом</button>
+      </div>
+      <div class="a4" id="a4"></div>
+    </div>
+    <h3 style="font-family:var(--font-display);margin:22px 0 0">Підпиши реквізити на бланку</h3>
+    <div class="req-grid" id="reqs"><div class="req-row"><b>1</b><select data-req="1"><option value="">— оберіть —</option><option>Адресат</option><option>Відмітка про наявність додатків</option><option>Відмітка про ознайомлення</option><option>Гриф затвердження</option><option>Дата документа</option><option>Заголовок до тексту</option><option>Код за ЄДРПОУ</option><option>Місце видання документа</option><option>Назва виду документа</option><option>Найменування юридичної особи</option><option>Підпис</option><option>Реєстраційний індекс (номер)</option><option>Текст документа</option></select></div><div class="req-row"><b>2</b><select data-req="2"><option value="">— оберіть —</option><option>Адресат</option><option>Відмітка про наявність додатків</option><option>Відмітка про ознайомлення</option><option>Гриф затвердження</option><option>Дата документа</option><option>Заголовок до тексту</option><option>Код за ЄДРПОУ</option><option>Місце видання документа</option><option>Назва виду документа</option><option>Найменування юридичної особи</option><option>Підпис</option><option>Реєстраційний індекс (номер)</option><option>Текст документа</option></select></div><div class="req-row"><b>3</b><select data-req="3"><option value="">— оберіть —</option><option>Адресат</option><option>Відмітка про наявність додатків</option><option>Відмітка про ознайомлення</option><option>Гриф затвердження</option><option>Дата документа</option><option>Заголовок до тексту</option><option>Код за ЄДРПОУ</option><option>Місце видання документа</option><option>Назва виду документа</option><option>Найменування юридичної особи</option><option>Підпис</option><option>Реєстраційний індекс (номер)</option><option>Текст документа</option></select></div><div class="req-row"><b>4</b><select data-req="4"><option value="">— оберіть —</option><option>Адресат</option><option>Відмітка про наявність додатків</option><option>Відмітка про ознайомлення</option><option>Гриф затвердження</option><option>Дата документа</option><option>Заголовок до тексту</option><option>Код за ЄДРПОУ</option><option>Місце видання документа</option><option>Назва виду документа</option><option>Найменування юридичної особи</option><option>Підпис</option><option>Реєстраційний індекс (номер)</option><option>Текст документа</option></select></div><div class="req-row"><b>5</b><select data-req="5"><option value="">— оберіть —</option><option>Адресат</option><option>Відмітка про наявність додатків</option><option>Відмітка про ознайомлення</option><option>Гриф затвердження</option><option>Дата документа</option><option>Заголовок до тексту</option><option>Код за ЄДРПОУ</option><option>Місце видання документа</option><option>Назва виду документа</option><option>Найменування юридичної особи</option><option>Підпис</option><option>Реєстраційний індекс (номер)</option><option>Текст документа</option></select></div><div class="req-row"><b>6</b><select data-req="6"><option value="">— оберіть —</option><option>Адресат</option><option>Відмітка про наявність додатків</option><option>Відмітка про ознайомлення</option><option>Гриф затвердження</option><option>Дата документа</option><option>Заголовок до тексту</option><option>Код за ЄДРПОУ</option><option>Місце видання документа</option><option>Назва виду документа</option><option>Найменування юридичної особи</option><option>Підпис</option><option>Реєстраційний індекс (номер)</option><option>Текст документа</option></select></div><div class="req-row"><b>7</b><select data-req="7"><option value="">— оберіть —</option><option>Адресат</option><option>Відмітка про наявність додатків</option><option>Відмітка про ознайомлення</option><option>Гриф затвердження</option><option>Дата документа</option><option>Заголовок до тексту</option><option>Код за ЄДРПОУ</option><option>Місце видання документа</option><option>Назва виду документа</option><option>Найменування юридичної особи</option><option>Підпис</option><option>Реєстраційний індекс (номер)</option><option>Текст документа</option></select></div><div class="req-row"><b>8</b><select data-req="8"><option value="">— оберіть —</option><option>Адресат</option><option>Відмітка про наявність додатків</option><option>Відмітка про ознайомлення</option><option>Гриф затвердження</option><option>Дата документа</option><option>Заголовок до тексту</option><option>Код за ЄДРПОУ</option><option>Місце видання документа</option><option>Назва виду документа</option><option>Найменування юридичної особи</option><option>Підпис</option><option>Реєстраційний індекс (номер)</option><option>Текст документа</option></select></div><div class="req-row"><b>9</b><select data-req="9"><option value="">— оберіть —</option><option>Адресат</option><option>Відмітка про наявність додатків</option><option>Відмітка про ознайомлення</option><option>Гриф затвердження</option><option>Дата документа</option><option>Заголовок до тексту</option><option>Код за ЄДРПОУ</option><option>Місце видання документа</option><option>Назва виду документа</option><option>Найменування юридичної особи</option><option>Підпис</option><option>Реєстраційний індекс (номер)</option><option>Текст документа</option></select></div><div class="req-row"><b>10</b><select data-req="10"><option value="">— оберіть —</option><option>Адресат</option><option>Відмітка про наявність додатків</option><option>Відмітка про ознайомлення</option><option>Гриф затвердження</option><option>Дата документа</option><option>Заголовок до тексту</option><option>Код за ЄДРПОУ</option><option>Місце видання документа</option><option>Назва виду документа</option><option>Найменування юридичної особи</option><option>Підпис</option><option>Реєстраційний індекс (номер)</option><option>Текст документа</option></select></div></div>
+  </section>
+
+  <section class="ed-step" id="s4">
+    <h2><i>🚀</i> Крок 4. Перевір і надішли</h2>
+    <p class="ed-sub">Спершу натисни «Перевірити» — побачиш підказки. Потім надішли відповіді вчителю.</p>
+    <div class="ed-who">
+      <label>Прізвище<input id="lastname" placeholder="Шевченко"></label>
+      <label>Ім’я<input id="firstname" placeholder="Тарас"></label>
+      <label>Група<select id="klass"><option value="">— оберіть —</option><option>102</option><option>105</option><option>109</option><option>110</option><option>201</option><option>202</option><option>205</option><option>209</option><option>210</option><option>301</option><option>310</option></select></label>
+    </div>
+    <div class="ed-actions"><button type="button" class="btn btn-ghost" id="checkBtn">🔎 Перевірити</button><button type="button" class="btn" id="sendBtn">📨 Надіслати вчителю</button></div>
+    <div class="ed-result" id="result"></div>
+    <div class="status-msg" id="statusMsg"></div>
+  </section>
+  <a class="btn btn-ghost" href="./#tema-02">← до теми</a>
+</main>
+<div class="zoom" id="zoom"><img alt=""></div>
+
+<footer class="site-footer">
+  <div class="sf-inner">
+    <div class="sf-brand"><img src="../assets/logo.png" alt=""><div><b>Інформатика</b><small>Київський професійний ліцей транспорту</small></div></div>
+    <div class="sf-teacher">Викладач інформатики — <b>Шутько Максим Олександрович</b></div>
+    <div class="sf-links"><a href="../#rozdily">Розділи</a><a href="../submit">Здати роботу</a><a href="../qr-quest/">QR-квест</a><a href="https://kplt.in.ua/" target="_blank" rel="noopener">Сайт ліцею ↗</a></div>
+    <div class="sf-credits">Ілюстрації: <a href="https://storyset.com/" target="_blank" rel="noopener">Storyset</a>, <a href="https://undraw.co/" target="_blank" rel="noopener">unDraw</a></div>
+  </div>
+</footer>
+
+<script src="../assets/config.js"></script>
+<script>
+  var DOCS = [{"id": "nakaz", "title": "Наказ про прийняття на роботу", "org": "ТОВ «Вікторія»", "dir": ["Внутрішній"], "group": ["З особового складу (кадровий)", "Розпорядчий"], "keep": ["Тривало (понад 10 років)"], "why": "Наказ видає керівник для працівників свого підприємства — внутрішній. Це розпорядчий документ з особового складу; накази про прийняття на роботу зберігають 75 років."}, {"id": "lyst", "title": "Лист-відповідь партнеру", "org": "ТОВ «Вітамін» → ТОВ «Яблуниця»", "dir": ["Вихідний", "Вхідний"], "group": ["Інформаційно-довідковий"], "keep": ["Тимчасово (до 10 років)"], "why": "Для «Вітаміну», що надіслав лист, він вихідний, для «Яблуниці» — вхідний. Службові листи — інформаційно-довідкові документи, ділове листування зберігають кілька років."}, {"id": "nakladna", "title": "Видаткова накладна", "org": "ТОВ «Едельвейс» → ТОВ «Орхідея»", "dir": ["Вихідний", "Вхідний"], "group": ["Обліково-фінансовий"], "keep": ["Тимчасово (до 10 років)"], "why": "Для постачальника накладна вихідна, для покупця — вхідна. Це первинний бухгалтерський (обліково-фінансовий) документ, його зберігають кілька років (зазвичай 3)."}, {"id": "zaiava", "title": "Заява на відпустку", "org": "економіст → директор ТОВ «Вікторія»", "dir": ["Внутрішній"], "group": ["З особового складу (кадровий)"], "keep": ["Тимчасово (до 10 років)"], "why": "Заява працівника директору свого підприємства — внутрішній документ з особового складу. Заяви про відпустки зберігають обмежений строк."}, {"id": "protokol", "title": "Протокол зборів учасників", "org": "ТОВ (загальні збори)", "dir": ["Внутрішній"], "group": ["Інформаційно-довідковий", "Організаційний"], "keep": ["Постійно"], "why": "Протокол фіксує хід і рішення зборів усередині товариства. Протоколи загальних зборів учасників мають велике значення для історії підприємства — зберігаються постійно."}, {"id": "dohovir", "title": "Договір постачання фруктів і овочів", "org": "Постачальник ↔ Покупець", "dir": ["Вихідний", "Вхідний"], "group": ["Господарсько-договірний"], "keep": ["Тимчасово (до 10 років)"], "why": "Договір підписують дві організації: для однієї він вихідний, для іншої — вхідний. Господарські договори зберігають кілька років після закінчення строку дії (зазвичай 3)."}], REQ = ["Найменування юридичної особи", "Код за ЄДРПОУ", "Назва виду документа", "Дата документа", "Місце видання документа", "Реєстраційний індекс (номер)", "Заголовок до тексту", "Текст документа", "Підпис", "Відмітка про ознайомлення"], KEY = 'ed-prakt-11-2';
+  var $ = function(id){ return document.getElementById(id); };
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  // збільшення зразків
+  document.querySelectorAll('.doc-img').forEach(function(b){ b.addEventListener('click', function(){ $('zoom').querySelector('img').src = b.getAttribute('data-src'); $('zoom').classList.add('show'); }); });
+  $('zoom').addEventListener('click', function(){ $('zoom').classList.remove('show'); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') $('zoom').classList.remove('show'); });
+
+  // бланк наказу з живим переглядом
+  function o(k){ var el = document.querySelector('[data-o="' + k + '"]'); return el ? el.value.trim() : ''; }
+  function v(k, ph){ var x = o(k); return x ? esc(x) : '<span class="empty">' + ph + '</span>'; }
+  function renderA4(){
+    var pts = ['p1', 'p2', 'p3'].map(o).filter(Boolean);
+    $('a4').innerHTML =
+      '<div class="r c b up"><span class="m">1</span>' + v('org', 'Найменування підприємства') + '</div>' +
+      '<div class="r" style="text-align:right;margin-top:8px"><span class="m">2</span>Код ЄДРПОУ ' + v('code', '________') + '</div>' +
+      '<div class="r c b" style="margin-top:12px;letter-spacing:2px"><span class="m">3</span>НАКАЗ</div>' +
+      '<div class="line3"><div class="r"><span class="m">4</span>' + v('date', 'дата') + '</div><div class="r"><span class="m mi">5</span>' + v('place', 'місто') + '</div><div class="r"><span class="m mi">6</span>' + v('num', '№ ___') + '</div></div>' +
+      '<div class="r b" style="max-width:60%"><span class="m">7</span>' + v('title', 'Заголовок до тексту') + '</div>' +
+      '<div class="r" style="margin-top:14px"><span class="m">8</span>' + (o('intro') ? esc(o('intro')) + ',' : '<span class="empty">Вступна частина,</span>') +
+        '<div class="b" style="margin-top:8px">НАКАЗУЮ:</div>' +
+        (pts.length ? '<ol>' + pts.map(function(p){ return '<li>' + esc(p) + '</li>'; }).join('') + '</ol>' : '<ol><li class="empty">Пункт наказу…</li></ol>') + '</div>' +
+      '<div class="r sign"><span class="m">9</span><span>' + v('pos', 'Посада') + '</span><i>підпис</i><span>' + v('boss', 'Ім’я ПРІЗВИЩЕ') + '</span></div>' +
+      '<div class="r" style="margin-top:26px"><span class="m">10</span><i>З наказом ознайомлені:</i> ____________</div>';
+  }
+  document.querySelectorAll('[data-o]').forEach(function(el){ el.addEventListener('input', function(){ renderA4(); save(); }); });
+  $('fillDemo').addEventListener('click', function(){
+    var d = {org: 'ТОВ «Сонячний автосервіс»', code: '41234567', place: 'Київ', date: '15.11.2026', num: '№ 25-од',
+      title: 'Про проведення тижня безпеки праці', intro: 'З метою запобігання травматизму на виробництві',
+      p1: 'Провести позаплановий інструктаж з охорони праці для всіх працівників до 20.11.2026.',
+      p2: 'Майстру цеху Петренку О. П. перевірити справність підйомників і зробити запис у журналі.',
+      p3: 'Контроль за виконанням наказу залишаю за собою.', pos: 'Директор', boss: 'Ірина КОВАЛЬ'};
+    Object.keys(d).forEach(function(k){ var el = document.querySelector('[data-o="' + k + '"]'); if (el && !el.value) el.value = d[k]; });
+    renderA4(); save();
+  });
+
+  // збереження чернетки в браузері
+  function save(){
+    try {
+      var st = {o: {}, docs: {}, req: {}, who: {}};
+      document.querySelectorAll('[data-o]').forEach(function(el){ st.o[el.getAttribute('data-o')] = el.value; });
+      document.querySelectorAll('.doc').forEach(function(d){ st.docs[d.getAttribute('data-id')] = [].map.call(d.querySelectorAll('select'), function(s){ return s.value; }); });
+      document.querySelectorAll('[data-req]').forEach(function(s){ st.req[s.getAttribute('data-req')] = s.value; });
+      ['lastname', 'firstname', 'klass'].forEach(function(id){ st.who[id] = $(id).value; });
+      localStorage.setItem(KEY, JSON.stringify(st));
+    } catch (e) {}
+  }
+  function load(){
+    try {
+      var st = JSON.parse(localStorage.getItem(KEY)); if (!st) return;
+      Object.keys(st.o || {}).forEach(function(k){ var el = document.querySelector('[data-o="' + k + '"]'); if (el) el.value = st.o[k]; });
+      Object.keys(st.docs || {}).forEach(function(id){ var d = document.querySelector('.doc[data-id="' + id + '"]'); if (d) d.querySelectorAll('select').forEach(function(s, i){ s.value = st.docs[id][i] || ''; }); });
+      Object.keys(st.req || {}).forEach(function(k){ var s = document.querySelector('[data-req="' + k + '"]'); if (s) s.value = st.req[k]; });
+      Object.keys(st.who || {}).forEach(function(id){ $(id).value = st.who[id] || ''; });
+    } catch (e) {}
+  }
+  document.querySelectorAll('select, .ed-who input').forEach(function(el){ el.addEventListener('change', save); el.addEventListener('input', save); });
+
+  // перевірка
+  function check(){
+    var t1 = 0, filled1 = 0, lines = [];
+    DOCS.forEach(function(d, n){
+      var card = document.querySelector('.doc[data-id="' + d.id + '"]'), parts = [];
+      card.querySelectorAll('select').forEach(function(s){
+        var k = s.getAttribute('data-k'), ok = s.value && d[k].indexOf(s.value) !== -1;
+        if (s.value) filled1++; if (ok) t1++;
+        s.classList.toggle('ok', !!ok); s.classList.toggle('bad', !!s.value && !ok);
+        parts.push((s.value || '—') + (s.value ? (ok ? ' ✓' : ' ✗') : ''));
+      });
+      card.classList.add('checked');
+      lines.push((n + 1) + '. ' + d.title + ': ' + parts.join(' | '));
+    });
+    var t2 = 0, filled2 = 0, rlines = [];
+    document.querySelectorAll('[data-req]').forEach(function(s){
+      var i = +s.getAttribute('data-req'), ok = s.value === REQ[i - 1];
+      if (s.value) filled2++; if (ok) t2++;
+      s.classList.toggle('ok', ok); s.classList.toggle('bad', !!s.value && !ok);
+      rlines.push(i + ') ' + (s.value || '—') + (s.value ? (ok ? ' ✓' : ' ✗') : ''));
+    });
+    var pts = ['p1', 'p2', 'p3'].map(o).filter(Boolean);
+    var orderText = [o('org'), 'Код ЄДРПОУ ' + o('code'), 'НАКАЗ', o('date') + '   ' + o('place') + '   ' + o('num'), o('title'), o('intro') + ',', 'НАКАЗУЮ:']
+      .concat(pts.map(function(p, i){ return (i + 1) + '. ' + p; })).concat([o('pos') + '   ' + o('boss')]).join('\n');
+    var orderFilled = ['org', 'code', 'date', 'place', 'num', 'title', 'pos', 'boss'].every(function(k){ return o(k); }) && pts.length >= 2;
+    return {t1: t1, filled1: filled1, t2: t2, filled2: filled2, orderFilled: orderFilled,
+      text: 'ЗАВДАННЯ 1 — класифікація (збіг з рекомендованими: ' + t1 + '/18)\n' + lines.join('\n') +
+            '\n\nЗАВДАННЯ 2 — наказ\n' + orderText + '\n\nРеквізити (правильно ' + t2 + '/10, підписано ' + filled2 + '):\n' + rlines.join('\n')};
+  }
+  $('checkBtn').addEventListener('click', function(){
+    var r = check(), msg = [];
+    msg.push('🗂️ Класифікація: ' + r.t1 + ' з 18 збігається з рекомендованими відповідями' + (r.filled1 < 18 ? ' (заповнено ' + r.filled1 + ' з 18)' : '') + '. Прочитай підказки 💡 під документами.');
+    msg.push('📝 Наказ: ' + (r.orderFilled ? 'усі основні реквізити заповнені ✓' : 'заповни всі поля бланка і щонайменше 2 пункти тексту'));
+    msg.push('🏷️ Реквізити: підписано ' + r.filled2 + ' з 10, правильно ' + r.t2 + (r.t2 >= 8 ? ' ✓' : ' — потрібно щонайменше 8'));
+    $('result').innerHTML = msg.map(function(m){ return '<div>' + m + '</div>'; }).join('');
+    $('result').classList.add('show');
+  });
+  $('sendBtn').addEventListener('click', function(){
+    var st = $('statusMsg'), r = check();
+    if (!$('lastname').value.trim() || !$('firstname').value.trim() || !$('klass').value){ st.textContent = '⚠ Вкажи прізвище, ім’я та групу.'; st.className = 'status-msg show status-err'; return; }
+    if (r.filled1 < 18 || !r.orderFilled || r.filled2 < 8){ st.textContent = '⚠ Спершу виконай обидва завдання: класифікуй усі 6 документів, заповни наказ і підпиши щонайменше 8 реквізитів.'; st.className = 'status-msg show status-err'; return; }
+    if (typeof SCRIPT_URL === 'undefined' || SCRIPT_URL.indexOf('ВСТАВ_СЮДИ') !== -1){ st.textContent = '⚠ Форму ще не підключено до таблиці вчителя.'; st.className = 'status-msg show status-err'; return; }
+    var data = new URLSearchParams({
+      lastname: $('lastname').value.trim(), firstname: $('firstname').value.trim(), klass: $('klass').value,
+      lesson: 'Розділ 11 — Тема 2: Класифікація документів і реквізити наказу', worktype: 'Практична робота',
+      link: '', answer: r.text, timestamp: new Date().toLocaleString('uk-UA')
+    });
+    st.textContent = '⏳ Надсилаю...'; st.className = 'status-msg show';
+    fetch(SCRIPT_URL, {method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: data.toString()})
+      .then(function(){ st.textContent = '✓ Відповіді надіслано! Учитель побачить їх у таблиці.'; st.className = 'status-msg show status-ok'; })
+      .catch(function(){ st.textContent = '✕ Не вдалося надіслати. Перевір інтернет і спробуй ще раз.'; st.className = 'status-msg show status-err'; });
+  });
+  load(); renderA4();
+</script>
+
+</body>
+</html>
