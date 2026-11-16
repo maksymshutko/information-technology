@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<script>/*clean-url*/(function(){if(location.protocol==="file:")return;var p=location.pathname,q=p.replace(/\/index\.html$/,"/").replace(/\.html$/,"");if(q!==p)history.replaceState(null,"",q+location.search+location.hash);})();</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Дизайн-студія · Інформатика КПЛТ</title>
+<meta name="description" content="Інтерактив: як створюють сайти й застосунки, UI та UX, логотипи та іконки. UX-аудит екрана застосунку.">
+<link rel="icon" href="../assets/logo.png">
+<link rel="stylesheet" href="../assets/style.css?v=d575c993">
+<style>
+  .ds{ --f1:#f24e1e; --f2:#ff7262; --f3:#a259ff; --f4:#1abcfe; --f5:#0acf83; --ok:#12a77a; --bad:#e5484d; }
+  .ds-hero{ position:relative; overflow:hidden; border-radius: 28px; padding: 30px 32px; margin-bottom: 26px; display:flex; gap: 24px; align-items:center;
+    background: radial-gradient(circle at 95% 0%, rgba(162,89,255,.4), transparent 42%), radial-gradient(circle at 75% 110%, rgba(26,188,254,.3), transparent 45%),
+      radial-gradient(circle at 0% 0%, rgba(242,78,30,.25), transparent 40%), var(--panel);
+    border: 1px solid rgba(162,89,255,.45); }
+  .ds-hero h1{ margin: 6px 0 10px; }
+  .ds-hero h1 .grad{ background: linear-gradient(90deg, var(--f1), var(--f3), var(--f4), var(--f5)); -webkit-background-clip:text; background-clip:text; color: transparent; }
+  .ds-hero img{ width: 240px; max-height: 190px; object-fit: contain; flex-shrink:0; }
+  .dots{ display:flex; gap: 6px; margin-bottom: 14px; } .dots i{ width: 14px; height: 14px; border-radius: 50%; }
+  .dots i:nth-child(1){ background: var(--f1); } .dots i:nth-child(2){ background: var(--f2); } .dots i:nth-child(3){ background: var(--f3); } .dots i:nth-child(4){ background: var(--f4); } .dots i:nth-child(5){ background: var(--f5); }
+  .brief{ background: rgba(255,255,255,.05); border: 1px dashed rgba(255,255,255,.25); border-radius: 14px; padding: 10px 14px; margin-bottom: 14px; font-size: 14px; font-weight: 600; color: #d9def5; }
+  .brief b{ color: var(--f2); }
+  .ds-steps{ display:flex; gap: 8px; flex-wrap: wrap; }
+  .ds-steps a{ padding: 7px 12px; border-radius: 12px; font-size: 13px; font-weight: 800; color: #10172e; }
+  .ds-steps a:nth-child(1){ background: var(--f2); } .ds-steps a:nth-child(2){ background: var(--f3); color:#fff; } .ds-steps a:nth-child(3){ background: var(--f4); } .ds-steps a:nth-child(4){ background: var(--f5); } .ds-steps a:nth-child(5){ background: #ffd166; } .ds-steps a:nth-child(6){ background: #eef2ff; }
+  .ds-st{ margin-bottom: 38px; background: var(--panel); border: 1px solid var(--border); border-radius: 24px; padding: 22px 24px; position: relative; }
+  .ds-st::before{ content:""; position:absolute; left: 0; top: 22px; bottom: 22px; width: 5px; border-radius: 0 5px 5px 0; background: var(--sc); }
+  #st1{ --sc: var(--f2); } #st2{ --sc: var(--f3); } #st3{ --sc: var(--f4); } #st4{ --sc: var(--f5); } #st5{ --sc: #ffd166; } #st6{ --sc: #eef2ff; }
+  .ds-st > h2{ display:flex; align-items:center; gap: 12px; font-family: var(--font-display); font-size: 21px; margin: 0 0 6px; }
+  .ds-st > h2 i{ font-style: normal; width: 40px; height: 40px; border-radius: 12px; display:grid; place-items:center; font-size: 19px; background: var(--sc); flex-shrink: 0; }
+  .ds-st > h2 small{ margin-left: auto; font: 800 13px var(--font-mono); color: var(--sc); white-space: nowrap; }
+  .ds-sub{ margin: 0 0 16px; color: var(--muted); font-weight: 500; }
+  .ds h3{ font-family: var(--font-display); font-size: 15.5px; margin: 18px 0 10px; }
+  .ds select{ padding: 9px 11px; background: var(--panel-soft); border: 1px solid var(--border-strong); border-radius: 10px; color: var(--ink); font: 600 14px var(--font-body); width: 100%; }
+  .ds select.ok{ border-color: var(--ok); background: rgba(18,167,122,.15); } .ds select.bad{ border-color: var(--bad); background: rgba(229,72,77,.13); }
+  .why{ display:none; font-size: 13px; line-height: 1.55; color: #d9def5; background: rgba(255,255,255,.04); border-left: 3px solid var(--sc); border-radius: 8px; padding: 8px 10px; }
+  .done .why{ display:block; }
+  .ds-actions{ display:flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; align-items: center; }
+  .ds-res{ font-weight: 700; font-size: 14px; }
+
+  /* 1. процес */
+  .flow{ display:grid; gap: 8px; counter-reset: st; }
+  .stg{ display:grid; grid-template-columns: 38px 44px 1fr auto; gap: 12px; align-items: center; background: var(--panel-soft); border: 1px solid var(--border); border-radius: 14px; padding: 9px 12px; transition: transform .25s; }
+  .stg::before{ counter-increment: st; content: counter(st); width: 32px; height: 32px; border-radius: 50%; display:grid; place-items:center; background: rgba(255,114,98,.18); color: var(--f2); font: 800 14px var(--font-mono); }
+  .stg .ic{ font-size: 26px; text-align:center; } .stg b{ font-size: 15px; } .stg p{ display:none; margin: 3px 0 0; font-size: 13px; color: #c9cfea; line-height: 1.5; }
+  .done .stg p{ display:block; }
+  .stg .mv{ display:flex; gap: 4px; } .stg .mv button{ width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--border-strong); background: rgba(255,255,255,.04); color: var(--ink); font-size: 15px; cursor: pointer; }
+  .stg .mv button:hover{ border-color: var(--f2); } .done .stg .mv{ display:none; }
+  .stg.y{ border-color: var(--ok); } .stg.n{ border-color: var(--bad); } .stg .tag{ display:none; font: 800 11.5px var(--font-mono); white-space: nowrap; }
+  .done .stg .tag{ display:block; } .stg.y .tag{ color: var(--ok); } .stg.n .tag{ color: var(--bad); }
+
+  /* 2. UI/UX */
+  .ux-grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .uxc{ display:flex; gap: 12px; align-items:center; justify-content: space-between; background: var(--panel-soft); border: 1px solid var(--border); border-radius: 14px; padding: 10px 12px; }
+  .uxc p{ margin: 0; font-weight: 600; font-size: 14px; }
+  .tg{ display:flex; flex-shrink: 0; border-radius: 10px; overflow:hidden; border: 1px solid var(--border-strong); }
+  .tg button{ border: 0; padding: 8px 12px; background: transparent; color: var(--muted); font: 800 13px var(--font-mono); cursor: pointer; }
+  .tg button.on[data-v="UI"]{ background: var(--f3); color: #fff; } .tg button.on[data-v="UX"]{ background: var(--f4); color: #10172e; }
+  .uxc.y{ border-color: var(--ok); } .uxc.n{ border-color: var(--bad); }
+  .uiux-def{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .uiux-def div{ border-radius: 14px; padding: 11px 14px; font-size: 14px; line-height: 1.5; }
+  .uiux-def div:nth-child(1){ background: rgba(162,89,255,.15); border: 1px solid rgba(162,89,255,.5); } .uiux-def div:nth-child(2){ background: rgba(26,188,254,.12); border: 1px solid rgba(26,188,254,.5); }
+  .uiux-def b{ display:block; font-family: var(--font-display); }
+
+  /* 3. логотипи */
+  .logo-grid{ display:grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .lg{ background: var(--panel-soft); border: 1px solid var(--border); border-radius: 16px; padding: 12px; display:grid; gap: 10px; align-content: start; }
+  .lg .art{ background: #fff; border-radius: 12px; height: 110px; display:grid; place-items:center; padding: 8px; }
+  .lg .art svg{ max-width: 100%; max-height: 94px; font-family: var(--font-body); }
+  .lg b{ font: 800 12px var(--font-mono); color: var(--f4); }
+  .scale{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .sc-c{ background: var(--panel-soft); border: 2px solid var(--border); border-radius: 16px; padding: 14px; cursor: pointer; display:grid; gap: 10px; text-align: left; color: var(--ink); font-family: var(--font-body); }
+  .sc-c:hover{ border-color: var(--f4); } .sc-c.sel{ border-color: var(--f4); box-shadow: 0 0 0 3px rgba(26,188,254,.25); }
+  .sc-c.y{ border-color: var(--ok); } .sc-c.n{ border-color: var(--bad); }
+  .sizes{ display:flex; align-items: flex-end; gap: 14px; }
+  .sizes span{ display:grid; justify-items:center; gap: 4px; font: 700 10.5px var(--font-mono); color: var(--muted); }
+  .sizes svg{ display:block; font-family: var(--font-body); }
+  .sizes .mono svg{ filter: grayscale(1) contrast(1.4); }
+  .tab-mock{ display:flex; align-items:center; gap: 6px; background: #dfe3ee; color: #333; border-radius: 8px 8px 0 0; padding: 5px 10px; font: 600 11px var(--font-body); width: max-content; }
+  .tab-mock svg{ width: 16px; height: 16px; }
+
+  /* 4. іконки */
+  .ic-grid{ display:grid; grid-template-columns: repeat(9, 1fr); gap: 10px; }
+  .icb{ aspect-ratio: 1; border-radius: 16px; background: #f4f5fb; color: #2b2d42; border: 3px solid transparent; display:grid; place-items:center; cursor: pointer; position: relative; padding: 0; }
+  .icb svg{ width: 54%; height: 54%; } .icb small{ position:absolute; bottom: 4px; left: 0; right: 0; font: 700 10px var(--font-body); color: #7a7f99; }
+  .icb.sel{ border-color: var(--f5); background: #e3fbf1; }
+  .icb.y{ border-color: var(--ok); } .icb.n{ border-color: var(--bad); } .icb.miss{ border-color: #ffd166; }
+  .grid-on .icb{ background-image: linear-gradient(rgba(26,188,254,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(26,188,254,.18) 1px, transparent 1px); background-size: 12.5% 12.5%; background-position: center; }
+  .ic-rules{ display:grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
+  .ic-rules div{ background: rgba(10,207,131,.08); border: 1px solid rgba(10,207,131,.35); border-radius: 12px; padding: 9px 11px; font-size: 13px; line-height: 1.45; }
+  .ic-rules b{ display:block; font-size: 13.5px; }
+  .ic-why{ display:grid; gap: 6px; margin-top: 12px; font-size: 13.5px; }
+  .ic-why div{ padding: 8px 11px; border-radius: 10px; background: rgba(255,255,255,.04); border-left: 4px solid var(--f5); }
+
+  /* 5. UX-аудит */
+  .audit{ display:grid; grid-template-columns: auto 1fr; gap: 26px; align-items: start; }
+  .phone{ width: 300px; border-radius: 40px; background: #0b0d14; padding: 12px; box-shadow: 0 20px 50px rgba(0,0,0,.5), inset 0 0 0 2px #2a2f42; }
+  .scr{ background: #fff; color: #222; border-radius: 30px; overflow: hidden; height: 580px; display:flex; flex-direction:column; font-family: var(--font-body); position: relative; }
+  .scr .notch{ height: 26px; display:flex; justify-content: space-between; padding: 6px 22px 0; font: 700 11px var(--font-body); color: #222; }
+  .scr .top{ padding: 6px 18px 0; display:flex; align-items:center; justify-content: space-between; }
+  .scr .top h4{ margin: 0; font-family: "Comic Sans MS", "Comic Neue", cursive; font-size: 22px; color: #6b3b1f; }
+  .fx-fonts .scr .top h4{ font-family: var(--font-display); font-size: 19px; color: #2b2d42; }
+  .scr .photo{ margin: 10px 18px 0; height: 170px; border-radius: 18px; overflow: hidden; }
+  .scr .photo svg{ width: 100%; height: 100%; display:block; }
+  .scr .body{ padding: 12px 18px 0; flex: 1; }
+  .scr .name{ font-family: Georgia, serif; font-style: italic; font-size: 21px; font-weight: 700; color: #222; }
+  .fx-fonts .scr .name{ font-family: var(--font-display); font-style: normal; font-size: 18px; }
+  .scr .desc{ color: #d4d4d8; font-size: 13px; line-height: 1.45; margin-top: 4px; }
+  .scr .price{ color: #d9d9de; font-weight: 800; font-size: 18px; margin-top: 8px; }
+  .fx-contrast .scr .desc{ color: #55596b; } .fx-contrast .scr .price{ color: #1d1f2b; }
+  .scr .sect{ font-family: "Courier New", monospace; font-size: 12px; font-weight: 700; color: #888; margin-top: 10px; text-transform: uppercase; }
+  .fx-fonts .scr .sect{ font-family: var(--font-body); color: #55596b; letter-spacing: .4px; }
+  .scr .qty{ display:flex; align-items:center; gap: 10px; margin-top: 6px; font-weight: 800; }
+  .scr .qty button{ width: 16px; height: 16px; border-radius: 4px; border: 1px solid #ccc; background: #f3f3f3; font-size: 10px; line-height: 1; padding: 0; color: #444; }
+  .fx-tap .scr .qty button{ width: 44px; height: 44px; border-radius: 14px; font-size: 20px; background: #fff1ec; border-color: #ffb9a5; color: #f24e1e; }
+  .scr .cta{ margin: 10px 18px 12px; font-size: 12px; color: #9a9a9a; text-decoration: underline; text-align: right; }
+  .scr .cta .t2, .fx-cta .scr .cta .t1{ display:none; } .fx-cta .scr .cta .t2{ display:inline; }
+  .scr .insp.v-ok::after, .scr .insp.v-bad::after{ top: 4px; right: 4px; }
+  .fx-cta .scr .cta{ background: #f24e1e; color: #fff; text-decoration: none; text-align: center; font-size: 16px; font-weight: 800; border-radius: 16px; padding: 14px; box-shadow: 0 8px 18px rgba(242,78,30,.35); }
+  .scr .nav{ display:flex; justify-content: space-around; padding: 10px 6px 16px; border-top: 1px solid #eee; }
+  .scr .nav span{ display:grid; justify-items:center; gap: 2px; color: #555; }
+  .scr .nav svg{ width: 22px; height: 22px; } .scr .nav small{ display:none; font: 700 10px var(--font-body); }
+  .fx-nav .scr .nav small{ display:block; }
+  .insp{ cursor: pointer; border-radius: 10px; outline: 2px dashed transparent; outline-offset: 2px; transition: outline-color .15s; position: relative; }
+  .insp:hover, .insp.cur{ outline-color: var(--f3); }
+  .insp.v-ok::after, .insp.v-bad::after{ position:absolute; top: -9px; right: -9px; width: 20px; height: 20px; border-radius: 50%; display:grid; place-items:center; color: #fff; font: 800 11px var(--font-mono); z-index: 9; }
+  .insp.v-ok::after{ content: "✓"; background: var(--ok); } .insp.v-bad::after{ content: "✗"; background: var(--bad); }
+  .dlg{ background: var(--panel-soft); border: 1px solid var(--f3); border-radius: 16px; padding: 14px 16px; display:none; margin-top: 12px; }
+  .dlg.show{ display:block; } .dlg h4{ margin: 0 0 10px; font-family: var(--font-display); font-size: 15px; }
+  .dlg .opts{ display:grid; gap: 8px; } .dlg .opts button{ text-align:left; padding: 10px 12px; border-radius: 11px; background: rgba(255,255,255,.04); border: 1px solid var(--border-strong); color: var(--ink); font: 700 14px var(--font-body); cursor: pointer; }
+  .dlg .opts button:hover:not(:disabled){ border-color: var(--f3); }
+  .dlg .opts button.r{ border-color: var(--ok); background: rgba(18,167,122,.18); } .dlg .opts button.w{ border-color: var(--bad); background: rgba(229,72,77,.15); }
+  .dlg .fb{ margin-top: 10px; font-size: 13.5px; line-height: 1.55; }
+  .rules5{ display:grid; gap: 8px; }
+  .rules5 div{ background: rgba(255,209,102,.08); border: 1px solid rgba(255,209,102,.3); border-radius: 12px; padding: 9px 12px; font-size: 13.3px; line-height: 1.5; }
+  .rules5 b{ color: #ffd166; }
+
+  /* фінал */
+  .score-row{ display:grid; grid-template-columns: repeat(5, 1fr) 1.2fr; gap: 10px; margin-bottom: 16px; }
+  .sc{ background: var(--panel-soft); border: 1px solid var(--border); border-radius: 16px; padding: 12px; }
+  .sc small{ display:block; color: var(--muted); font-weight: 700; font-size: 12px; } .sc b{ font: 800 22px var(--font-display); }
+  .sc.total{ background: linear-gradient(120deg, rgba(242,78,30,.25), rgba(162,89,255,.3), rgba(26,188,254,.25)); border-color: rgba(162,89,255,.5); }
+  .badge{ display:none; align-items:center; gap: 12px; padding: 12px 16px; border-radius: 16px; background: rgba(162,89,255,.14); border: 1px solid rgba(162,89,255,.5); margin-bottom: 16px; font-weight: 700; }
+  .badge.show{ display:flex; } .badge span{ font-size: 32px; }
+  .who{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .who label{ display:grid; gap: 4px; font-size: 12px; font-weight: 800; color: var(--muted); }
+  .who input{ padding: 9px 11px; background: var(--panel-soft); border: 1px solid var(--border-strong); border-radius: 10px; color: var(--ink); font: 600 14px var(--font-body); width: 100%; }
+  @media (max-width: 1000px){ .logo-grid{ grid-template-columns: repeat(3, 1fr); } .ic-grid{ grid-template-columns: repeat(5, 1fr); } .ic-rules{ grid-template-columns: 1fr 1fr; }
+    .audit{ grid-template-columns: 1fr; justify-items: center; } .audit > div:last-child{ width: 100%; } .score-row{ grid-template-columns: repeat(3, 1fr); } .scale{ grid-template-columns: 1fr; } }
+  @media (max-width: 640px){ .ds-hero{ padding: 22px 18px; } .ds-hero img{ display:none; } .ds-st{ padding: 18px 14px; } .ux-grid, .uiux-def{ grid-template-columns: 1fr; }
+    .logo-grid{ grid-template-columns: 1fr 1fr; } .ic-grid{ grid-template-columns: repeat(3, 1fr); } .ic-rules{ grid-template-columns: 1fr; } .who{ grid-template-columns: 1fr; }
+    .stg{ grid-template-columns: 32px 1fr auto; } .stg .ic{ display:none; } .ds-st > h2 small{ display:none; } .phone{ width: 280px; } .score-row{ grid-template-columns: 1fr 1fr; } .uxc{ flex-direction: column; align-items: stretch; } }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="logo" href="../">
+      <img src="../assets/logo.png" alt="Логотип КПЛТ">
+      <span class="brand"><b>Інформатика</b><small>КПЛТ</small></span>
+    </a>
+    <div class="links">
+      <a href="../">Головна</a>
+      <a href="../#rozdily" class="active">Розділи</a>
+      <a href="../pidruchnyk">Підручник</a>
+      <a href="../submit">Здати роботу</a>
+    </div>
+  </div>
+</nav>
+<main class="wrap ds" id="dsMain">
+  <section class="ds-hero">
+    <div>
+      <div class="dots"><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="eyebrow">Розділ 5 · Графічний дизайн · Інтерактив</div>
+      <h1>Дизайн-<span class="grad">студія</span></h1>
+      <p class="lead" style="margin-bottom:12px">Сьогодні ти — молодший дизайнер студії. Дізнаєшся, як народжуються сайти й застосунки, чим UI відрізняється від UX, як працюють логотипи та іконки, — і проведеш власний UX-аудит.</p>
+      <div class="brief">📩 <b>Бриф від клієнта:</b> кав’ярня «Колія» біля вокзалу хоче логотип, набір іконок і застосунок для замовлення кави в дорогу.</div>
+      <nav class="ds-steps"><a href="#st1">1 · Процес</a><a href="#st2">2 · UI чи UX</a><a href="#st3">3 · Логотип</a><a href="#st4">4 · Іконки</a><a href="#st5">5 · UX-аудит</a><a href="#st6">Результат</a></nav>
+    </div>
+    <img src="../assets/illu/ss-ui-ux-differences-bro.svg" alt="">
+  </section>
+
+  <section class="ds-st" id="st1">
+    <h2><i>🧭</i> Станція 1. Як народжується сайт чи застосунок <small>7 балів</small></h2>
+    <p class="ds-sub">Над великим проєктом працює команда, і в неї є чіткий порядок роботи. Розстав 7 етапів від першого до останнього кнопками ↑ ↓.</p>
+    <div class="flow" id="flow"></div>
+    <div class="ds-actions"><button type="button" class="btn" id="check1">✓ Перевірити порядок</button><span class="ds-res" id="res1"></span></div>
+  </section>
+
+  <section class="ds-st" id="st2">
+    <h2><i>🧩</i> Станція 2. UI чи UX? <small>8 балів</small></h2>
+    <div class="uiux-def">
+      <div><b>UI — User Interface</b>Інтерфейс: як продукт <i>виглядає</i>. Кольори, шрифти, кнопки, іконки, анімації.</div>
+      <div><b>UX — User Experience</b>Досвід користувача: наскільки продуктом <i>зручно</i> користуватися. Логіка, кроки, дослідження, тести.</div>
+    </div>
+    <p class="ds-sub">Чим займається дизайнер у кожній ситуації — UI чи UX?</p>
+    <div class="ux-grid"><div class="uxc" data-i="0" data-a="UI"><p>Підбирає кольори кнопок і шрифти для екрана</p><div class="tg"><button type="button" data-v="UI">UI</button><button type="button" data-v="UX">UX</button></div></div><div class="uxc" data-i="1" data-a="UX"><p>Опитує користувачів, що їм незручно в застосунку</p><div class="tg"><button type="button" data-v="UI">UI</button><button type="button" data-v="UX">UX</button></div></div><div class="uxc" data-i="2" data-a="UI"><p>Малює набір іконок в єдиному стилі</p><div class="tg"><button type="button" data-v="UI">UI</button><button type="button" data-v="UX">UX</button></div></div><div class="uxc" data-i="3" data-a="UX"><p>Продумує, за скільки кроків людина оформить замовлення</p><div class="tg"><button type="button" data-v="UI">UI</button><button type="button" data-v="UX">UX</button></div></div><div class="uxc" data-i="4" data-a="UI"><p>Робить анімацію натискання кнопки</p><div class="tg"><button type="button" data-v="UI">UI</button><button type="button" data-v="UX">UX</button></div></div><div class="uxc" data-i="5" data-a="UX"><p>Перевіряє прототип на 5 реальних користувачах</p><div class="tg"><button type="button" data-v="UI">UI</button><button type="button" data-v="UX">UX</button></div></div><div class="uxc" data-i="6" data-a="UI"><p>Складає стайлгайд: кольори, відступи, стани кнопок</p><div class="tg"><button type="button" data-v="UI">UI</button><button type="button" data-v="UX">UX</button></div></div><div class="uxc" data-i="7" data-a="UX"><p>Будує карту шляху користувача (user flow)</p><div class="tg"><button type="button" data-v="UI">UI</button><button type="button" data-v="UX">UX</button></div></div></div>
+    <div class="ds-actions"><button type="button" class="btn" id="check2">✓ Перевірити</button><span class="ds-res" id="res2"></span></div>
+  </section>
+
+  <section class="ds-st" id="st3">
+    <h2><i>✒️</i> Станція 3. Логотип <small>6 балів</small></h2>
+    <p class="ds-sub">Для «Колії» підготували 5 концептів логотипа різних типів. Визнач тип кожного.</p>
+    <div class="logo-grid" id="logos"><div class="lg"><b>ЛОГОТИП 1</b><div class="art"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="#3b2a20"/><circle cx="50" cy="50" r="36" fill="none" stroke="#f3c77b" stroke-width="2"/><path id="arcT" d="M22 50 A28 28 0 0 1 78 50" fill="none"/><text font-size="10" font-weight="800" fill="#f3c77b" letter-spacing="2"><textPath href="#arcT" startOffset="50%" text-anchor="middle">КАВ’ЯРНЯ</textPath></text><text x="50" y="62" text-anchor="middle" font-size="17" font-weight="900" fill="#fff">КОЛІЯ</text><text x="50" y="76" text-anchor="middle" font-size="7" fill="#f3c77b">since 2027</text></svg></div><select id="l0" data-a="Емблема" data-q="Логотип 1"><option value="">— обери —</option><option>Знак (символ)</option><option>Логотип-слово (шрифтовий)</option><option>Комбінований</option><option>Емблема</option><option>Монограма</option></select><div class="why">💡 Текст вписаний у форму (коло, щит, печатку) і не відділяється від неї — це емблема.</div></div><div class="lg"><b>ЛОГОТИП 2</b><div class="art"><svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" rx="22" fill="#ff7a59"/><path d="M30 44 H62 V58 C62 68 55 74 46 74 C37 74 30 68 30 58 Z" fill="#fff"/><path d="M62 49 H67 C73 49 73 61 67 61 H62" fill="none" stroke="#fff" stroke-width="4"/><path d="M40 30 C36 35 44 37 40 42 M50 28 C46 33 54 35 50 40" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/></svg></div><select id="l1" data-a="Знак (символ)" data-q="Логотип 2"><option value="">— обери —</option><option>Знак (символ)</option><option>Логотип-слово (шрифтовий)</option><option>Комбінований</option><option>Емблема</option><option>Монограма</option></select><div class="why">💡 Лише символ без жодного слова. Так працюють знаки великих брендів, коли їх уже всі впізнають.</div></div><div class="lg"><b>ЛОГОТИП 3</b><div class="art"><svg viewBox="0 0 100 100"><text x="50" y="70" text-anchor="middle" font-family="Georgia,serif" font-size="60" font-weight="700" fill="#2b2d42">К</text><text x="62" y="78" text-anchor="middle" font-family="Georgia,serif" font-size="44" font-style="italic" fill="#ef476f">к</text></svg></div><select id="l2" data-a="Монограма" data-q="Логотип 3"><option value="">— обери —</option><option>Знак (символ)</option><option>Логотип-слово (шрифтовий)</option><option>Комбінований</option><option>Емблема</option><option>Монограма</option></select><div class="why">💡 Сплетені 1–3 літери (ініціали назви) — це монограма.</div></div><div class="lg"><b>ЛОГОТИП 4</b><div class="art"><svg viewBox="0 0 160 100"><text x="80" y="62" text-anchor="middle" font-size="40" font-weight="900" fill="#2b2d42" letter-spacing="-1">колія</text><rect x="30" y="70" width="100" height="5" rx="2.5" fill="#ff7a59"/></svg></div><select id="l3" data-a="Логотип-слово (шрифтовий)" data-q="Логотип 4"><option value="">— обери —</option><option>Знак (символ)</option><option>Логотип-слово (шрифтовий)</option><option>Комбінований</option><option>Емблема</option><option>Монограма</option></select><div class="why">💡 Логотип — це сама назва, написана особливим шрифтом. Знака немає.</div></div><div class="lg"><b>ЛОГОТИП 5</b><div class="art"><svg viewBox="0 0 180 100"><g transform="translate(-6 4) scale(.9)"><path d="M30 44 H62 V58 C62 68 55 74 46 74 C37 74 30 68 30 58 Z" fill="#ff7a59"/><path d="M62 49 H67 C73 49 73 61 67 61 H62" fill="none" stroke="#ff7a59" stroke-width="4"/><path d="M40 30 C36 35 44 37 40 42 M50 28 C46 33 54 35 50 40" fill="none" stroke="#2b2d42" stroke-width="3.5" stroke-linecap="round"/></g><text x="78" y="58" font-size="30" font-weight="900" fill="#2b2d42">Колія</text><text x="79" y="74" font-size="10" fill="#8d8f9c" letter-spacing="1.5">КАВА В ДОРОГУ</text></svg></div><select id="l4" data-a="Комбінований" data-q="Логотип 5"><option value="">— обери —</option><option>Знак (символ)</option><option>Логотип-слово (шрифтовий)</option><option>Комбінований</option><option>Емблема</option><option>Монограма</option></select><div class="why">💡 Знак + назва поруч. Їх можна використовувати разом і окремо — найпоширеніший тип.</div></div></div>
+    <h3>Тест масштабу: який логотип стане іконкою застосунку і вкладки браузера?</h3>
+    <p class="ds-sub">Дизайнер завжди перевіряє логотип у маленькому розмірі і в одному кольорі. Подивись, як кожен варіант виглядає на 96 px, 48 px, у вкладці браузера (16 px) і чорно-білим. Натисни на найкращий.</p>
+    <div class="scale"><button type="button" class="sc-c" data-id="A"><b>Варіант A</b><div class="sizes"><span><svg width="96" height="96" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#f6efe6"/><circle cx="50" cy="40" r="22" fill="none" stroke="#7a5c45" stroke-width="1"/><path d="M38 36 H62 V44 C62 50 57 54 50 54 C43 54 38 50 38 44Z" fill="none" stroke="#7a5c45" stroke-width="1"/><path d="M44 30 C42 32 46 33 44 35 M50 29 C48 31 52 32 50 34 M56 30 C54 32 58 33 56 35" fill="none" stroke="#7a5c45" stroke-width=".8"/><text x="50" y="76" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="9" fill="#7a5c45">Кав’ярня «Колія»</text><text x="50" y="87" text-anchor="middle" font-size="5" fill="#a08670">свіжообсмажена кава щодня з 7:00</text></svg>96 px</span><span><svg width="48" height="48" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#f6efe6"/><circle cx="50" cy="40" r="22" fill="none" stroke="#7a5c45" stroke-width="1"/><path d="M38 36 H62 V44 C62 50 57 54 50 54 C43 54 38 50 38 44Z" fill="none" stroke="#7a5c45" stroke-width="1"/><path d="M44 30 C42 32 46 33 44 35 M50 29 C48 31 52 32 50 34 M56 30 C54 32 58 33 56 35" fill="none" stroke="#7a5c45" stroke-width=".8"/><text x="50" y="76" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="9" fill="#7a5c45">Кав’ярня «Колія»</text><text x="50" y="87" text-anchor="middle" font-size="5" fill="#a08670">свіжообсмажена кава щодня з 7:00</text></svg>48 px</span><span><div class="tab-mock"><svg viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#f6efe6"/><circle cx="50" cy="40" r="22" fill="none" stroke="#7a5c45" stroke-width="1"/><path d="M38 36 H62 V44 C62 50 57 54 50 54 C43 54 38 50 38 44Z" fill="none" stroke="#7a5c45" stroke-width="1"/><path d="M44 30 C42 32 46 33 44 35 M50 29 C48 31 52 32 50 34 M56 30 C54 32 58 33 56 35" fill="none" stroke="#7a5c45" stroke-width=".8"/><text x="50" y="76" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="9" fill="#7a5c45">Кав’ярня «Колія»</text><text x="50" y="87" text-anchor="middle" font-size="5" fill="#a08670">свіжообсмажена кава щодня з 7:00</text></svg> Колія</div>16 px</span><span class="mono"><svg width="48" height="48" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#f6efe6"/><circle cx="50" cy="40" r="22" fill="none" stroke="#7a5c45" stroke-width="1"/><path d="M38 36 H62 V44 C62 50 57 54 50 54 C43 54 38 50 38 44Z" fill="none" stroke="#7a5c45" stroke-width="1"/><path d="M44 30 C42 32 46 33 44 35 M50 29 C48 31 52 32 50 34 M56 30 C54 32 58 33 56 35" fill="none" stroke="#7a5c45" stroke-width=".8"/><text x="50" y="76" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="9" fill="#7a5c45">Кав’ярня «Колія»</text><text x="50" y="87" text-anchor="middle" font-size="5" fill="#a08670">свіжообсмажена кава щодня з 7:00</text></svg>ч/б</span></div></button><button type="button" class="sc-c" data-id="B"><b>Варіант B</b><div class="sizes"><span><svg width="96" height="96" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#ff7a59"/><path d="M30 44 H62 V58 C62 68 55 74 46 74 C37 74 30 68 30 58 Z" fill="#fff"/><path d="M62 49 H67 C73 49 73 61 67 61 H62" fill="none" stroke="#fff" stroke-width="4"/><path d="M40 30 C36 35 44 37 40 42 M50 28 C46 33 54 35 50 40" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/></svg>96 px</span><span><svg width="48" height="48" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#ff7a59"/><path d="M30 44 H62 V58 C62 68 55 74 46 74 C37 74 30 68 30 58 Z" fill="#fff"/><path d="M62 49 H67 C73 49 73 61 67 61 H62" fill="none" stroke="#fff" stroke-width="4"/><path d="M40 30 C36 35 44 37 40 42 M50 28 C46 33 54 35 50 40" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/></svg>48 px</span><span><div class="tab-mock"><svg viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#ff7a59"/><path d="M30 44 H62 V58 C62 68 55 74 46 74 C37 74 30 68 30 58 Z" fill="#fff"/><path d="M62 49 H67 C73 49 73 61 67 61 H62" fill="none" stroke="#fff" stroke-width="4"/><path d="M40 30 C36 35 44 37 40 42 M50 28 C46 33 54 35 50 40" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/></svg> Колія</div>16 px</span><span class="mono"><svg width="48" height="48" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#ff7a59"/><path d="M30 44 H62 V58 C62 68 55 74 46 74 C37 74 30 68 30 58 Z" fill="#fff"/><path d="M62 49 H67 C73 49 73 61 67 61 H62" fill="none" stroke="#fff" stroke-width="4"/><path d="M40 30 C36 35 44 37 40 42 M50 28 C46 33 54 35 50 40" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/></svg>ч/б</span></div></button><button type="button" class="sc-c" data-id="C"><b>Варіант C</b><div class="sizes"><span><svg width="96" height="96" viewBox="0 0 100 100"><defs><linearGradient id="gC1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd166"/><stop offset=".35" stop-color="#ef476f"/><stop offset=".7" stop-color="#7b2ff7"/><stop offset="1" stop-color="#06d6a0"/></linearGradient></defs><rect width="100" height="100" rx="22" fill="url(#gC1)"/><circle cx="30" cy="30" r="10" fill="#fff" opacity=".35"/><circle cx="70" cy="62" r="18" fill="#fff" opacity=".25"/><text x="50" y="50" text-anchor="middle" font-size="12" font-weight="700" fill="#fff" opacity=".85">КОЛІЯ</text><text x="50" y="62" text-anchor="middle" font-size="6" fill="#fff" opacity=".7">coffee · tea · desserts · wi-fi</text></svg>96 px</span><span><svg width="48" height="48" viewBox="0 0 100 100"><defs><linearGradient id="gC2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd166"/><stop offset=".35" stop-color="#ef476f"/><stop offset=".7" stop-color="#7b2ff7"/><stop offset="1" stop-color="#06d6a0"/></linearGradient></defs><rect width="100" height="100" rx="22" fill="url(#gC2)"/><circle cx="30" cy="30" r="10" fill="#fff" opacity=".35"/><circle cx="70" cy="62" r="18" fill="#fff" opacity=".25"/><text x="50" y="50" text-anchor="middle" font-size="12" font-weight="700" fill="#fff" opacity=".85">КОЛІЯ</text><text x="50" y="62" text-anchor="middle" font-size="6" fill="#fff" opacity=".7">coffee · tea · desserts · wi-fi</text></svg>48 px</span><span><div class="tab-mock"><svg viewBox="0 0 100 100"><defs><linearGradient id="gC3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd166"/><stop offset=".35" stop-color="#ef476f"/><stop offset=".7" stop-color="#7b2ff7"/><stop offset="1" stop-color="#06d6a0"/></linearGradient></defs><rect width="100" height="100" rx="22" fill="url(#gC3)"/><circle cx="30" cy="30" r="10" fill="#fff" opacity=".35"/><circle cx="70" cy="62" r="18" fill="#fff" opacity=".25"/><text x="50" y="50" text-anchor="middle" font-size="12" font-weight="700" fill="#fff" opacity=".85">КОЛІЯ</text><text x="50" y="62" text-anchor="middle" font-size="6" fill="#fff" opacity=".7">coffee · tea · desserts · wi-fi</text></svg> Колія</div>16 px</span><span class="mono"><svg width="48" height="48" viewBox="0 0 100 100"><defs><linearGradient id="gC4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd166"/><stop offset=".35" stop-color="#ef476f"/><stop offset=".7" stop-color="#7b2ff7"/><stop offset="1" stop-color="#06d6a0"/></linearGradient></defs><rect width="100" height="100" rx="22" fill="url(#gC4)"/><circle cx="30" cy="30" r="10" fill="#fff" opacity=".35"/><circle cx="70" cy="62" r="18" fill="#fff" opacity=".25"/><text x="50" y="50" text-anchor="middle" font-size="12" font-weight="700" fill="#fff" opacity=".85">КОЛІЯ</text><text x="50" y="62" text-anchor="middle" font-size="6" fill="#fff" opacity=".7">coffee · tea · desserts · wi-fi</text></svg>ч/б</span></div></button></div>
+    <div class="why" id="scaleWhy" style="margin-top:12px;border-left-color:var(--f4)">💡 <b>Варіант B</b>: простий знак, 1–2 кольори, без дрібного тексту — впізнається навіть у 16 px і в чорно-білому. Варіант A «розсипається» через тонкі лінії й дрібні написи, а C перетворюється на кольорову пляму: градієнти й слоган не читаються.</div>
+    <div class="ds-actions"><button type="button" class="btn" id="check3">✓ Перевірити станцію</button><span class="ds-res" id="res3"></span></div>
+  </section>
+
+  <section class="ds-st" id="st4">
+    <h2><i>🔣</i> Станція 4. Набір іконок <small>3 бали</small></h2>
+    <p class="ds-sub">Іконки в застосунку — це одна «сім’я». Ось правила, за якими їх малюють:</p>
+    <div class="ic-rules">
+      <div><b>📐 Одна сітка</b>Усі іконки на сітці 24×24 з однаковими полями.</div>
+      <div><b>✏️ Одна товщина</b>Однакова товщина лінії, наприклад 2 px.</div>
+      <div><b>⭕ Один стиль</b>Або всі контурні (outline), або всі залиті (filled).</div>
+      <div><b>🔘 Однакові кути</b>Однакові заокруглення кутів і кінців ліній.</div>
+    </div>
+    <p class="ds-sub">Знайди 3 іконки, які порушують стиль набору, і натисни на них.</p>
+    <div class="ic-grid" id="icGrid"><button type="button" class="icb" data-id="home" aria-label="Головна"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 L12 4 L20 11 V20 H14 V14 H10 V20 H4 Z"/></svg><small>Головна</small></button><button type="button" class="icb" data-id="search" aria-label="Пошук"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="square" stroke-linejoin="miter"><circle cx="11" cy="11" r="6"/><path d="M16 16 L20 20"/></svg><small>Пошук</small></button><button type="button" class="icb" data-id="user" aria-label="Профіль"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20 C4 15 20 15 20 20"/></svg><small>Профіль</small></button><button type="button" class="icb" data-id="heart" aria-label="Обране"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20 C5 15 3 11 5 8 C7 5 11 6 12 9 C13 6 17 5 19 8 C21 11 19 15 12 20Z"/></svg><small>Обране</small></button><button type="button" class="icb" data-id="cart" aria-label="Кошик"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4 H6 L8 15 H18 L20 8 H7"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg><small>Кошик</small></button><button type="button" class="icb" data-id="bell" aria-label="Сповіщення"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16 V11 C6 7 9 5 12 5 C15 5 18 7 18 11 V16 L20 18 H4 Z"/><path d="M10 20.5 C10.5 22 13.5 22 14 20.5"/></svg><small>Сповіщення</small></button><button type="button" class="icb" data-id="cup" aria-label="Кава"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9 H16 V14 C16 17 14 19 11 19 H10 C7 19 5 17 5 14 Z"/><path d="M16 11 H18 C20 11 20 15 18 15 H16"/><path d="M9 3 C8 4.5 10 5.5 9 7 M12.5 3 C11.5 4.5 13.5 5.5 12.5 7"/></svg><small>Кава</small></button><button type="button" class="icb" data-id="pin" aria-label="Мапа"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21 C7 15 5 12 5 9 C5 5 8 3 12 3 C16 3 19 5 19 9 C19 12 17 15 12 21Z"/><circle cx="12" cy="9" r="2.5"/></svg><small>Мапа</small></button><button type="button" class="icb" data-id="gear" aria-label="Налаштування"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7 H14 M18 7 H20 M4 17 H6 M10 17 H20"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><small>Налаштування</small></button></div>
+    <div class="ic-why" id="icWhy"></div>
+    <div class="ds-actions"><button type="button" class="btn btn-ghost btn-sm" id="gridBtn">▦ Показати сітку</button><button type="button" class="btn" id="check4">✓ Перевірити</button><span class="ds-res" id="res4"></span></div>
+  </section>
+
+  <section class="ds-st" id="st5">
+    <h2><i>📱</i> Станція 5. UX-аудит екрана застосунку <small>6 балів</small></h2>
+    <p class="ds-sub">Стажер зібрав екран замовлення. Натискай на елементи телефона й визначай, який принцип дизайну тут важливий. Якщо відповідь правильна, екран одразу виправиться. Не все тут помилкове! Кожен елемент можна оцінити лише раз.</p>
+    <div class="audit">
+      <div class="phone"><div class="scr">
+        <div class="notch"><span>9:41</span><span>●●● 🔋</span></div>
+        <div class="top"><h4 class="insp" data-i="fonts">Колія ☕</h4><span style="font-size:18px">⋯</span></div>
+        <div class="photo insp" data-i="photo"><svg viewBox="0 0 260 170" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="cbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe2c6"/><stop offset="1" stop-color="#f4a261"/></linearGradient><radialGradient id="foam" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#f7e3c8"/><stop offset=".7" stop-color="#c98b55"/><stop offset="1" stop-color="#7a4a2a"/></radialGradient></defs><rect width="260" height="170" fill="url(#cbg)"/><ellipse cx="130" cy="120" rx="80" ry="22" fill="#e8d5c0"/><path d="M80 70 H180 L172 120 C170 132 160 138 130 138 C100 138 90 132 88 120 Z" fill="#fff"/><path d="M180 82 C202 82 202 110 176 110" fill="none" stroke="#fff" stroke-width="9"/><ellipse cx="130" cy="72" rx="50" ry="12" fill="url(#foam)"/><path d="M118 70 C124 62 136 62 142 70 C136 74 124 74 118 70Z" fill="#fff" opacity=".85"/></svg></div>
+        <div class="body">
+          <div class="name">Капучино «Перон»</div>
+          <div class="insp" data-i="contrast"><div class="desc">Подвійний еспресо, ніжна молочна пінка. Об’єм 350 мл, готуємо за 3 хвилини.</div><div class="price">65 ₴</div></div>
+          <div class="sect">Кількість</div>
+          <div class="qty insp" data-i="tap"><button type="button" tabindex="-1">−</button><span>1</span><button type="button" tabindex="-1">+</button></div>
+        </div>
+        <div class="cta insp" data-i="cta"><span class="t1">замовити</span><span class="t2">Замовити · 65 ₴</span></div>
+        <div class="nav insp" data-i="nav"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 L12 4 L20 11 V20 H4 Z"/></svg><small>Меню</small></span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L14.5 9 L21 9.5 L16 13.5 L17.5 20 L12 16.5 L6.5 20 L8 13.5 L3 9.5 L9.5 9 Z"/></svg><small>Бонуси</small></span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4 H6 L8 15 H18 L20 8 H7"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg><small>Кошик</small></span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8 V12 L15 14"/></svg><small>Історія</small></span></div>
+      </div></div>
+      <div>
+        <div class="rules5">
+          <div><b>Контраст</b> — текст має чітко відрізнятися від фону (щонайменше 4,5 : 1).</div>
+          <div><b>Зона натискання</b> — кнопки під палець, не менше 44–48 px.</div>
+          <div><b>Ієрархія</b> — найважливіша дія на екрані найпомітніша.</div>
+          <div><b>Узгодженість</b> — 1–2 шрифти, однакові стилі для однакових елементів.</div>
+          <div><b>Зрозумілість</b> — іконки з підписами, без загадок.</div>
+        </div>
+        <div class="dlg" id="dlg"></div>
+        <div class="ds-actions"><span class="ds-res" id="res5"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ds-st" id="st6">
+    <h2><i>🏆</i> Результат і надсилання</h2>
+    <div class="score-row">
+      <div class="sc"><small>1 · Процес</small><b id="sc1">—</b></div>
+      <div class="sc"><small>2 · UI/UX</small><b id="sc2">—</b></div>
+      <div class="sc"><small>3 · Логотип</small><b id="sc3">—</b></div>
+      <div class="sc"><small>4 · Іконки</small><b id="sc4">—</b></div>
+      <div class="sc"><small>5 · UX-аудит</small><b id="sc5">—</b></div>
+      <div class="sc total"><small>Разом</small><b id="scT">…</b></div>
+    </div>
+    <div class="badge" id="badge"><span>🎖️</span>Звання «Junior UI/UX-дизайнер» — студія готова взяти тебе на проєкт!</div>
+    <div class="who">
+      <label>Прізвище<input id="lastname" placeholder="Шевченко"></label>
+      <label>Ім’я<input id="firstname" placeholder="Тарас"></label>
+      <label>Група<select id="klass"><option value="">— обери —</option><option>102</option><option>105</option><option>109</option><option>110</option><option>201</option><option>202</option><option>205</option><option>209</option><option>210</option><option>301</option><option>310</option></select></label>
+    </div>
+    <div class="ds-actions"><button type="button" class="btn" id="sendBtn">📨 Надіслати вчителю</button><button type="button" class="btn btn-ghost btn-sm" id="resetBtn">↺ Почати спочатку</button></div>
+    <div class="status-msg" id="statusMsg"></div>
+  </section>
+  <a class="btn btn-ghost" href="./">← до розділу 5</a>
+</main>
+<footer class="site-footer">
+  <div class="sf-inner">
+    <div class="sf-brand"><img src="../assets/logo.png" alt=""><div><b>Інформатика</b><small>Київський професійний ліцей транспорту</small></div></div>
+    <div class="sf-teacher">Викладач інформатики — <b>Шутько Максим Олександрович</b></div>
+    <div class="sf-links"><a href="../#rozdily">Розділи</a><a href="../submit">Здати роботу</a><a href="../qr-quest/">QR-квест</a><a href="https://kplt.in.ua/" target="_blank" rel="noopener">Сайт ліцею ↗</a></div>
+    <div class="sf-credits">Ілюстрації: <a href="https://storyset.com/" target="_blank" rel="noopener">Storyset</a>, <a href="https://undraw.co/" target="_blank" rel="noopener">unDraw</a></div>
+  </div>
+</footer>
+<script src="../assets/config.js"></script>
+<script>
+(function(){
+  var D = {"stages": [{"id": "brief", "ic": "🤝", "name": "Бриф", "what": "Зустріч із клієнтом: мета, аудиторія, бюджет, терміни, що подобається і що ні."}, {"id": "research", "ic": "🔍", "name": "Дослідження", "what": "Опитування майбутніх користувачів, аналіз конкурентів, збір референсів (мудборд)."}, {"id": "flow", "ic": "🗺️", "name": "Персона і шлях користувача", "what": "Хто користувач і які кроки він робить, щоб досягти мети (user flow, карта сайту)."}, {"id": "wire", "ic": "✏️", "name": "Вайрфрейм (каркас)", "what": "Чорно-біла схема екранів: де меню, кнопки, текст. Без кольорів — тільки структура. Папір або Figma."}, {"id": "ui", "ic": "🎨", "name": "UI-макет", "what": "Кольори, шрифти, іконки, фото, стани кнопок. Збирають дизайн-систему і стайлгайд."}, {"id": "proto", "ic": "📱", "name": "Прототип і тестування", "what": "Клікабельний прототип дають 5–7 реальним людям і дивляться, де вони плутаються. Потім виправляють."}, {"id": "dev", "ic": "🚀", "name": "Передача розробникам", "what": "Розробники отримують макети, розміри, кольори та іконки і пишуть код. Дизайнер стежить, щоб усе збіглося з макетом."}], "start": ["ui", "brief", "proto", "wire", "dev", "research", "flow"], "icons": [{"id": "home", "name": "Головна", "odd": false, "why": ""}, {"id": "search", "name": "Пошук", "odd": true, "why": "Тонка лінія 1 px і гострі (квадратні) кінці — решта набору має лінію 2 px із заокругленнями."}, {"id": "user", "name": "Профіль", "odd": false, "why": ""}, {"id": "heart", "name": "Обране", "odd": true, "why": "Залита (filled) іконка серед контурних (outline). В одному наборі всі іконки мають бути одного типу."}, {"id": "cart", "name": "Кошик", "odd": false, "why": ""}, {"id": "bell", "name": "Сповіщення", "odd": true, "why": "Задебела лінія (майже 4 px) — іконка виглядає «важчою» за сусідів і привертає зайву увагу."}, {"id": "cup", "name": "Кава", "odd": false, "why": ""}, {"id": "pin", "name": "Мапа", "odd": false, "why": ""}, {"id": "gear", "name": "Налаштування", "odd": false, "why": ""}], "audit": [{"id": "contrast", "name": "Опис і ціна напою", "ans": "Контраст тексту", "why": "Світло-сірий текст на білому майже не видно, особливо на сонці. Для звичайного тексту потрібен контраст щонайменше 4,5 : 1."}, {"id": "tap", "name": "Кнопки «−» і «+»", "ans": "Розмір зони натискання", "why": "Палець — не курсор миші. Зона натискання має бути не меншою за 44×44 pt (Apple) / 48×48 dp (Android)."}, {"id": "cta", "name": "Кнопка «замовити»", "ans": "Візуальна ієрархія (головна дія)", "why": "Головна дія екрана має бути найпомітнішою: велика кнопка фірмового кольору на всю ширину, а не дрібне посилання."}, {"id": "fonts", "name": "Заголовок і назви розділів", "ans": "Узгодженість шрифтів", "why": "Три різні шрифти на одному екрані створюють хаос. В інтерфейсі вистачає 1–2 шрифтів і кількох розмірів."}, {"id": "nav", "name": "Нижнє меню з іконками", "ans": "Підписи до іконок", "why": "Незрозумілі іконки без підписів змушують гадати. Короткий підпис під іконкою знімає питання."}, {"id": "photo", "name": "Фото напою", "ans": "Усе гаразд — виправляти не треба", "why": "Якісне фото продукту — правильне рішення: воно допомагає вибрати і викликає апетит."}], "principles": ["Контраст тексту", "Розмір зони натискання", "Візуальна ієрархія (головна дія)", "Узгодженість шрифтів", "Підписи до іконок", "Усе гаразд — виправляти не треба"]}, KEY = 'dyzain-studiia';
+  var $ = function(id){ return document.getElementById(id); };
+  var S = {order: D.start.slice(), s1: null, ux: {}, s2: null, lg: {}, scale: '', s3: null, ic: [], s4: null, au: {}, who: {}};
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+  try { var st = JSON.parse(localStorage.getItem(KEY)); if (st && st.order) S = Object.assign(S, st); } catch(e){}
+  var byId = function(arr, id){ return arr.filter(function(x){ return x.id === id; })[0]; };
+
+  /* 1. процес */
+  function render1(){
+    var correct = D.stages.map(function(s){ return s.id; });
+    $('flow').innerHTML = S.order.map(function(id, i){
+      var s = byId(D.stages, id), ok = correct[i] === id;
+      return '<div class="stg' + (S.s1 !== null ? (ok ? ' y' : ' n') : '') + '" data-id="' + id + '"><span class="ic">' + s.ic + '</span><div><b>' + s.name + '</b><p>' + s.what + '</p></div>' +
+        '<span class="mv"><button type="button" data-d="-1" aria-label="Вгору">↑</button><button type="button" data-d="1" aria-label="Вниз">↓</button></span>' +
+        '<span class="tag">' + (ok ? '✓ на місці' : '✗ має бути №' + (correct.indexOf(id) + 1)) + '</span></div>'; }).join('');
+    $('flow').querySelectorAll('.mv button').forEach(function(b){ b.addEventListener('click', function(){
+      var id = b.closest('.stg').getAttribute('data-id'), i = S.order.indexOf(id), j = i + (+b.getAttribute('data-d'));
+      if (j < 0 || j >= S.order.length) return; S.order[i] = S.order[j]; S.order[j] = id; save(); render1(); }); });
+  }
+  $('check1').addEventListener('click', function(){
+    var correct = D.stages.map(function(s){ return s.id; });
+    S.s1 = S.order.filter(function(id, i){ return correct[i] === id; }).length; save(); show1(); score();
+  });
+  function show1(){ $('st1').classList.add('done'); render1(); $('check1').disabled = true;
+    $('res1').textContent = '✓ На своєму місці ' + S.s1 + ' з 7 етапів. Прочитай, що відбувається на кожному.'; }
+  if (S.s1 !== null) show1(); else render1();
+
+  /* 2. UI / UX */
+  document.querySelectorAll('.uxc').forEach(function(c){
+    var i = c.getAttribute('data-i');
+    function paint(){ c.querySelectorAll('.tg button').forEach(function(b){ b.classList.toggle('on', S.ux[i] === b.getAttribute('data-v')); }); }
+    c.querySelectorAll('.tg button').forEach(function(b){ b.addEventListener('click', function(){ if (S.s2 !== null) return; S.ux[i] = b.getAttribute('data-v'); save(); paint(); }); });
+    paint();
+  });
+  function show2(){ document.querySelectorAll('.uxc').forEach(function(c){ c.classList.add(S.ux[c.getAttribute('data-i')] === c.getAttribute('data-a') ? 'y' : 'n'); });
+    $('check2').disabled = true; $('res2').textContent = '✓ Правильно ' + S.s2 + ' з 8. Зелене — влучно, червоне — помилка.'; }
+  $('check2').addEventListener('click', function(){
+    var cards = [].slice.call(document.querySelectorAll('.uxc'));
+    if (cards.some(function(c){ return !S.ux[c.getAttribute('data-i')]; })){ $('res2').textContent = '⚠ Познач UI або UX для всіх 8 карток.'; return; }
+    S.s2 = cards.filter(function(c){ return S.ux[c.getAttribute('data-i')] === c.getAttribute('data-a'); }).length; save(); show2(); score();
+  });
+  if (S.s2 !== null) show2();
+
+  /* 3. логотипи */
+  var sel3 = [].slice.call(document.querySelectorAll('#logos select'));
+  sel3.forEach(function(s){ if (S.lg[s.id]) s.value = S.lg[s.id]; s.addEventListener('change', function(){ S.lg[s.id] = s.value; save(); }); });
+  document.querySelectorAll('.sc-c').forEach(function(c){
+    c.classList.toggle('sel', S.scale === c.getAttribute('data-id'));
+    c.addEventListener('click', function(){ if (S.s3 !== null) return; S.scale = c.getAttribute('data-id'); save();
+      document.querySelectorAll('.sc-c').forEach(function(x){ x.classList.toggle('sel', x === c); }); });
+  });
+  function show3(){
+    sel3.forEach(function(s){ s.classList.add(s.value === s.getAttribute('data-a') ? 'ok' : 'bad'); s.disabled = true; s.closest('.lg').classList.add('done'); });
+    document.querySelectorAll('.sc-c').forEach(function(c){ var id = c.getAttribute('data-id'); if (id === 'B') c.classList.add('y'); else if (id === S.scale) c.classList.add('n'); });
+    $('scaleWhy').style.display = 'block'; $('check3').disabled = true;
+    $('res3').textContent = '✓ Станцію пройдено: ' + S.s3 + ' з 6.';
+  }
+  $('check3').addEventListener('click', function(){
+    if (sel3.some(function(s){ return !s.value; }) || !S.scale){ $('res3').textContent = '⚠ Визнач тип усіх 5 логотипів і обери логотип для іконки застосунку.'; return; }
+    S.s3 = sel3.filter(function(s){ return s.value === s.getAttribute('data-a'); }).length + (S.scale === 'B' ? 1 : 0); save(); show3(); score();
+  });
+  if (S.s3 !== null) show3();
+
+  /* 4. іконки */
+  var icb = [].slice.call(document.querySelectorAll('.icb'));
+  function paint4(){ icb.forEach(function(b){ b.classList.toggle('sel', S.ic.indexOf(b.getAttribute('data-id')) !== -1); }); }
+  icb.forEach(function(b){ b.addEventListener('click', function(){ if (S.s4 !== null) return; var id = b.getAttribute('data-id'), k = S.ic.indexOf(id);
+    if (k === -1) S.ic.push(id); else S.ic.splice(k, 1); save(); paint4(); }); });
+  $('gridBtn').addEventListener('click', function(){ $('icGrid').classList.toggle('grid-on'); });
+  function show4(){
+    icb.forEach(function(b){ var id = b.getAttribute('data-id'), odd = byId(D.icons, id).odd, picked = S.ic.indexOf(id) !== -1;
+      b.classList.remove('sel'); if (picked) b.classList.add(odd ? 'y' : 'n'); else if (odd) b.classList.add('miss'); });
+    $('icWhy').innerHTML = D.icons.filter(function(x){ return x.odd; }).map(function(x){ return '<div><b>' + x.name + ':</b> ' + x.why + '</div>'; }).join('') +
+      '<div>🟩 зелена рамка — знайдено, 🟥 червона — іконка була в порядку, 🟨 жовта — пропущена «чужа».</div>';
+    $('check4').disabled = true; $('res4').textContent = '✓ Результат: ' + S.s4 + ' з 3.';
+  }
+  $('check4').addEventListener('click', function(){
+    if (!S.ic.length){ $('res4').textContent = '⚠ Познач іконки, які випадають зі стилю набору.'; return; }
+    var hit = S.ic.filter(function(id){ return byId(D.icons, id).odd; }).length, miss = S.ic.length - hit;
+    S.s4 = Math.max(0, hit - miss); save(); show4(); score();
+  });
+  if (S.s4 !== null) show4(); else paint4();
+
+  /* 5. UX-аудит */
+  var phoneBox = $('st5');
+  function mark5(id){ var v = S.au[id]; document.querySelectorAll('[data-i="' + id + '"]').forEach(function(el){ el.classList.remove('v-ok', 'v-bad'); if (v) el.classList.add(v.ok ? 'v-ok' : 'v-bad'); }); }
+  function fix5(id){ if (id !== 'photo') phoneBox.classList.add('fx-' + id); }
+  Object.keys(S.au).forEach(function(id){ fix5(id); mark5(id); });
+  function open5(id){
+    var it = byId(D.audit, id), d = S.au[id];
+    document.querySelectorAll('.insp').forEach(function(el){ el.classList.toggle('cur', el.getAttribute('data-i') === id); });
+    $('dlg').innerHTML = '<h4>🔎 ' + it.name + ': який принцип тут важливий?</h4><div class="opts">' + D.principles.map(function(p){
+      var c = d ? (p === it.ans ? ' class="r"' : (p === d.pick ? ' class="w"' : '')) : '';
+      return '<button type="button"' + c + (d ? ' disabled' : '') + '>' + p + '</button>'; }).join('') + '</div>' +
+      (d ? '<div class="fb">' + (d.ok ? '✓ Так! ' : '✗ Ні. Правильно: «' + it.ans + '». ') + it.why + '</div>' : '');
+    $('dlg').classList.add('show');
+    if (!d) $('dlg').querySelectorAll('.opts button').forEach(function(b){ b.addEventListener('click', function(){
+      S.au[id] = {pick: b.textContent, ok: b.textContent === it.ans}; save();
+      setTimeout(function(){ fix5(id); }, 300); mark5(id); open5(id); res5(); score(); }); });
+  }
+  document.querySelectorAll('.insp').forEach(function(el){ el.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); open5(el.getAttribute('data-i')); }); });
+  function res5(){ var n = Object.keys(S.au).length, ok = Object.keys(S.au).filter(function(k){ return S.au[k].ok; }).length;
+    $('res5').textContent = 'Перевірено ' + n + ' з 6' + (n ? ', правильно ' + ok : '') + (n === 6 ? ' — екран готовий до релізу! 🚀' : '. Натискай на елементи екрана (підсвічуються при наведенні).'); }
+  res5();
+
+  /* фінал */
+  function score(){
+    var n5 = Object.keys(S.au).length, ok5 = Object.keys(S.au).filter(function(k){ return S.au[k].ok; }).length;
+    var v = [S.s1, S.s2, S.s3, S.s4, n5 === 6 ? ok5 : null], mx = [7, 8, 6, 3, 6];
+    v.forEach(function(x, i){ $('sc' + (i + 1)).textContent = x === null ? '—' : x + '/' + mx[i]; });
+    var all = v.every(function(x){ return x !== null; }), sum = v.reduce(function(a, x){ return a + (x || 0); }, 0);
+    $('scT').textContent = all ? sum + '/30' : '…'; $('badge').classList.toggle('show', all && sum >= 24);
+    return {all: all, sum: sum, v: v};
+  }
+  score();
+  ['lastname', 'firstname', 'klass'].forEach(function(id){ if (S.who[id]) $(id).value = S.who[id];
+    ['input', 'change'].forEach(function(ev){ $(id).addEventListener(ev, function(){ S.who[id] = $(id).value; save(); }); }); });
+  function report(){
+    var r = score(), L = [], correct = D.stages.map(function(s){ return s.id; });
+    L.push('1. ПРОЦЕС СТВОРЕННЯ САЙТУ/ЗАСТОСУНКУ: ' + r.v[0] + '/7');
+    S.order.forEach(function(id, i){ L.push('  ' + (i + 1) + ') ' + byId(D.stages, id).name + (correct[i] === id ? ' ✓' : ' ✗')); });
+    L.push('', '2. UI ЧИ UX: ' + r.v[1] + '/8');
+    document.querySelectorAll('.uxc').forEach(function(c){ var i = c.getAttribute('data-i'); L.push('  ' + c.querySelector('p').textContent + ' → ' + (S.ux[i] || '—') + (S.ux[i] === c.getAttribute('data-a') ? ' ✓' : ' ✗')); });
+    L.push('', '3. ЛОГОТИПИ: ' + r.v[2] + '/6');
+    sel3.forEach(function(s){ L.push('  ' + s.getAttribute('data-q') + ': ' + s.value + (s.value === s.getAttribute('data-a') ? ' ✓' : ' ✗ (' + s.getAttribute('data-a') + ')')); });
+    L.push('  Логотип для іконки застосунку: ' + S.scale + (S.scale === 'B' ? ' ✓' : ' ✗ (B)'));
+    L.push('', '4. ІКОНКИ (чужі в наборі): ' + r.v[3] + '/3 · позначено: ' + S.ic.map(function(id){ return byId(D.icons, id).name; }).join(', '));
+    L.push('', '5. UX-АУДИТ ЕКРАНА: ' + r.v[4] + '/6');
+    D.audit.forEach(function(it){ var v = S.au[it.id]; L.push('  ' + it.name + ': ' + (v ? v.pick + (v.ok ? ' ✓' : ' ✗') : '—')); });
+    L.push('', 'РАЗОМ: ' + r.sum + '/30');
+    return {all: r.all, text: L.join('\n')};
+  }
+  $('sendBtn').addEventListener('click', function(){
+    var st = $('statusMsg'), r = report();
+    if (!$('lastname').value.trim() || !$('firstname').value.trim() || !$('klass').value){ st.textContent = '⚠ Вкажи прізвище, ім’я та групу.'; st.className = 'status-msg show status-err'; return; }
+    if (!r.all){ st.textContent = '⚠ Спершу пройди всі 5 станцій (на кожній натисни «Перевірити», а на п’ятій оціни всі 6 елементів екрана).'; st.className = 'status-msg show status-err'; return; }
+    if (typeof SCRIPT_URL === 'undefined' || SCRIPT_URL.indexOf('ВСТАВ_СЮДИ') !== -1){ st.textContent = '⚠ Форма тимчасово не працює. Повідом, будь ласка, вчителя.'; st.className = 'status-msg show status-err'; return; }
+    var data = new URLSearchParams({ lastname: $('lastname').value.trim(), firstname: $('firstname').value.trim(), klass: $('klass').value,
+      lesson: 'Розділ 5 — Дизайн-студія: сайти, застосунки, UI/UX, іконки, логотипи', worktype: 'Інтерактив', link: '', answer: r.text, timestamp: new Date().toLocaleString('uk-UA') });
+    st.textContent = '⏳ Надсилаю...'; st.className = 'status-msg show';
+    fetch(SCRIPT_URL, {method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: data.toString()})
+      .then(function(){ st.textContent = '✓ Результат надіслано! Учитель побачить його в таблиці.'; st.className = 'status-msg show status-ok'; })
+      .catch(function(){ st.textContent = '✕ Не вдалося надіслати. Перевір інтернет і спробуй ще раз.'; st.className = 'status-msg show status-err'; });
+  });
+  $('resetBtn').addEventListener('click', function(){ if (confirm('Почати студію спочатку? Усі відповіді на цій сторінці буде стерто.')){ try { localStorage.removeItem(KEY); } catch(e){} location.reload(); } });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<script>/*clean-url*/(function(){if(location.protocol==="file:")return;var p=location.pathname,q=p.replace(/\/index\.html$/,"/").replace(/\.html$/,"");if(q!==p)history.replaceState(null,"",q+location.search+location.hash);})();</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Практична: оформлення ділових документів · Інформатика КПЛТ</title>
+<meta name="description" content="Розділ 11, тема 3: ігрова практична «Лікарня для документів» — поля, шрифти, помилки, діловий стиль, власна заява.">
+<link rel="icon" href="../assets/logo.png">
+<link rel="stylesheet" href="../assets/style.css?v=d575c993">
+<style>
+  .od{ --coral:#ff7a59; --sun:#ffd166; --sky:#4cc9f0; --grape:#a78bfa; --lime:#3ee6b5; --ok:#12a77a; --bad:#e5484d; }
+  .od-hero{ position:relative; overflow:hidden; border-radius: 28px; padding: 28px 32px; margin-bottom: 26px; display:flex; gap: 22px; align-items:center;
+    background: radial-gradient(circle at 90% 20%, rgba(76,201,240,.35), transparent 45%), radial-gradient(circle at 10% 110%, rgba(255,122,89,.35), transparent 45%),
+      linear-gradient(120deg, rgba(255,209,102,.18), rgba(167,139,250,.22)), var(--panel);
+    border: 1px solid rgba(255,209,102,.4); }
+  .od-hero h1{ margin: 6px 0 10px; }
+  .od-hero h1 .grad{ background: linear-gradient(90deg, var(--sun), var(--coral), var(--grape)); -webkit-background-clip:text; background-clip:text; color: transparent; }
+  .od-hero .doc-bot{ width: 190px; flex-shrink: 0; animation: bob 3s ease-in-out infinite; }
+  @keyframes bob{ 50%{ transform: translateY(-8px) rotate(2deg); } }
+  .od-steps{ display:flex; gap: 8px; flex-wrap: wrap; }
+  .od-steps a{ padding: 7px 13px; border-radius: 12px; font-size: 13px; font-weight: 800; color: #10172e; }
+  .od-steps a:nth-child(1){ background: var(--sun); } .od-steps a:nth-child(2){ background: var(--coral); } .od-steps a:nth-child(3){ background: var(--sky); } .od-steps a:nth-child(4){ background: var(--grape); } .od-steps a:nth-child(5){ background: var(--lime); } .od-steps a:nth-child(6){ background: #eef2ff; }
+  .od-st{ margin-bottom: 36px; background: var(--panel); border: 1px solid var(--border); border-radius: 24px; padding: 22px 24px; position: relative; }
+  .od-st::before{ content:""; position:absolute; left: 0; top: 22px; bottom: 22px; width: 5px; border-radius: 0 5px 5px 0; background: var(--sc); }
+  #s0{ --sc: var(--sun); } #s1{ --sc: var(--sun); } #s2{ --sc: var(--coral); } #s3{ --sc: var(--sky); } #s4{ --sc: var(--grape); } #s5{ --sc: var(--lime); }
+  .od-st > h2{ display:flex; align-items:center; gap: 12px; font-family: var(--font-display); font-size: 21px; margin: 0 0 10px; }
+  .od-st > h2 i{ font-style: normal; width: 40px; height: 40px; border-radius: 12px; display:grid; place-items:center; color: #10172e; font-size: 19px; background: var(--sc); flex-shrink: 0; }
+  .od-st > h2 small{ margin-left: auto; font: 800 13px var(--font-mono); color: var(--sc); white-space: nowrap; }
+  .bubble{ display:flex; gap: 12px; align-items: flex-start; margin-bottom: 16px; }
+  .bubble .av{ width: 46px; height: 46px; flex-shrink: 0; } .bubble .av svg{ width: 100%; height: 100%; }
+  .bubble p{ margin: 0; background: #fff; color: #1d2340; border-radius: 4px 16px 16px 16px; padding: 10px 14px; font-weight: 600; font-size: 14.5px; line-height: 1.5; position: relative; }
+  .bubble p b{ color: #d9480f; }
+  .od-actions{ display:flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; align-items: center; }
+  .od-res{ font-weight: 700; font-size: 14px; }
+  .od select, .od input, .od textarea{ padding: 9px 11px; background: var(--panel-soft); border: 1px solid var(--border-strong); border-radius: 10px; color: var(--ink); font: 600 14px var(--font-body); width: 100%; }
+  .od textarea{ min-height: 86px; resize: vertical; }
+  .od select:focus, .od input:focus, .od textarea:focus{ outline: none; border-color: var(--grape); }
+  .vid{ display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+  .vid div{ background: rgba(255,255,255,.04); border: 1px solid var(--border-strong); border-radius: 14px; padding: 10px 12px; font-size: 13.5px; line-height: 1.5; }
+  .vid b{ display:block; font-size: clamp(16px, 4.4vw, 22px); overflow-wrap: anywhere; font-family: var(--font-display); color: var(--sun); }
+
+  /* аркуш А4 */
+  .a4w{ --k: 1.62px; }
+  .a4{ width: calc(210 * var(--k)); height: calc(297 * var(--k)); background: #fff; color: #111; position: relative; border-radius: 4px; box-shadow: 0 18px 40px rgba(0,0,0,.45); flex-shrink: 0; overflow: hidden; }
+  .a4 .fld{ position:absolute; inset: 0; pointer-events: none; }
+  .a4 .fld i{ position:absolute; background: repeating-linear-gradient(45deg, rgba(255,122,89,.16) 0 4px, rgba(255,122,89,.05) 4px 8px); transition: all .35s; }
+  .a4 .lbl{ position:absolute; font: 800 9px var(--font-mono); color: #d9480f; background: #fff3; transition: all .35s; white-space: nowrap; }
+  .a4 .area{ position:absolute; outline: 1px dashed #4cc9f0; transition: all .35s; overflow: hidden; }
+  .a4 .area .addr{ margin-left: 52%; } .a4 .area .ttl{ text-align:center; font-weight: 700; letter-spacing: 1px; margin: .8em 0; }
+  .a4 .area .tx{ margin: 0; } .a4 .area .foot{ display:flex; justify-content: space-between; margin-top: 1.2em; }
+  .s1grid{ display:grid; grid-template-columns: auto 1fr; gap: 26px; align-items: start; }
+  .ctl{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+  .ctl label{ display:grid; gap: 4px; font-size: 12.5px; font-weight: 800; color: var(--muted); background: var(--panel-soft); border: 1px solid var(--border); border-radius: 12px; padding: 9px 11px; }
+  .ctl label span.v{ color: var(--ink); font-family: var(--font-mono); float: right; }
+  .ctl input[type=range]{ padding: 0; accent-color: var(--coral); background: transparent; border: 0; }
+  .ctl label.y{ border-color: var(--ok); } .ctl label.n{ border-color: var(--bad); }
+  .ctl .tip{ display:none; font-weight: 600; font-size: 12px; color: #ffb4a6; } .ctl label.n .tip{ display:block; }
+
+  /* станція 2 */
+  .pat{ display:grid; grid-template-columns: auto 1fr; gap: 24px; align-items: start; }
+  .paper{ width: 430px; max-width: 100%; box-sizing: border-box; background: #fffdf7; color: #1b1b1b; border-radius: 6px; padding: 26px 26px 30px 40px; font: 14px/1.5 "Times New Roman", Times, serif;
+    box-shadow: 0 18px 40px rgba(0,0,0,.45); position: relative; background-image: linear-gradient(90deg, transparent 30px, rgba(229,72,77,.35) 30px 31px, transparent 31px); }
+  .fr{ cursor: pointer; border-radius: 5px; padding: 1px 3px; margin: 0 -3px; transition: background .15s, box-shadow .15s; }
+  .fr:hover{ background: rgba(167,139,250,.18); }
+  .fr.sel{ background: rgba(255,209,102,.45); box-shadow: 0 0 0 2px #e0a800; }
+  .fr.hit{ background: rgba(18,167,122,.18); box-shadow: 0 0 0 2px var(--ok); } .fr.false{ background: rgba(229,72,77,.15); box-shadow: 0 0 0 2px var(--bad); }
+  .fr.miss{ box-shadow: 0 0 0 2px #e0a800; background: rgba(255,209,102,.25); }
+  .p-addr{ display:block; width: 55%; } .p-from{ display:block; width: 55%; margin-top: 4px; }
+  .p-title{ display:block; text-align:center; margin: 16px 0 10px; font-family: "Comic Sans MS", "Comic Neue", cursive; color: #e5484d; font-size: 21px; font-weight: 700; }
+  .paper p{ margin: 6px 0; text-indent: 0; }
+  .p-foot{ display:flex; justify-content: space-between; margin-top: 18px; }
+  .cure{ display:grid; gap: 8px; } .cure div{ background: var(--panel-soft); border-left: 4px solid var(--ok); border-radius: 10px; padding: 9px 12px; font-size: 13.5px; line-height: 1.5; }
+  .cure div.x{ border-left-color: #e0a800; } .cure div.f{ border-left-color: var(--bad); }
+  .counter{ display:inline-flex; gap: 6px; } .counter i{ width: 18px; height: 18px; border-radius: 50%; background: rgba(255,255,255,.1); border: 2px solid var(--border-strong); }
+  .counter i.on{ background: var(--sun); border-color: var(--sun); }
+
+  /* станція 3 */
+  .tr{ display:grid; gap: 14px; }
+  .tr-it{ background: var(--panel-soft); border: 1px solid var(--border); border-radius: 18px; padding: 14px; display:grid; gap: 10px; }
+  .tr-q{ display:flex; gap: 10px; align-items:center; font-weight: 700; font-size: 15px; }
+  .tr-q span{ background: #e9ecf8; color: #1d2340; padding: 8px 13px; border-radius: 16px 16px 16px 4px; }
+  .tr-o{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .tr-o button{ text-align:left; padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,.04); border: 1px solid var(--border-strong); color: var(--ink); font: 600 13.5px/1.45 var(--font-body); cursor: pointer; white-space: pre-line; }
+  .tr-o button:hover:not(:disabled){ border-color: var(--sky); }
+  .tr-o button.r{ border-color: var(--ok); background: rgba(18,167,122,.16); } .tr-o button.w{ border-color: var(--bad); background: rgba(229,72,77,.14); }
+  .tr-fb{ font-size: 13px; color: var(--muted); font-weight: 600; }
+
+  /* станція 4 */
+  .themes{ display:flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .themes button{ padding: 9px 14px; border-radius: 12px; border: 1px solid var(--border-strong); background: rgba(255,255,255,.04); color: var(--ink); font: 700 14px var(--font-body); cursor: pointer; }
+  .themes button.on{ background: var(--grape); color: #10172e; border-color: var(--grape); }
+  .s4grid{ display:grid; grid-template-columns: 1fr auto; gap: 24px; align-items: start; }
+  .s4f{ display:grid; gap: 10px; } .s4f label{ display:grid; gap: 4px; font-size: 12.5px; font-weight: 800; color: var(--muted); }
+  .s4f .row2{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .s4f small{ font-weight: 600; color: #8f9abf; }
+  .rules{ display:grid; gap: 6px; margin-top: 6px; } .rules div{ font-size: 13.5px; font-weight: 700; padding: 7px 11px; border-radius: 10px; background: rgba(255,255,255,.04); border-left: 4px solid var(--bad); }
+  .rules div.y{ border-left-color: var(--ok); }
+  .a4.mine{ --k: 1.55px; font-family: "Times New Roman", Times, serif; }
+  .a4.mine .in{ position:absolute; left: calc(30 * var(--k)); right: calc(10 * var(--k)); top: calc(20 * var(--k)); bottom: calc(20 * var(--k)); font-size: calc(14 * .3528 * var(--k)); line-height: 1.35; }
+  .a4.mine .addr{ margin-left: 50%; white-space: pre-line; } .a4.mine .ttl{ text-align:center; font-weight: 700; margin: 1.6em 0 1em; letter-spacing: 1px; }
+  .a4.mine .tx{ text-indent: calc(10 * var(--k)); text-align: justify; white-space: pre-line; } .a4.mine .foot{ display:flex; justify-content: space-between; margin-top: 2em; }
+  .a4.mine .ph{ color: #a2a9bf; }
+
+  /* фінал */
+  .score-row{ display:grid; grid-template-columns: repeat(4, 1fr) 1.2fr; gap: 10px; margin-bottom: 16px; }
+  .sc{ background: var(--panel-soft); border: 1px solid var(--border); border-radius: 16px; padding: 12px; }
+  .sc small{ display:block; color: var(--muted); font-weight: 700; font-size: 12px; } .sc b{ font: 800 22px var(--font-display); }
+  .sc.total{ background: linear-gradient(120deg, rgba(255,209,102,.25), rgba(255,122,89,.25), rgba(167,139,250,.3)); border-color: rgba(255,209,102,.5); }
+  .badge{ display:none; align-items:center; gap: 12px; padding: 12px 16px; border-radius: 16px; background: rgba(62,230,181,.1); border: 1px solid rgba(62,230,181,.45); margin-bottom: 16px; font-weight: 700; }
+  .badge.show{ display:flex; } .badge span{ font-size: 32px; }
+  .who{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .who label{ display:grid; gap: 4px; font-size: 12px; font-weight: 800; color: var(--muted); }
+  @media (max-width: 1000px){ .s1grid, .pat, .s4grid{ grid-template-columns: minmax(0, 1fr); justify-items: center; } .s1grid > div:last-child, .pat > div:last-child, .s4grid > div:first-child{ width: 100%; }
+    .tr-o{ grid-template-columns: 1fr; } .vid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } .score-row{ grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 640px){ .od-hero{ padding: 22px 18px; } .od-hero .doc-bot{ display:none; } .od-st{ padding: 18px 14px; } .ctl{ grid-template-columns: 1fr; }
+    .a4w{ --k: 1.45px; } .a4.mine{ --k: 1.45px; } .who, .s4f .row2{ grid-template-columns: 1fr; } .od-st > h2 small{ display:none; } .score-row{ grid-template-columns: 1fr 1fr; }
+    .paper{ padding: 18px 14px 22px 36px; font-size: 13px; } }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="logo" href="../">
+      <img src="../assets/logo.png" alt="Логотип КПЛТ">
+      <span class="brand"><b>Інформатика</b><small>КПЛТ</small></span>
+    </a>
+    <div class="links">
+      <a href="../">Головна</a>
+      <a href="../#rozdily" class="active">Розділи</a>
+      <a href="../pidruchnyk">Підручник</a>
+      <a href="../submit">Здати роботу</a>
+    </div>
+  </div>
+</nav>
+<main class="wrap od">
+  <section class="od-hero">
+    <div>
+      <div class="eyebrow">Розділ 11 · Тема 3 · Практична робота</div>
+      <h1>Лікарня для <span class="grad">документів</span></h1>
+      <p class="lead" style="margin-bottom:14px">Знайомся: <b>Доктор Бланк</b> 🩺. Він лікує документи від хаосу, сленгу й смайликів. Пройди 4 станції — і навчишся оформлювати ділові папери за стандартом (ДСТУ 4163:2020). Наприкінці надішли роботу вчителю.</p>
+      <nav class="od-steps"><a href="#s0">Шпаргалка</a><a href="#s1">1 · Аркуш</a><a href="#s2">2 · 7 помилок</a><a href="#s3">3 · Перекладач</a><a href="#s4">4 · Моя заява</a><a href="#s5">Результат</a></nav>
+    </div>
+    <svg viewBox="0 0 200 220" class="doc-bot" aria-hidden="true">
+  <ellipse cx="100" cy="208" rx="62" ry="8" fill="rgba(0,0,0,.25)"/>
+  <path d="M48 18 H128 L158 48 V190 Q158 198 150 198 H48 Q40 198 40 190 V26 Q40 18 48 18Z" fill="#fff"/>
+  <path d="M128 18 V40 Q128 48 136 48 H158Z" fill="#dfe6ff"/>
+  <rect x="58" y="120" width="82" height="6" rx="3" fill="#dfe6ff"/><rect x="58" y="134" width="70" height="6" rx="3" fill="#dfe6ff"/><rect x="58" y="148" width="78" height="6" rx="3" fill="#dfe6ff"/>
+  <circle cx="78" cy="78" r="13" fill="#10172e"/><circle cx="120" cy="78" r="13" fill="#10172e"/><circle cx="82" cy="74" r="4.5" fill="#fff"/><circle cx="124" cy="74" r="4.5" fill="#fff"/>
+  <path d="M84 100 Q99 112 114 100" fill="none" stroke="#10172e" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="64" cy="98" r="7" fill="#ff7a59" opacity=".45"/><circle cx="134" cy="98" r="7" fill="#ff7a59" opacity=".45"/>
+  <path d="M30 70 Q24 128 66 150 Q94 164 100 186" fill="none" stroke="#4cc9f0" stroke-width="6" stroke-linecap="round"/>
+  <path d="M170 70 Q176 120 150 140" fill="none" stroke="#4cc9f0" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="100" cy="190" r="12" fill="#a78bfa" stroke="#fff" stroke-width="4"/>
+  <rect x="58" y="4" width="60" height="18" rx="9" fill="#ff7a59"/><path d="M84 8 h8 v4 h4 v6 h-4 v4 h-8 v-4 h-4 v-6 h4z" fill="#fff" transform="translate(0 -2) scale(1 .9)"/>
+</svg>
+  </section>
+
+  <section class="od-st" id="s0">
+    <h2><i>📌</i> Шпаргалка Доктора Бланка</h2>
+    <div class="bubble"><div class="av"><svg viewBox="0 0 200 220"  aria-hidden="true">
+  <ellipse cx="100" cy="208" rx="62" ry="8" fill="rgba(0,0,0,.25)"/>
+  <path d="M48 18 H128 L158 48 V190 Q158 198 150 198 H48 Q40 198 40 190 V26 Q40 18 48 18Z" fill="#fff"/>
+  <path d="M128 18 V40 Q128 48 136 48 H158Z" fill="#dfe6ff"/>
+  <rect x="58" y="120" width="82" height="6" rx="3" fill="#dfe6ff"/><rect x="58" y="134" width="70" height="6" rx="3" fill="#dfe6ff"/><rect x="58" y="148" width="78" height="6" rx="3" fill="#dfe6ff"/>
+  <circle cx="78" cy="78" r="13" fill="#10172e"/><circle cx="120" cy="78" r="13" fill="#10172e"/><circle cx="82" cy="74" r="4.5" fill="#fff"/><circle cx="124" cy="74" r="4.5" fill="#fff"/>
+  <path d="M84 100 Q99 112 114 100" fill="none" stroke="#10172e" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="64" cy="98" r="7" fill="#ff7a59" opacity=".45"/><circle cx="134" cy="98" r="7" fill="#ff7a59" opacity=".45"/>
+  <path d="M30 70 Q24 128 66 150 Q94 164 100 186" fill="none" stroke="#4cc9f0" stroke-width="6" stroke-linecap="round"/>
+  <path d="M170 70 Q176 120 150 140" fill="none" stroke="#4cc9f0" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="100" cy="190" r="12" fill="#a78bfa" stroke="#fff" stroke-width="4"/>
+  <rect x="58" y="4" width="60" height="18" rx="9" fill="#ff7a59"/><path d="M84 8 h8 v4 h4 v6 h-4 v4 h-8 v-4 h-4 v-6 h4z" fill="#fff" transform="translate(0 -2) scale(1 .9)"/>
+</svg></div><p>Привіт! Я — <b>Доктор Бланк</b>. Документи хворіють, коли їх пишуть «як вийде». Ось мої головні правила — тримай перед очима на всіх станціях.</p></div>
+    <div class="vid">
+      <div><b>30 · 10</b>мм — ліве і праве поля</div>
+      <div><b>20 · 20</b>мм — верхнє і нижнє поля</div>
+      <div><b>12–14</b>пт, Times New Roman, інтервал 1–1,5</div>
+      <div><b>10 мм</b>абзацний відступ, текст по ширині</div>
+      <div><b>15.11.2026</b>дата цифрами: ДД.ММ.РРРР</div>
+      <div><b>Ірина КОВАЛЬ</b>у підписі — ім’я та ПРІЗВИЩЕ великими</div>
+      <div><b>ЗАЯВА</b>назва виду документа — по центру, без крапки</div>
+      <div><b>«Прошу…»</b>заява починається з прохання, без «Привіт»</div>
+    </div>
+  </section>
+
+  <section class="od-st" id="s1">
+    <h2><i>📐</i> Станція 1. Налаштуй аркуш <small>9 балів</small></h2>
+    <div class="bubble"><div class="av"><svg viewBox="0 0 200 220"  aria-hidden="true">
+  <ellipse cx="100" cy="208" rx="62" ry="8" fill="rgba(0,0,0,.25)"/>
+  <path d="M48 18 H128 L158 48 V190 Q158 198 150 198 H48 Q40 198 40 190 V26 Q40 18 48 18Z" fill="#fff"/>
+  <path d="M128 18 V40 Q128 48 136 48 H158Z" fill="#dfe6ff"/>
+  <rect x="58" y="120" width="82" height="6" rx="3" fill="#dfe6ff"/><rect x="58" y="134" width="70" height="6" rx="3" fill="#dfe6ff"/><rect x="58" y="148" width="78" height="6" rx="3" fill="#dfe6ff"/>
+  <circle cx="78" cy="78" r="13" fill="#10172e"/><circle cx="120" cy="78" r="13" fill="#10172e"/><circle cx="82" cy="74" r="4.5" fill="#fff"/><circle cx="124" cy="74" r="4.5" fill="#fff"/>
+  <path d="M84 100 Q99 112 114 100" fill="none" stroke="#10172e" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="64" cy="98" r="7" fill="#ff7a59" opacity=".45"/><circle cx="134" cy="98" r="7" fill="#ff7a59" opacity=".45"/>
+  <path d="M30 70 Q24 128 66 150 Q94 164 100 186" fill="none" stroke="#4cc9f0" stroke-width="6" stroke-linecap="round"/>
+  <path d="M170 70 Q176 120 150 140" fill="none" stroke="#4cc9f0" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="100" cy="190" r="12" fill="#a78bfa" stroke="#fff" stroke-width="4"/>
+  <rect x="58" y="4" width="60" height="18" rx="9" fill="#ff7a59"/><path d="M84 8 h8 v4 h4 v6 h-4 v4 h-8 v-4 h-4 v-6 h4z" fill="#fff" transform="translate(0 -2) scale(1 .9)"/>
+</svg></div><p>Хтось налаштував аркуш «на око»: поля криві, шрифт Comic Sans, інтервал як у вірші. <b>Покрути повзунки й обери параметри</b>, щоб аркуш став за стандартом. Зміни видно одразу!</p></div>
+    <div class="s1grid">
+      <div class="a4w"><div class="a4"><div class="fld" id="fld1"><i></i><i></i><i></i><i></i><span class="lbl"></span><span class="lbl"></span><span class="lbl"></span><span class="lbl"></span></div>
+        <div class="area" id="area1"><div class="addr">Директорові ліцею<br>Олені МАРЧЕНКО<br>учня групи 202<br>Петра Сидоренка</div><div class="ttl">ЗАЯВА</div>
+          <p class="tx">Прошу дозволити мені взяти участь у турнірі ліцею з кіберспорту, що відбудеться 05.12.2026, та звільнити мене від занять у цей день з 12:00 до 16:00.</p>
+          <p class="tx">Додаток: лист-запрошення від організаторів на 1 арк. в 1 прим.</p>
+          <div class="foot"><span>17.11.2026</span><i>підпис</i><span>Петро СИДОРЕНКО</span></div></div></div></div>
+      <div>
+        <div class="ctl"><label>Ліве поле <span class="v" data-v="ml"></span><input type="range" data-p="ml" min="0" max="40" step="5"><span class="tip">💡 Ліве поле — 30 мм: тут документ підшивають у справу.</span></label><label>Праве поле <span class="v" data-v="mr"></span><input type="range" data-p="mr" min="0" max="30" step="5"><span class="tip">💡 Праве поле — не менше 10 мм.</span></label><label>Верхнє поле <span class="v" data-v="mt"></span><input type="range" data-p="mt" min="0" max="40" step="5"><span class="tip">💡 Верхнє поле — не менше 20 мм.</span></label><label>Нижнє поле <span class="v" data-v="mb"></span><input type="range" data-p="mb" min="0" max="40" step="5"><span class="tip">💡 Нижнє поле — не менше 20 мм (і не «безодня» на півсторінки).</span></label><label>Шрифт<select data-p="ff"><option>Comic Sans MS</option><option>Times New Roman</option><option>Impact</option><option>Courier New</option></select><span class="tip">💡 Для документів — Times New Roman. Comic Sans лишимо для листівок.</span></label><label>Розмір шрифту<select data-p="fs"><option>8</option><option>10</option><option>12</option><option>14</option><option>18</option><option>24</option></select><span class="tip">💡 Розмір шрифту — 12–14 пт.</span></label><label>Міжрядковий інтервал<select data-p="lh"><option>1</option><option>1.5</option><option>2</option><option>3</option></select><span class="tip">💡 Інтервал — 1–1,5. Подвійний робить документ «дірявим».</span></label><label>Абзацний відступ<select data-p="ti"><option>0</option><option>5</option><option>10</option><option>25</option></select><span class="tip">💡 Абзацний відступ — 10 мм (1 см).</span></label><label>Вирівнювання тексту<select data-p="ta"><option>по центру</option><option>по лівому краю</option><option>по ширині</option><option>по правому краю</option></select><span class="tip">💡 Основний текст вирівнюють по ширині — рівні краї з обох боків.</span></label></div>
+        <div class="od-actions"><button type="button" class="btn" id="check1">✓ Перевірити аркуш</button><span class="od-res" id="live1"></span></div>
+        <div class="od-res" id="res1" style="margin-top:8px"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="od-st" id="s2">
+    <h2><i>🔍</i> Станція 2. Пацієнт: заява Петра <small>7 балів</small></h2>
+    <div class="bubble"><div class="av"><svg viewBox="0 0 200 220"  aria-hidden="true">
+  <ellipse cx="100" cy="208" rx="62" ry="8" fill="rgba(0,0,0,.25)"/>
+  <path d="M48 18 H128 L158 48 V190 Q158 198 150 198 H48 Q40 198 40 190 V26 Q40 18 48 18Z" fill="#fff"/>
+  <path d="M128 18 V40 Q128 48 136 48 H158Z" fill="#dfe6ff"/>
+  <rect x="58" y="120" width="82" height="6" rx="3" fill="#dfe6ff"/><rect x="58" y="134" width="70" height="6" rx="3" fill="#dfe6ff"/><rect x="58" y="148" width="78" height="6" rx="3" fill="#dfe6ff"/>
+  <circle cx="78" cy="78" r="13" fill="#10172e"/><circle cx="120" cy="78" r="13" fill="#10172e"/><circle cx="82" cy="74" r="4.5" fill="#fff"/><circle cx="124" cy="74" r="4.5" fill="#fff"/>
+  <path d="M84 100 Q99 112 114 100" fill="none" stroke="#10172e" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="64" cy="98" r="7" fill="#ff7a59" opacity=".45"/><circle cx="134" cy="98" r="7" fill="#ff7a59" opacity=".45"/>
+  <path d="M30 70 Q24 128 66 150 Q94 164 100 186" fill="none" stroke="#4cc9f0" stroke-width="6" stroke-linecap="round"/>
+  <path d="M170 70 Q176 120 150 140" fill="none" stroke="#4cc9f0" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="100" cy="190" r="12" fill="#a78bfa" stroke="#fff" stroke-width="4"/>
+  <rect x="58" y="4" width="60" height="18" rx="9" fill="#ff7a59"/><path d="M84 8 h8 v4 h4 v6 h-4 v4 h-8 v-4 h-4 v-6 h4z" fill="#fff" transform="translate(0 -2) scale(1 .9)"/>
+</svg></div><p>До мене привезли заяву Петра. У ній <b>7 помилок</b>, але не все погане! <b>Натискай на підозрілі фрагменти</b>, а потім — «Поставити діагноз». Обережно: за помилкове позначення знімаю бал.</p></div>
+    <div class="pat">
+      <div class="paper">
+        <span class="fr p-addr" data-f="addr">Директорові ліцею<br>Олені МАРЧЕНКО</span>
+        <span class="fr p-from" data-f="from" style="margin-left:45%">учня групи 202<br>Петра Сидоренка</span>
+        <span class="fr p-title" data-f="title">ЗаЯвА!!! 🙂</span>
+        <p><span class="fr" data-f="hi">Привіт, Олено Вікторівно!</span></p>
+        <p><span class="fr" data-f="ask">Прошу дозволити мені взяти участь у турнірі ліцею з кіберспорту 05.12.2026,</span> <span class="fr" data-f="slang">бо я топ гравець і всіх рознесу 💪</span></p>
+        <p><span class="fr" data-f="att">Додаток: лист-запрошення на 1 арк. в 1 прим.</span></p>
+        <p><span class="fr" data-f="ps">P.S. Відпишіть швидше, плз.</span></p>
+        <div class="p-foot"><span class="fr" data-f="date">15/11/26</span><span class="fr" data-f="sign">Петя (підпис)</span></div>
+      </div>
+      <div>
+        <p style="margin:0 0 8px;font-weight:700">Позначено: <span class="counter" id="cnt2"></span></p>
+        <div class="od-actions" style="margin-top:0"><button type="button" class="btn" id="check2">🩺 Поставити діагноз</button><span class="od-res" id="res2"></span></div>
+        <div class="cure" id="cure" style="margin-top:14px"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="od-st" id="s3">
+    <h2><i>🤖</i> Станція 3. Перекладач «Розмовна → Ділова» <small>6 балів</small></h2>
+    <div class="bubble"><div class="av"><svg viewBox="0 0 200 220"  aria-hidden="true">
+  <ellipse cx="100" cy="208" rx="62" ry="8" fill="rgba(0,0,0,.25)"/>
+  <path d="M48 18 H128 L158 48 V190 Q158 198 150 198 H48 Q40 198 40 190 V26 Q40 18 48 18Z" fill="#fff"/>
+  <path d="M128 18 V40 Q128 48 136 48 H158Z" fill="#dfe6ff"/>
+  <rect x="58" y="120" width="82" height="6" rx="3" fill="#dfe6ff"/><rect x="58" y="134" width="70" height="6" rx="3" fill="#dfe6ff"/><rect x="58" y="148" width="78" height="6" rx="3" fill="#dfe6ff"/>
+  <circle cx="78" cy="78" r="13" fill="#10172e"/><circle cx="120" cy="78" r="13" fill="#10172e"/><circle cx="82" cy="74" r="4.5" fill="#fff"/><circle cx="124" cy="74" r="4.5" fill="#fff"/>
+  <path d="M84 100 Q99 112 114 100" fill="none" stroke="#10172e" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="64" cy="98" r="7" fill="#ff7a59" opacity=".45"/><circle cx="134" cy="98" r="7" fill="#ff7a59" opacity=".45"/>
+  <path d="M30 70 Q24 128 66 150 Q94 164 100 186" fill="none" stroke="#4cc9f0" stroke-width="6" stroke-linecap="round"/>
+  <path d="M170 70 Q176 120 150 140" fill="none" stroke="#4cc9f0" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="100" cy="190" r="12" fill="#a78bfa" stroke="#fff" stroke-width="4"/>
+  <rect x="58" y="4" width="60" height="18" rx="9" fill="#ff7a59"/><path d="M84 8 h8 v4 h4 v6 h-4 v4 h-8 v-4 h-4 v-6 h4z" fill="#fff" transform="translate(0 -2) scale(1 .9)"/>
+</svg></div><p>Мій робот-перекладач зламався 🤖. Допоможи: для кожної розмовної фрази <b>обери нормальний діловий варіант</b>. Пастка: «канцелярит» з купою пишних слів — теж погано!</p></div>
+    <div class="tr"><div class="tr-it" data-i="0" data-ok="Повідомляю, що 18.11.2026 прибуду на заняття о 09:30 через візит до лікаря."><div class="tr-q">💬 <span>Сорі, я завтра трохи запізнюсь 🙈</span></div><div class="tr-o"><button type="button">Повідомляю, що 18.11.2026 прибуду на заняття о 09:30 через візит до лікаря.</button><button type="button">Вибачайте, завтра буду, як вийде 😅</button><button type="button">Доводжу до Вашого найвищого відома, що завтрашнього дня моє прибуття відбудеться у невизначений момент часу.</button></div><div class="tr-fb"></div></div><div class="tr-it" data-i="1" data-ok="Просимо надіслати розклад занять на 24–28.11.2026."><div class="tr-q">💬 <span>Скиньте, плз, розклад на наступний тиждень</span></div><div class="tr-o"><button type="button">Киньте розклад, бо я не в курсі</button><button type="button">Просимо надіслати розклад занять на 24–28.11.2026.</button><button type="button">Вимагаємо негайно надіслати все, що стосується тижня!!!</button></div><div class="tr-fb"></div></div><div class="tr-it" data-i="2" data-ok="Прошу надати мені щорічну основну відпустку з 01.12.2026 тривалістю 14 календарних днів."><div class="tr-q">💬 <span>Хочу у відпустку з понеділка, ок?</span></div><div class="tr-o"><button type="button">Чи не будете Ви такі ласкаві, якщо Вам не важко, коли-небудь відпустити мене кудись?</button><button type="button">Йду у відпустку з понеділка, всім па!</button><button type="button">Прошу надати мені щорічну основну відпустку з 01.12.2026 тривалістю 14 календарних днів.</button></div><div class="tr-fb"></div></div><div class="tr-it" data-i="3" data-ok="Щиро дякуємо за допомогу в організації заходу."><div class="tr-q">💬 <span>Пасиб за допомогу, ви топ!</span></div><div class="tr-o"><button type="button">Респект вам і уважуха!</button><button type="button">Висловлюємо безмежну, неосяжну й неймовірну вдячність усім і кожному!</button><button type="button">Щиро дякуємо за допомогу в організації заходу.</button></div><div class="tr-fb"></div></div><div class="tr-it" data-i="4" data-ok="З повагою
+Майстер виробничого навчання   Ольга ТКАЧ"><div class="tr-q">💬 <span>Ну, короче, в мене все. Бувай!</span></div><div class="tr-o"><button type="button">З повагою
+Майстер виробничого навчання   Ольга ТКАЧ</button><button type="button">Кінець.</button><button type="button">Ну все, на зв’язку 👋</button></div><div class="tr-fb"></div></div><div class="tr-it" data-i="5" data-ok="Просимо надати відповідь до 20.11.2026."><div class="tr-q">💬 <span>Відповідайте швидше, бо горить!</span></div><div class="tr-o"><button type="button">Відповідайте, коли буде настрій.</button><button type="button">Просимо надати відповідь до 20.11.2026.</button><button type="button">Терміново!!! Відповідь потрібна ще вчора!!!</button></div><div class="tr-fb"></div></div></div>
+    <div class="od-actions"><span class="od-res" id="res3"></span></div>
+  </section>
+
+  <section class="od-st" id="s4">
+    <h2><i>✍️</i> Станція 4. Моя заява <small>4 бали</small></h2>
+    <div class="bubble"><div class="av"><svg viewBox="0 0 200 220"  aria-hidden="true">
+  <ellipse cx="100" cy="208" rx="62" ry="8" fill="rgba(0,0,0,.25)"/>
+  <path d="M48 18 H128 L158 48 V190 Q158 198 150 198 H48 Q40 198 40 190 V26 Q40 18 48 18Z" fill="#fff"/>
+  <path d="M128 18 V40 Q128 48 136 48 H158Z" fill="#dfe6ff"/>
+  <rect x="58" y="120" width="82" height="6" rx="3" fill="#dfe6ff"/><rect x="58" y="134" width="70" height="6" rx="3" fill="#dfe6ff"/><rect x="58" y="148" width="78" height="6" rx="3" fill="#dfe6ff"/>
+  <circle cx="78" cy="78" r="13" fill="#10172e"/><circle cx="120" cy="78" r="13" fill="#10172e"/><circle cx="82" cy="74" r="4.5" fill="#fff"/><circle cx="124" cy="74" r="4.5" fill="#fff"/>
+  <path d="M84 100 Q99 112 114 100" fill="none" stroke="#10172e" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="64" cy="98" r="7" fill="#ff7a59" opacity=".45"/><circle cx="134" cy="98" r="7" fill="#ff7a59" opacity=".45"/>
+  <path d="M30 70 Q24 128 66 150 Q94 164 100 186" fill="none" stroke="#4cc9f0" stroke-width="6" stroke-linecap="round"/>
+  <path d="M170 70 Q176 120 150 140" fill="none" stroke="#4cc9f0" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="100" cy="190" r="12" fill="#a78bfa" stroke="#fff" stroke-width="4"/>
+  <rect x="58" y="4" width="60" height="18" rx="9" fill="#ff7a59"/><path d="M84 8 h8 v4 h4 v6 h-4 v4 h-8 v-4 h-4 v-6 h4z" fill="#fff" transform="translate(0 -2) scale(1 .9)"/>
+</svg></div><p>Фінал! Обери тему й <b>напиши власну заяву</b>. Праворуч вона одразу з’являється на аркуші за стандартом, а знизу — мій чек-лист правил.</p></div>
+    <div class="themes"><button type="button" data-t="cyber">🎮 Участь у турнірі з кіберспорту</button><button type="button" data-t="latte">☕ Майстер-клас з латте-арту</button><button type="button" data-t="depo">🚆 Екскурсія до локомотивного депо</button></div>
+    <div class="s4grid">
+      <div class="s4f">
+        <div class="row2">
+          <label>Кому <small>(посада, Ім’я ПРІЗВИЩЕ — давальний відмінок)</small><textarea id="f_to" rows="2" style="min-height:60px" placeholder="Директорові ліцею&#10;Олені МАРЧЕНКО"></textarea></label>
+          <label>Від кого <small>(група, ім’я та прізвище — родовий відмінок)</small><textarea id="f_from" rows="2" style="min-height:60px" placeholder="учня групи 202&#10;Петра Сидоренка"></textarea></label>
+        </div>
+        <label>Текст заяви <small>(почни з «Прошу…», вкажи дату події)</small><textarea id="f_text"></textarea></label>
+        <div class="row2"><label>Дата<input id="f_date" placeholder="17.11.2026"></label><label>Підпис <small>(Ім’я ПРІЗВИЩЕ)</small><input id="f_sign" placeholder="Петро СИДОРЕНКО"></label></div>
+        <div class="rules" id="rules4"></div>
+        <button type="button" class="btn btn-ghost btn-sm" id="fill4" style="justify-self:start">✨ Підставити приклад у порожні поля</button>
+      </div>
+      <div class="a4 mine"><div class="in" id="mine"></div></div>
+    </div>
+  </section>
+
+  <section class="od-st" id="s5">
+    <h2><i>🏆</i> Результат і надсилання</h2>
+    <div class="score-row">
+      <div class="sc"><small>1 · Аркуш</small><b id="sc1">—</b></div>
+      <div class="sc"><small>2 · 7 помилок</small><b id="sc2">—</b></div>
+      <div class="sc"><small>3 · Перекладач</small><b id="sc3">—</b></div>
+      <div class="sc"><small>4 · Моя заява</small><b id="sc4">—</b></div>
+      <div class="sc total"><small>Разом</small><b id="scT">…</b></div>
+    </div>
+    <div class="badge" id="badge"><span>🩺</span>Звання «Лікар документів» — Доктор Бланк бере тебе в асистенти!</div>
+    <div class="who">
+      <label>Прізвище<input id="lastname" placeholder="Шевченко"></label>
+      <label>Ім’я<input id="firstname" placeholder="Тарас"></label>
+      <label>Група<select id="klass"><option value="">— обери —</option><option>102</option><option>105</option><option>109</option><option>110</option><option>201</option><option>202</option><option>205</option><option>209</option><option>210</option><option>301</option><option>310</option></select></label>
+    </div>
+    <div class="od-actions"><button type="button" class="btn" id="sendBtn">📨 Надіслати вчителю</button><button type="button" class="btn btn-ghost btn-sm" id="resetBtn">↺ Почати спочатку</button></div>
+    <div class="status-msg" id="statusMsg"></div>
+  </section>
+  <a class="btn btn-ghost" href="./#tema-03">← до теми</a>
+</main>
+<footer class="site-footer">
+  <div class="sf-inner">
+    <div class="sf-brand"><img src="../assets/logo.png" alt=""><div><b>Інформатика</b><small>Київський професійний ліцей транспорту</small></div></div>
+    <div class="sf-teacher">Викладач інформатики — <b>Шутько Максим Олександрович</b></div>
+    <div class="sf-links"><a href="../#rozdily">Розділи</a><a href="../submit">Здати роботу</a><a href="../qr-quest/">QR-квест</a><a href="https://kplt.in.ua/" target="_blank" rel="noopener">Сайт ліцею ↗</a></div>
+    <div class="sf-credits">Ілюстрації: <a href="https://storyset.com/" target="_blank" rel="noopener">Storyset</a>, <a href="https://undraw.co/" target="_blank" rel="noopener">unDraw</a></div>
+  </div>
+</footer>
+<script src="../assets/config.js"></script>
+<script>
+(function(){
+  var D = {"sheet": [{"id": "ml", "name": "Ліве поле", "type": "range", "min": 0, "max": 40, "step": 5, "unit": "мм", "start": 5, "ok": [30], "tip": "Ліве поле — 30 мм: тут документ підшивають у справу."}, {"id": "mr", "name": "Праве поле", "type": "range", "min": 0, "max": 30, "step": 5, "unit": "мм", "start": 25, "ok": [10, 15], "tip": "Праве поле — не менше 10 мм."}, {"id": "mt", "name": "Верхнє поле", "type": "range", "min": 0, "max": 40, "step": 5, "unit": "мм", "start": 5, "ok": [20, 25], "tip": "Верхнє поле — не менше 20 мм."}, {"id": "mb", "name": "Нижнє поле", "type": "range", "min": 0, "max": 40, "step": 5, "unit": "мм", "start": 40, "ok": [20, 25], "tip": "Нижнє поле — не менше 20 мм (і не «безодня» на півсторінки)."}, {"id": "ff", "name": "Шрифт", "type": "select", "opts": ["Comic Sans MS", "Times New Roman", "Impact", "Courier New"], "start": "Comic Sans MS", "ok": ["Times New Roman"], "tip": "Для документів — Times New Roman. Comic Sans лишимо для листівок."}, {"id": "fs", "name": "Розмір шрифту", "type": "select", "opts": ["8", "10", "12", "14", "18", "24"], "start": "24", "ok": ["12", "14"], "tip": "Розмір шрифту — 12–14 пт."}, {"id": "lh", "name": "Міжрядковий інтервал", "type": "select", "opts": ["1", "1.5", "2", "3"], "start": "3", "ok": ["1", "1.5"], "tip": "Інтервал — 1–1,5. Подвійний робить документ «дірявим»."}, {"id": "ti", "name": "Абзацний відступ", "type": "select", "opts": ["0", "5", "10", "25"], "start": "0", "ok": ["10"], "tip": "Абзацний відступ — 10 мм (1 см)."}, {"id": "ta", "name": "Вирівнювання тексту", "type": "select", "opts": ["по центру", "по лівому краю", "по ширині", "по правому краю"], "start": "по центру", "ok": ["по ширині"], "tip": "Основний текст вирівнюють по ширині — рівні краї з обох боків."}], "frags": {"addr": [true, "Адресат (кому) пишуть у правому верхньому куті, а не зліва."], "from": [false, ""], "title": [true, "Назва виду документа — ЗАЯВА: великими літерами, по центру, без знаків оклику, смайлів і кольорових шрифтів."], "hi": [true, "У заяві не вітаються і не звертаються — одразу пишуть суть: «Прошу…»."], "ask": [false, ""], "slang": [true, "Сленг і емоції («топ гравець», «рознесу», 💪) — не для документів. Офіційно-діловий стиль: точно, стримано, без оцінок."], "att": [false, ""], "ps": [true, "«P.S.» і «плз» у заяві не пишуть. Якщо потрібна відповідь до певної дати — так і зазнач у тексті."], "date": [true, "Дата — цифрами у форматі ДД.ММ.РРРР: 15.11.2026."], "sign": [true, "Підпис: особистий підпис + Власне ім’я ПРІЗВИЩЕ: Петро СИДОРЕНКО. Без зменшувальних «Петя»."]}, "themes": [{"id": "cyber", "name": "🎮 Участь у турнірі з кіберспорту", "hint": "Прошу дозволити мені взяти участь у турнірі ліцею з кіберспорту, що відбудеться 05.12.2026."}, {"id": "latte", "name": "☕ Майстер-клас з латте-арту", "hint": "Прошу зарахувати мене до учасників майстер-класу з латте-арту 10.12.2026."}, {"id": "depo", "name": "🚆 Екскурсія до локомотивного депо", "hint": "Прошу дозволити мені відвідати екскурсію до локомотивного депо 12.12.2026."}]}, KEY = 'prakt-oformlennia-11-3';
+  var $ = function(id){ return document.getElementById(id); };
+  var S = {p: {}, s1: null, sel: [], s2: null, tr: {}, th: 'cyber', f: {}, who: {}};
+  D.sheet.forEach(function(x){ S.p[x.id] = String(x.start); });
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+  try { var st = JSON.parse(localStorage.getItem(KEY)); if (st && st.p) S = Object.assign(S, st); } catch(e){}
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  /* ---------- 1. аркуш ---------- */
+  var ALIGN = {'по центру': 'center', 'по лівому краю': 'left', 'по ширині': 'justify', 'по правому краю': 'right'};
+  function okP(x){ return x.ok.map(String).indexOf(String(S.p[x.id])) !== -1; }
+  function draw1(){
+    var p = S.p, a = $('area1'), k = 'var(--k)';
+    D.sheet.forEach(function(x){ var el = document.querySelector('[data-p="' + x.id + '"]'); if (el.value !== String(p[x.id])) el.value = p[x.id];
+      var v = document.querySelector('[data-v="' + x.id + '"]'); if (v) v.textContent = p[x.id] + ' ' + (x.unit || ''); });
+    a.style.left = 'calc(' + p.ml + ' * ' + k + ')'; a.style.right = 'calc(' + p.mr + ' * ' + k + ')';
+    a.style.top = 'calc(' + p.mt + ' * ' + k + ')'; a.style.bottom = 'calc(' + p.mb + ' * ' + k + ')';
+    a.style.fontFamily = '"' + p.ff + '", serif'; a.style.fontSize = 'calc(' + p.fs + ' * .3528 * ' + k + ')'; a.style.lineHeight = p.lh * 1.15;
+    a.querySelectorAll('.tx').forEach(function(t){ t.style.textIndent = 'calc(' + p.ti + ' * ' + k + ')'; t.style.textAlign = ALIGN[p.ta]; });
+    var f = $('fld1').children;
+    f[0].style.cssText = 'left:0;top:0;bottom:0;width:calc(' + p.ml + ' * ' + k + ')'; f[1].style.cssText = 'right:0;top:0;bottom:0;width:calc(' + p.mr + ' * ' + k + ')';
+    f[2].style.cssText = 'left:0;right:0;top:0;height:calc(' + p.mt + ' * ' + k + ')'; f[3].style.cssText = 'left:0;right:0;bottom:0;height:calc(' + p.mb + ' * ' + k + ')';
+    var L = $('fld1').querySelectorAll('.lbl');
+    L[0].style.cssText = 'left:2px;top:50%;'; L[0].textContent = p.ml + ' мм'; L[1].style.cssText = 'right:2px;top:46%;'; L[1].textContent = p.mr + ' мм';
+    L[2].style.cssText = 'left:44%;top:2px;'; L[2].textContent = p.mt + ' мм'; L[3].style.cssText = 'left:44%;bottom:2px;'; L[3].textContent = p.mb + ' мм';
+    var n = D.sheet.filter(okP).length; $('live1').textContent = n + ' з 9 параметрів за стандартом';
+    if (S.s1 !== null) mark1();
+  }
+  function mark1(){ D.sheet.forEach(function(x){ var l = document.querySelector('[data-p="' + x.id + '"]').closest('label'); l.classList.toggle('y', okP(x)); l.classList.toggle('n', !okP(x)); }); }
+  document.querySelectorAll('[data-p]').forEach(function(el){ el.addEventListener('input', function(){ S.p[el.getAttribute('data-p')] = el.value; save(); draw1(); }); });
+  $('check1').addEventListener('click', function(){
+    if (S.s1 === null){ S.s1 = D.sheet.filter(okP).length; save(); score(); }
+    mark1(); $('res1').textContent = S.s1 === 9 ? '🎉 Ідеально з першої спроби: 9 з 9!' : 'У залік іде перша перевірка: ' + S.s1 + ' з 9. Виправ червоні параметри — підказки під ними.';
+  });
+  draw1(); if (S.s1 !== null) $('check1').click();
+
+  /* ---------- 2. знайди помилки ---------- */
+  var frs = [].slice.call(document.querySelectorAll('.fr'));
+  function paint2(){ frs.forEach(function(f){ f.classList.toggle('sel', S.sel.indexOf(f.getAttribute('data-f')) !== -1); });
+    $('cnt2').innerHTML = [0,1,2,3,4,5,6].map(function(i){ return '<i class="' + (i < S.sel.length ? 'on' : '') + '"></i>'; }).join(''); }
+  frs.forEach(function(f){ f.addEventListener('click', function(){ if (S.s2 !== null) return; var id = f.getAttribute('data-f'), k = S.sel.indexOf(id);
+    if (k === -1) S.sel.push(id); else S.sel.splice(k, 1); save(); paint2(); }); });
+  function show2(){
+    var out = [];
+    frs.forEach(function(f){ var id = f.getAttribute('data-f'), err = D.frags[id][0], picked = S.sel.indexOf(id) !== -1;
+      f.classList.remove('sel'); if (picked) f.classList.add(err ? 'hit' : 'false'); else if (err) f.classList.add('miss'); });
+    Object.keys(D.frags).forEach(function(id){ var fr = D.frags[id], picked = S.sel.indexOf(id) !== -1;
+      if (fr[0]) out.push('<div class="' + (picked ? '' : 'x') + '">' + (picked ? '✅ Знайдено. ' : '🟨 Пропущено. ') + fr[1] + '</div>');
+      else if (picked) out.push('<div class="f">❌ «' + esc(document.querySelector('[data-f="' + id + '"]').textContent.trim().slice(0, 40)) + '…» — тут усе гаразд, це не помилка.</div>'); });
+    $('cure').innerHTML = out.join(''); $('check2').disabled = true;
+    $('res2').textContent = '🩺 Діагноз поставлено: ' + S.s2 + ' з 7.';
+  }
+  $('check2').addEventListener('click', function(){
+    if (!S.sel.length){ $('res2').textContent = '⚠ Познач фрагменти з помилками.'; return; }
+    var hit = S.sel.filter(function(id){ return D.frags[id][0]; }).length; S.s2 = Math.max(0, hit - (S.sel.length - hit)); save(); show2(); score();
+  });
+  paint2(); if (S.s2 !== null) show2();
+
+  /* ---------- 3. перекладач ---------- */
+  document.querySelectorAll('.tr-it').forEach(function(it){
+    var i = it.getAttribute('data-i'), ok = it.getAttribute('data-ok');
+    function paint(){ var v = S.tr[i]; if (!v) return;
+      it.querySelectorAll('.tr-o button').forEach(function(b){ b.disabled = true; if (b.textContent === ok) b.classList.add('r'); else if (b.textContent === v) b.classList.add('w'); });
+      it.querySelector('.tr-fb').textContent = v === ok ? '✓ Чітко, ввічливо, з датами — саме так пишуть документи.' : '✗ Не те: або все ще розмовне, або «канцелярит», який важко читати. Правильний варіант — зелений.'; }
+    it.querySelectorAll('.tr-o button').forEach(function(b){ b.addEventListener('click', function(){ if (S.tr[i]) return; S.tr[i] = b.textContent; save(); paint(); res3(); score(); }); });
+    paint();
+  });
+  function s3(){ var n = 0; document.querySelectorAll('.tr-it').forEach(function(it){ if (S.tr[it.getAttribute('data-i')] === it.getAttribute('data-ok')) n++; }); return n; }
+  function res3(){ var n = Object.keys(S.tr).length; $('res3').textContent = n === 6 ? '🤖 Переклад завершено: ' + s3() + ' з 6.' : 'Перекладено ' + n + ' з 6.'; }
+  res3();
+
+  /* ---------- 4. власна заява ---------- */
+  var F = ['to', 'from', 'text', 'date', 'sign'];
+  F.forEach(function(k){ var el = $('f_' + k); if (S.f[k]) el.value = S.f[k]; el.addEventListener('input', function(){ S.f[k] = el.value; save(); draw4(); }); });
+  function theme(id){ S.th = id; document.querySelectorAll('.themes button').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-t') === id); });
+    var t = D.themes.filter(function(x){ return x.id === id; })[0]; $('f_text').placeholder = t.hint; save(); draw4(); }
+  document.querySelectorAll('.themes button').forEach(function(b){ b.addEventListener('click', function(){ theme(b.getAttribute('data-t')); }); });
+  var EMO = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u;
+  function rules(){
+    var f = S.f, txt = (f.text || '').trim(), all = [f.to, f.from, f.text, f.date, f.sign].join(' ');
+    return [
+      {t: 'Текст починається зі слова «Прошу»', ok: /^Прошу\s/.test(txt)},
+      {t: 'Дата у форматі ДД.ММ.РРРР', ok: /^(0[1-9]|[12]\d|3[01])\.(0[1-9]|1[0-2])\.20\d\d$/.test((f.date || '').trim())},
+      {t: 'Підпис: Власне ім’я ПРІЗВИЩЕ (прізвище великими)', ok: /^[А-ЯІЇЄҐ][а-яіїєґ'’-]+\s+[А-ЯІЇЄҐ'’-]{2,}$/.test((f.sign || '').trim())},
+      {t: 'Без смайлів і знаків оклику', ok: !!txt && !EMO.test(all) && all.indexOf('!') === -1},
+    ];
+  }
+  function draw4(){
+    var f = S.f, ph = function(v, p){ return v && v.trim() ? esc(v.trim()) : '<span class="ph">' + p + '</span>'; };
+    $('mine').innerHTML = '<div class="addr">' + ph(f.to, 'Кому: посада, Ім’я ПРІЗВИЩЕ\n(у давальному відмінку)') + '\n' + ph(f.from, 'Від кого: група, ім’я та прізвище\n(у родовому відмінку)') + '</div>' +
+      '<div class="ttl">ЗАЯВА</div><div class="tx">' + ph(f.text, esc($('f_text').placeholder)) + '</div>' +
+      '<div class="foot"><span>' + ph(f.date, 'ДД.ММ.РРРР') + '</span><i>підпис</i><span>' + ph(f.sign, 'Ім’я ПРІЗВИЩЕ') + '</span></div>';
+    var r = rules(); $('rules4').innerHTML = r.map(function(x){ return '<div class="' + (x.ok ? 'y' : '') + '">' + (x.ok ? '✓ ' : '○ ') + x.t + '</div>'; }).join('');
+    score();
+  }
+  $('fill4').addEventListener('click', function(){
+    var t = D.themes.filter(function(x){ return x.id === S.th; })[0];
+    var d = {to: 'Директорові ліцею\nОлені МАРЧЕНКО', from: 'учня групи 202\nПетра Сидоренка', text: t.hint, date: '17.11.2026', sign: 'Петро СИДОРЕНКО'};
+    F.forEach(function(k){ if (!S.f[k]){ S.f[k] = d[k]; $('f_' + k).value = d[k]; } }); save(); draw4();
+  });
+  theme(S.th || 'cyber');
+
+  /* ---------- фінал ---------- */
+  function filled4(){ return F.every(function(k){ return S.f[k] && S.f[k].trim(); }); }
+  function score(){
+    var v = [S.s1, S.s2, Object.keys(S.tr).length === 6 ? s3() : null, filled4() ? rules().filter(function(x){ return x.ok; }).length : null], mx = [9, 7, 6, 4];
+    v.forEach(function(x, i){ $('sc' + (i + 1)).textContent = x === null ? '—' : x + '/' + mx[i]; });
+    var all = v.every(function(x){ return x !== null; }), sum = v.reduce(function(a, x){ return a + (x || 0); }, 0);
+    $('scT').textContent = all ? sum + '/26' : '…'; $('badge').classList.toggle('show', all && sum >= 21);
+    return {all: all, sum: sum, v: v};
+  }
+  ['lastname', 'firstname', 'klass'].forEach(function(id){ if (S.who[id]) $(id).value = S.who[id];
+    ['input', 'change'].forEach(function(ev){ $(id).addEventListener(ev, function(){ S.who[id] = $(id).value; save(); }); }); });
+  function report(){
+    var r = score(), L = [];
+    L.push('1. НАЛАШТУВАННЯ АРКУША: ' + r.v[0] + '/9 (перша перевірка)');
+    D.sheet.forEach(function(x){ L.push('  ' + x.name + ': ' + S.p[x.id] + (x.unit ? ' ' + x.unit : '') + (okP(x) ? ' ✓' : ' ✗')); });
+    L.push('', '2. ЗНАЙДИ 7 ПОМИЛОК: ' + r.v[1] + '/7 · позначено: ' + S.sel.length);
+    L.push('', '3. ПЕРЕКЛАДАЧ НА ДІЛОВИЙ СТИЛЬ: ' + r.v[2] + '/6');
+    document.querySelectorAll('.tr-it').forEach(function(it){ var i = it.getAttribute('data-i'); L.push('  «' + it.querySelector('.tr-q span').textContent + '» → ' + (S.tr[i] === it.getAttribute('data-ok') ? '✓' : '✗')); });
+    L.push('', '4. ВЛАСНА ЗАЯВА: ' + r.v[3] + '/4 правил');
+    rules().forEach(function(x){ L.push('  ' + (x.ok ? '✓ ' : '✗ ') + x.t); });
+    L.push('  --- текст заяви ---', '  ' + (S.f.to || '').replace(/\n/g, ' '), '  ' + (S.f.from || '').replace(/\n/g, ' '), '  ЗАЯВА', '  ' + (S.f.text || '').replace(/\n/g, ' '), '  ' + (S.f.date || '') + '   ' + (S.f.sign || ''));
+    L.push('', 'РАЗОМ: ' + r.sum + '/26');
+    return {all: r.all, text: L.join('\n')};
+  }
+  $('sendBtn').addEventListener('click', function(){
+    var st = $('statusMsg'), r = report();
+    if (!$('lastname').value.trim() || !$('firstname').value.trim() || !$('klass').value){ st.textContent = '⚠ Вкажи прізвище, ім’я та групу.'; st.className = 'status-msg show status-err'; return; }
+    if (!r.all){ st.textContent = '⚠ Спершу пройди всі 4 станції: перевір аркуш, постав діагноз заяві, переклади 6 фраз і заповни всі поля своєї заяви.'; st.className = 'status-msg show status-err'; return; }
+    if (typeof SCRIPT_URL === 'undefined' || SCRIPT_URL.indexOf('ВСТАВ_СЮДИ') !== -1){ st.textContent = '⚠ Форма тимчасово не працює. Повідом, будь ласка, вчителя.'; st.className = 'status-msg show status-err'; return; }
+    var data = new URLSearchParams({ lastname: $('lastname').value.trim(), firstname: $('firstname').value.trim(), klass: $('klass').value,
+      lesson: 'Розділ 11 — Тема 3: Оформлення ділових документів за стандартами', worktype: 'Практична робота', link: '', answer: r.text, timestamp: new Date().toLocaleString('uk-UA') });
+    st.textContent = '⏳ Надсилаю...'; st.className = 'status-msg show';
+    fetch(SCRIPT_URL, {method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: data.toString()})
+      .then(function(){ st.textContent = '✓ Роботу надіслано! Доктор Бланк задоволений 🩺'; st.className = 'status-msg show status-ok'; })
+      .catch(function(){ st.textContent = '✕ Не вдалося надіслати. Перевір інтернет і спробуй ще раз.'; st.className = 'status-msg show status-err'; });
+  });
+  $('resetBtn').addEventListener('click', function(){ if (confirm('Почати практичну спочатку? Усі відповіді на цій сторінці буде стерто.')){ try { localStorage.removeItem(KEY); } catch(e){} location.reload(); } });
+  score();
+})();
+</script>
+</body>
+</html>
