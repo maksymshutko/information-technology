@@ -11,4 +11,4 @@
  * 2. Встав отриманий URL нижче замість SCRIPT_URL.
  * 3. Зберігай — усі сторінки сайту одразу почнуть його використовувати.
  */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxMANyt_3oEWqXiFmftrGdpH03Ri7BEPZswafatmWz44rC87H4Ya51IZCKMB8IkMuVf/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPl-a59GrCh_O0NR0NbekP1CrTncQaq1PaDNLZLm8KXE86zPyR8Q25SY6tI992nwlX/exec";

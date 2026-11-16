@@ -92,16 +92,8 @@
     <div class="status-msg" id="statusMsg"></div>
   </form>
 
-  <div class="panel panel-note" style="margin-top:34px;">
-    <h3>⚙ Для вчителя: як це підключити (одноразово)</h3>
-    <p>1. Створи новий Google Sheet — це буде твій «кабінет» з усіма роботами.</p>
-    <p>2. Відкрий <code>Розширення → Apps Script</code>, встав код із файлу <code>apps-script/Code.gs</code> (додається окремо), збережи.</p>
-    <p>3. <code>Deploy → New deployment → Web app</code>. Execute as: <code>Me</code>. Who has access: <code>Anyone</code>. Натисни Deploy й скопіюй URL веб-застосунку.</p>
-    <p>4. Встав цей URL замість <code>SCRIPT_URL</code> у файлі <code>assets/config.js</code> — і форма (та всі тести на сайті) запрацюють.</p>
-    <p>5. У тому ж файлі <code>Code.gs</code> заміни <code>CABINET_KEY</code> на свій секретний рядок. Результати й тести можна переглянути на сторінці <code>kabinet.html</code> (немає в меню — посилання зберігай собі) після введення цього ключа.</p>
-  </div>
 
-  <footer>Дані надсилаються напряму у ваш Google Sheet — сторонні сервери не використовуються.</footer>
+  <footer>Дані надсилаються напряму в таблицю вчителя — сторонні сервери не використовуються.</footer>
 </div>
 
 <script src="assets/config.js"></script>
@@ -114,7 +106,7 @@
     e.preventDefault();
 
     if (SCRIPT_URL.indexOf('ВСТАВ_СЮДИ') !== -1) {
-      statusMsg.textContent = '⚠ Форму ще не підключено до Google Sheet. Учителю: заповни SCRIPT_URL у коді сторінки (інструкція вище).';
+      statusMsg.textContent = '⚠ Форма тимчасово не працює. Повідом, будь ласка, вчителя.';
       statusMsg.className = 'status-msg show status-err';
       return;
     }
