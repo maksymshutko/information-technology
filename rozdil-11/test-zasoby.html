@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<script>/*clean-url*/(function(){if(location.protocol==="file:")return;var p=location.pathname,q=p.replace(/\/index\.html$/,"/").replace(/\.html$/,"");if(q!==p)history.replaceState(null,"",q+location.search+location.hash);})();</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тест: технічні та програмні засоби обробки документів · Інформатика КПЛТ</title>
+<meta name="description" content="12 питань з фото пристроїв і програм + одне відкрите. Відповідай, натисни «Перевірити», подивись пояснення — і надішли результат учителю.">
+<link rel="icon" href="../assets/logo.png">
+<link rel="stylesheet" href="../assets/style.css?v=23f00d98">
+<style>
+  .qz{ --coral:#ff7a59; --sun:#ffd166; --sky:#4cc9f0; --grape:#a78bfa; --lime:#3ee6b5; --ok:#12a77a; --bad:#e5484d; }
+  .qz-hero{ position:relative; overflow:hidden; border-radius: 28px; padding: 28px 32px; margin-bottom: 24px; display:flex; gap: 22px; align-items:center;
+    background: linear-gradient(120deg, rgba(76,201,240,.22), rgba(167,139,250,.25) 55%, rgba(255,122,89,.2)), var(--panel); border: 1px solid rgba(76,201,240,.4); }
+  .qz-hero h1{ margin: 6px 0 10px; }
+  .qz-hero h1 .grad{ background: linear-gradient(90deg, var(--sky), var(--grape), var(--coral)); -webkit-background-clip:text; background-clip:text; color: transparent; }
+  .qz-hero .hi{ width: 220px; flex-shrink: 0; background: #fff; border-radius: 20px; padding: 12px; transform: rotate(3deg); box-shadow: 0 16px 34px rgba(0,0,0,.4); }
+  .qz-hero .hi img{ width: 100%; display:block; }
+  .qz-prog{ display:flex; align-items:center; gap: 10px; font-weight: 700; font-size: 14px; position: sticky; top: 78px; z-index: 5; background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 10px 14px; margin-bottom: 16px; }
+  .qz-prog .bar{ flex: 1; height: 8px; background: rgba(255,255,255,.08); border-radius: 8px; overflow: hidden; }
+  .qz-prog .bar i{ display:block; height: 100%; width: 0; background: linear-gradient(90deg, var(--sky), var(--grape)); transition: width .3s; }
+  .qs{ display:grid; gap: 14px; counter-reset: q; }
+  .q{ background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 16px 18px; display:grid; grid-template-columns: 1fr; gap: 12px; }
+  .q.has-img{ grid-template-columns: 210px 1fr; }
+  .q .img{ background: #fff; border-radius: 14px; height: 170px; display:grid; place-items:center; padding: 8px; }
+  .q .img img{ max-width: 100%; max-height: 154px; object-fit: contain; }
+  .q h3{ margin: 0 0 10px; font-size: 16px; display:flex; gap: 10px; align-items: baseline; }
+  .q h3::before{ counter-increment: q; content: counter(q); flex-shrink: 0; width: 28px; height: 28px; border-radius: 9px; display:grid; place-items:center; background: var(--grape); color: #10172e; font: 800 13px var(--font-mono); }
+  .q h3 small{ font-weight: 700; color: var(--sun); font-size: 12px; }
+  .opts{ display:grid; gap: 8px; grid-template-columns: 1fr 1fr; }
+  .opt{ display:flex; gap: 10px; align-items:center; padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,.04); border: 1px solid var(--border-strong); cursor: pointer; font-weight: 600; font-size: 14px; line-height: 1.4; }
+  .opt:hover{ border-color: var(--sky); } .opt input{ accent-color: var(--grape); width: 18px; height: 18px; flex-shrink: 0; margin: 0; }
+  .opt.chosen{ border-color: var(--grape); background: rgba(167,139,250,.14); }
+  .opt.r{ border-color: var(--ok); background: rgba(18,167,122,.16); } .opt.w{ border-color: var(--bad); background: rgba(229,72,77,.14); }
+  .q textarea{ width: 100%; min-height: 96px; padding: 10px 12px; background: var(--panel-soft); border: 1px solid var(--border-strong); border-radius: 12px; color: var(--ink); font: 600 14px/1.5 var(--font-body); resize: vertical; }
+  .why{ display:none; margin-top: 10px; font-size: 13.3px; line-height: 1.55; color: #d9def5; background: rgba(255,255,255,.04); border-left: 3px solid var(--sky); border-radius: 8px; padding: 8px 11px; }
+  .checked .why{ display:block; }
+  .q.good{ border-color: rgba(18,167,122,.6); } .q.badq{ border-color: rgba(229,72,77,.6); }
+  .fin{ margin-top: 22px; background: var(--panel); border: 1px solid var(--border); border-radius: 22px; padding: 20px 22px; }
+  .fin h2{ margin: 0 0 12px; font-family: var(--font-display); font-size: 20px; }
+  .score{ display:none; align-items:center; gap: 16px; padding: 14px 18px; border-radius: 16px; margin-bottom: 14px; background: linear-gradient(120deg, rgba(76,201,240,.2), rgba(167,139,250,.25)); border: 1px solid rgba(167,139,250,.5); }
+  .score.show{ display:flex; } .score b{ font: 800 30px var(--font-display); } .score span{ font-weight: 700; }
+  .who{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .who label{ display:grid; gap: 4px; font-size: 12px; font-weight: 800; color: var(--muted); }
+  .who input, .who select{ padding: 9px 11px; background: var(--panel-soft); border: 1px solid var(--border-strong); border-radius: 10px; color: var(--ink); font: 600 14px var(--font-body); width: 100%; }
+  .acts{ display:flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  @media (max-width: 760px){ .q.has-img{ grid-template-columns: 1fr; } .opts{ grid-template-columns: 1fr; } .qz-hero .hi{ display:none; } .qz-hero{ padding: 22px 18px; } .who{ grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="logo" href="../">
+      <img src="../assets/logo.png" alt="Логотип КПЛТ">
+      <span class="brand"><b>Інформатика</b><small>КПЛТ</small></span>
+    </a>
+    <div class="links">
+      <a href="../">Головна</a>
+      <a href="../#rozdily" class="active">Розділи</a>
+      <a href="../pidruchnyk">Підручник</a>
+      <a href="../submit">Здати роботу</a>
+    </div>
+  </div>
+</nav>
+<main class="wrap qz">
+  <section class="qz-hero">
+    <div>
+      <div class="eyebrow">Розділ 11 · Тема 5 · Тест</div>
+      <h1>Засоби обробки <span class="grad">документів</span></h1>
+      <p class="lead" style="margin-bottom:0">12 питань з фото пристроїв і програм + одне відкрите. Відповідай, натисни «Перевірити», подивись пояснення — і надішли результат учителю.</p>
+    </div>
+    <div class="hi"><img src="../assets/img/devices/printer.webp" alt=""></div>
+  </section>
+  <div class="qz-prog">Відповіді: <span id="pn"></span><div class="bar"><i id="pb"></i></div></div>
+  <div class="qs"><div class="q has-img" data-i="0"><div class="img"><img src="../assets/img/devices/printer.webp" alt="" loading="lazy"></div><div><h3><span>Що це за пристрій і яка його головна особливість?</span></h3><div class="opts"><label class="opt"><input type="radio" name="q0" value="0"><span>Ламінатор</span></label><label class="opt"><input type="radio" name="q0" value="1"><span>Струменевий принтер з СНПЧ: чорнило доливають у ємності</span></label><label class="opt"><input type="radio" name="q0" value="2"><span>Лазерний принтер з картриджем-тонером</span></label><label class="opt"><input type="radio" name="q0" value="3"><span>Планшетний сканер</span></label></div><div class="why">💡 Збоку видно прозорі ємності з чорнилом чотирьох кольорів (BK, Y, M, C) — це система безперервної подачі чорнила (СНПЧ, EcoTank).</div></div></div><div class="q has-img" data-i="1"><div class="img"><img src="../assets/img/devices/scanner.webp" alt="" loading="lazy"></div><div><h3><span>Для чого використовують цей пристрій?</span></h3><div class="opts"><label class="opt"><input type="radio" name="q1" value="0"><span>Перетворює паперовий документ чи фото на цифровий файл</span></label><label class="opt"><input type="radio" name="q1" value="1"><span>Друкує фото</span></label><label class="opt"><input type="radio" name="q1" value="2"><span>Копіює документи на плівку</span></label><label class="opt"><input type="radio" name="q1" value="3"><span>Знищує документи</span></label></div><div class="why">💡 Це планшетний сканер: кладеш документ на скло, і він створює цифрову копію (PDF, JPG).</div></div></div><div class="q has-img" data-i="2"><div class="img"><img src="../assets/img/devices/shredder.webp" alt="" loading="lazy"></div><div><h3><span>Що робить цей пристрій?</span></h3><div class="opts"><label class="opt"><input type="radio" name="q2" value="0"><span>Друкує на двох сторонах аркуша</span></label><label class="opt"><input type="radio" name="q2" value="1"><span>Розрізає документи на дрібні частини, щоб їх не можна було відновити</span></label><label class="opt"><input type="radio" name="q2" value="2"><span>Зшиває аркуші пружиною</span></label><label class="opt"><input type="radio" name="q2" value="3"><span>Сортує документи за датою</span></label></div><div class="why">💡 Це шредер: у кошику видно «конфеті» з паперу. Ним знищують документи з персональними та конфіденційними даними.</div></div></div><div class="q has-img" data-i="3"><div class="img"><img src="../assets/img/devices/laminator.webp" alt="" loading="lazy"></div><div><h3><span>Навіщо пропускають документ через цей пристрій?</span></h3><div class="opts"><label class="opt"><input type="radio" name="q3" value="0"><span>Щоб стерти з нього текст</span></label><label class="opt"><input type="radio" name="q3" value="1"><span>Щоб надрукувати копію</span></label><label class="opt"><input type="radio" name="q3" value="2"><span>Щоб запаяти в захисну плівку</span></label><label class="opt"><input type="radio" name="q3" value="3"><span>Щоб відсканувати його</span></label></div><div class="why">💡 Ламінатор запаює аркуш у прозору плівку: документ не мокне й не мнеться. Так захищають бейджі, інструкції, меню.</div></div></div><div class="q" data-i="4"><div><h3><span>Яка роздільна здатність достатня для сканування текстових документів?</span></h3><div class="opts"><label class="opt"><input type="radio" name="q4" value="0"><span>2400 dpi</span></label><label class="opt"><input type="radio" name="q4" value="1"><span>30 dpi</span></label><label class="opt"><input type="radio" name="q4" value="2"><span>72 dpi</span></label><label class="opt"><input type="radio" name="q4" value="3"><span>300 dpi</span></label></div><div class="why">💡 300 dpi — оптимально для тексту: чітко і файл не надто великий. 72 dpi — замало, 2400 — завеликий файл без потреби.</div></div></div><div class="q" data-i="5"><div><h3><span>OCR — це…</span></h3><div class="opts"><label class="opt"><input type="radio" name="q5" value="0"><span>розпізнавання тексту на скані чи фото</span></label><label class="opt"><input type="radio" name="q5" value="1"><span>формат електронного документа</span></label><label class="opt"><input type="radio" name="q5" value="2"><span>програма для створення презентацій</span></label><label class="opt"><input type="radio" name="q5" value="3"><span>електронний цифровий підпис</span></label></div><div class="why">💡 OCR (Optical Character Recognition) перетворює зображення тексту на текст, який можна редагувати й шукати. Безкоштовно — Google Lens, Google Диск.</div></div></div><div class="q has-img" data-i="6"><div class="img"><img src="../assets/img/devices/doc-pdf.webp" alt="" loading="lazy"></div><div><h3><span>Чому договір зазвичай надсилають у PDF, а не у DOCX?</span></h3><div class="opts"><label class="opt"><input type="radio" name="q6" value="0"><span>PDF однаково виглядає на всіх пристроях і його складно випадково змінити</span></label><label class="opt"><input type="radio" name="q6" value="1"><span>DOCX не можна відкрити на телефоні</span></label><label class="opt"><input type="radio" name="q6" value="2"><span>PDF можна редагувати швидше</span></label><label class="opt"><input type="radio" name="q6" value="3"><span>PDF завжди менший за розміром</span></label></div><div class="why">💡 PDF «фіксує» вигляд документа: шрифти й поля не з’їдуть, а текст не зміниться випадково. Саме PDF підписують КЕП.</div></div></div><div class="q" data-i="7"><div><h3><span>Як у Google Документах зберегти файл як PDF?</span></h3><div class="opts"><label class="opt"><input type="radio" name="q7" value="0"><span>Це неможливо, потрібна інша програма</span></label><label class="opt"><input type="radio" name="q7" value="1"><span>Вставлення → Зображення → PDF</span></label><label class="opt"><input type="radio" name="q7" value="2"><span>Файл → Завантажити → Документ PDF (.pdf)</span></label><label class="opt"><input type="radio" name="q7" value="3"><span>Правка → Копіювати → PDF</span></label></div><div class="why">💡 Файл → Завантажити → PDF. Також підходить універсальний спосіб: Друк → «Зберегти як PDF».</div></div></div><div class="q has-img" data-i="8"><div class="img"><img src="../assets/img/devices/gdocs.webp" alt="" loading="lazy"></div><div><h3><span>Яка можливість Google Документів найкорисніша для командної роботи?</span></h3><div class="opts"><label class="opt"><input type="radio" name="q8" value="0"><span>Друк на будь-якому принтері</span></label><label class="opt"><input type="radio" name="q8" value="1"><span>Робота без інтернету в будь-якому браузері</span></label><label class="opt"><input type="radio" name="q8" value="2"><span>Спільне редагування в реальному часі з коментарями та історією версій</span></label><label class="opt"><input type="radio" name="q8" value="3"><span>Великий вибір шрифтів</span></label></div><div class="why">💡 Кілька людей одночасно редагують один документ, обговорюють у коментарях і можуть повернути будь-яку попередню версію.</div></div></div><div class="q" data-i="9"><div><h3><span>БФП (багатофункціональний пристрій) поєднує в собі…</span></h3><div class="opts"><label class="opt"><input type="radio" name="q9" value="0"><span>принтер, сканер і копір</span></label><label class="opt"><input type="radio" name="q9" value="1"><span>монітор, клавіатуру і мишу</span></label><label class="opt"><input type="radio" name="q9" value="2"><span>роутер і модем</span></label><label class="opt"><input type="radio" name="q9" value="3"><span>шредер і ламінатор</span></label></div><div class="why">💡 БФП = принтер + сканер + копір (іноді ще й факс) в одному корпусі.</div></div></div><div class="q" data-i="10"><div><h3><span>Які паперові документи обов’язково знищують шредером, а не викидають у смітник?</span></h3><div class="opts"><label class="opt"><input type="radio" name="q10" value="0"><span>Документи з персональними даними: паспортні дані, номери телефонів, підписи</span></label><label class="opt"><input type="radio" name="q10" value="1"><span>Чисті аркуші</span></label><label class="opt"><input type="radio" name="q10" value="2"><span>Старі газети</span></label><label class="opt"><input type="radio" name="q10" value="3"><span>Рекламні листівки</span></label></div><div class="why">💡 Персональні дані захищає закон. Викинутий документ можуть дістати й використати шахраї.</div></div></div><div class="q" data-i="11"><div><h3><span>Познач усі ПРОГРАМНІ засоби обробки документів: <small>кілька правильних</small></span></h3><div class="opts"><label class="opt"><input type="checkbox" name="q11" value="0"><span>Ламінатор</span></label><label class="opt"><input type="checkbox" name="q11" value="1"><span>Google Документи</span></label><label class="opt"><input type="checkbox" name="q11" value="2"><span>Google Lens</span></label><label class="opt"><input type="checkbox" name="q11" value="3"><span>Adobe Acrobat Reader</span></label><label class="opt"><input type="checkbox" name="q11" value="4"><span>Шредер</span></label><label class="opt"><input type="checkbox" name="q11" value="5"><span>LibreOffice Writer</span></label></div><div class="why">💡 Програмні засоби — це програми й сервіси: Google Документи, LibreOffice Writer, Adobe Acrobat Reader, Google Lens. Ламінатор і шредер — технічні (апаратні) засоби.</div></div></div><div class="q" data-i="12"><div><h3><span>Опиши своїми словами (2–4 речення): як перетворити паперову довідку на PDF-файл і надіслати її в ліцей, не виходячи з дому? <small>відкрите · не оцінюється автоматично</small></span></h3><textarea placeholder="Наприклад: сфотографую довідку в застосунку…"></textarea></div></div></div>
+  <section class="fin">
+    <h2>🏁 Завершення</h2>
+    <div class="score" id="score"><b id="scB"></b><span id="scT"></span></div>
+    <div class="who">
+      <label>Прізвище<input id="lastname" placeholder="Шевченко"></label>
+      <label>Ім’я<input id="firstname" placeholder="Тарас"></label>
+      <label>Група<select id="klass"><option value="">— обери —</option><option>102</option><option>105</option><option>109</option><option>110</option><option>201</option><option>202</option><option>205</option><option>209</option><option>210</option><option>301</option><option>310</option></select></label>
+    </div>
+    <div class="acts"><button type="button" class="btn btn-ghost" id="checkBtn">🔎 Перевірити відповіді</button><button type="button" class="btn" id="sendBtn">📨 Надіслати вчителю</button><button type="button" class="btn btn-ghost btn-sm" id="resetBtn">↺ Пройти заново</button></div>
+    <div class="status-msg" id="statusMsg"></div>
+  </section>
+  <a class="btn btn-ghost" href="./#tema-05" style="margin-top:20px">← до теми</a>
+</main>
+<footer class="site-footer">
+  <div class="sf-inner">
+    <div class="sf-brand"><img src="../assets/logo.png" alt=""><div><b>Інформатика</b><small>Київський професійний ліцей транспорту</small></div></div>
+    <div class="sf-teacher">Викладач інформатики — <b>Шутько Максим Олександрович</b></div>
+    <div class="sf-links"><a href="../#rozdily">Розділи</a><a href="../submit">Здати роботу</a><a href="../qr-quest/">QR-квест</a><a href="https://kplt.in.ua/" target="_blank" rel="noopener">Сайт ліцею ↗</a></div>
+    <div class="sf-credits">Ілюстрації: <a href="https://storyset.com/" target="_blank" rel="noopener">Storyset</a>, <a href="https://undraw.co/" target="_blank" rel="noopener">unDraw</a></div>
+  </div>
+</footer>
+<script src="../assets/config.js"></script>
+<script>
+(function(){
+  var Q = [{"t": "one", "q": "Що це за пристрій і яка його головна особливість?", "o": ["Ламінатор", "Струменевий принтер з СНПЧ: чорнило доливають у ємності", "Лазерний принтер з картриджем-тонером", "Планшетний сканер"], "a": [1]}, {"t": "one", "q": "Для чого використовують цей пристрій?", "o": ["Перетворює паперовий документ чи фото на цифровий файл", "Друкує фото", "Копіює документи на плівку", "Знищує документи"], "a": [0]}, {"t": "one", "q": "Що робить цей пристрій?", "o": ["Друкує на двох сторонах аркуша", "Розрізає документи на дрібні частини, щоб їх не можна було відновити", "Зшиває аркуші пружиною", "Сортує документи за датою"], "a": [1]}, {"t": "one", "q": "Навіщо пропускають документ через цей пристрій?", "o": ["Щоб стерти з нього текст", "Щоб надрукувати копію", "Щоб запаяти в захисну плівку", "Щоб відсканувати його"], "a": [2]}, {"t": "one", "q": "Яка роздільна здатність достатня для сканування текстових документів?", "o": ["2400 dpi", "30 dpi", "72 dpi", "300 dpi"], "a": [3]}, {"t": "one", "q": "OCR — це…", "o": ["розпізнавання тексту на скані чи фото", "формат електронного документа", "програма для створення презентацій", "електронний цифровий підпис"], "a": [0]}, {"t": "one", "q": "Чому договір зазвичай надсилають у PDF, а не у DOCX?", "o": ["PDF однаково виглядає на всіх пристроях і його складно випадково змінити", "DOCX не можна відкрити на телефоні", "PDF можна редагувати швидше", "PDF завжди менший за розміром"], "a": [0]}, {"t": "one", "q": "Як у Google Документах зберегти файл як PDF?", "o": ["Це неможливо, потрібна інша програма", "Вставлення → Зображення → PDF", "Файл → Завантажити → Документ PDF (.pdf)", "Правка → Копіювати → PDF"], "a": [2]}, {"t": "one", "q": "Яка можливість Google Документів найкорисніша для командної роботи?", "o": ["Друк на будь-якому принтері", "Робота без інтернету в будь-якому браузері", "Спільне редагування в реальному часі з коментарями та історією версій", "Великий вибір шрифтів"], "a": [2]}, {"t": "one", "q": "БФП (багатофункціональний пристрій) поєднує в собі…", "o": ["принтер, сканер і копір", "монітор, клавіатуру і мишу", "роутер і модем", "шредер і ламінатор"], "a": [0]}, {"t": "one", "q": "Які паперові документи обов’язково знищують шредером, а не викидають у смітник?", "o": ["Документи з персональними даними: паспортні дані, номери телефонів, підписи", "Чисті аркуші", "Старі газети", "Рекламні листівки"], "a": [0]}, {"t": "many", "q": "Познач усі ПРОГРАМНІ засоби обробки документів:", "o": ["Ламінатор", "Google Документи", "Google Lens", "Adobe Acrobat Reader", "Шредер", "LibreOffice Writer"], "a": [1, 2, 3, 5]}, {"t": "open", "q": "Опиши своїми словами (2–4 речення): як перетворити паперову довідку на PDF-файл і надіслати її в ліцей, не виходячи з дому?", "o": [], "a": []}], KEY = 'test-11-5', LESSON = 'Розділ 11 — Тема 5: Технічні та програмні засоби обробки документів';
+  var $ = function(id){ return document.getElementById(id); };
+  var S = {ans: {}, done: false, who: {}};
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+  try { var st = JSON.parse(localStorage.getItem(KEY)); if (st && st.ans) S = Object.assign(S, st); } catch(e){}
+  var graded = Q.filter(function(q){ return q.t !== 'open'; }).length;
+  function get(i){ var q = Q[i], el = document.querySelector('.q[data-i="' + i + '"]');
+    if (q.t === 'open') return el.querySelector('textarea').value;
+    return [].slice.call(el.querySelectorAll('input:checked')).map(function(x){ return +x.value; }); }
+  function answered(i){ var v = S.ans[i]; return Q[i].t === 'open' ? !!(v && v.trim()) : !!(v && v.length); }
+  function prog(){ var n = Q.filter(function(q, i){ return answered(i); }).length; $('pn').textContent = n + ' / ' + Q.length; $('pb').style.width = (100 * n / Q.length) + '%'; }
+  document.querySelectorAll('.q').forEach(function(el){
+    var i = +el.getAttribute('data-i'), q = Q[i];
+    if (q.t === 'open'){ var ta = el.querySelector('textarea'); if (S.ans[i]) ta.value = S.ans[i]; ta.addEventListener('input', function(){ S.ans[i] = ta.value; save(); prog(); }); return; }
+    el.querySelectorAll('input').forEach(function(inp){
+      if ((S.ans[i] || []).indexOf(+inp.value) !== -1) inp.checked = true;
+      inp.addEventListener('change', function(){ if (S.done) return; S.ans[i] = get(i); save(); paint(el); prog(); });
+    });
+    paint(el);
+  });
+  function paint(el){ el.querySelectorAll('.opt').forEach(function(o){ o.classList.toggle('chosen', o.querySelector('input').checked); }); }
+  function same(a, b){ a = (a || []).slice().sort(); b = b.slice().sort(); return a.length === b.length && a.every(function(x, k){ return x === b[k]; }); }
+  function grade(){
+    var sc = 0;
+    document.querySelectorAll('.q').forEach(function(el){
+      var i = +el.getAttribute('data-i'), q = Q[i];
+      el.classList.add('checked'); if (q.t === 'open'){ el.querySelector('textarea').readOnly = true; return; }
+      var ok = same(S.ans[i], q.a); if (ok) sc++;
+      el.classList.add(ok ? 'good' : 'badq');
+      el.querySelectorAll('.opt').forEach(function(o){ var v = +o.querySelector('input').value; o.querySelector('input').disabled = true;
+        if (q.a.indexOf(v) !== -1) o.classList.add('r'); else if ((S.ans[i] || []).indexOf(v) !== -1) o.classList.add('w'); });
+    });
+    $('scB').textContent = sc + ' / ' + graded;
+    var pct = sc / graded;
+    $('scT').textContent = pct >= .9 ? '🏆 Чудово! Ти справжній офіс-профі.' : pct >= .7 ? '👍 Добре! Переглянь пояснення до помилок.' : pct >= .5 ? '🙂 Непогано, але варто ще раз перечитати конспект.' : '📘 Повтори конспект теми — і все вийде!';
+    $('score').classList.add('show'); $('checkBtn').disabled = true;
+    return sc;
+  }
+  $('checkBtn').addEventListener('click', function(){
+    var miss = Q.map(function(q, i){ return answered(i) ? 0 : i + 1; }).filter(Boolean);
+    if (miss.length){ $('statusMsg').textContent = '⚠ Дай відповідь на всі питання. Пропущено: ' + miss.join(', ') + '.'; $('statusMsg').className = 'status-msg show status-err'; return; }
+    $('statusMsg').className = 'status-msg'; S.done = true; save(); grade();
+    $('score').scrollIntoView({behavior: 'smooth', block: 'center'});
+  });
+  if (S.done) grade();
+  ['lastname', 'firstname', 'klass'].forEach(function(id){ if (S.who[id]) $(id).value = S.who[id];
+    ['input', 'change'].forEach(function(ev){ $(id).addEventListener(ev, function(){ S.who[id] = $(id).value; save(); }); }); });
+  $('sendBtn').addEventListener('click', function(){
+    var st = $('statusMsg');
+    if (!S.done){ st.textContent = '⚠ Спершу натисни «Перевірити відповіді».'; st.className = 'status-msg show status-err'; return; }
+    if (!$('lastname').value.trim() || !$('firstname').value.trim() || !$('klass').value){ st.textContent = '⚠ Вкажи прізвище, ім’я та групу.'; st.className = 'status-msg show status-err'; return; }
+    if (typeof SCRIPT_URL === 'undefined' || SCRIPT_URL.indexOf('ВСТАВ_СЮДИ') !== -1){ st.textContent = '⚠ Форма тимчасово не працює. Повідом, будь ласка, вчителя.'; st.className = 'status-msg show status-err'; return; }
+    var sc = 0, L = [];
+    Q.forEach(function(q, i){
+      if (q.t === 'open'){ L.push((i + 1) + '. ' + q.q + '\n   Відповідь: ' + (S.ans[i] || '').trim().replace(/\n+/g, ' ')); return; }
+      var ok = same(S.ans[i], q.a); if (ok) sc++;
+      L.push((i + 1) + '. ' + (ok ? '✓ ' : '✗ ') + q.q + ' → ' + (S.ans[i] || []).map(function(k){ return q.o[k]; }).join('; '));
+    });
+    L.unshift('РЕЗУЛЬТАТ: ' + sc + '/' + graded, '');
+    var data = new URLSearchParams({ lastname: $('lastname').value.trim(), firstname: $('firstname').value.trim(), klass: $('klass').value,
+      lesson: LESSON, worktype: 'Тест', link: '', answer: L.join('\n'), timestamp: new Date().toLocaleString('uk-UA') });
+    st.textContent = '⏳ Надсилаю...'; st.className = 'status-msg show';
+    fetch(SCRIPT_URL, {method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: data.toString()})
+      .then(function(){ st.textContent = '✓ Результат надіслано! Учитель побачить його в таблиці.'; st.className = 'status-msg show status-ok'; })
+      .catch(function(){ st.textContent = '✕ Не вдалося надіслати. Перевір інтернет і спробуй ще раз.'; st.className = 'status-msg show status-err'; });
+  });
+  $('resetBtn').addEventListener('click', function(){ if (confirm('Пройти тест заново? Відповіді на цій сторінці буде стерто.')){ try { localStorage.removeItem(KEY); } catch(e){} location.reload(); } });
+  prog();
+})();
+</script>
+</body>
+</html>

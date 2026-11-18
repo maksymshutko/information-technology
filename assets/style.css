@@ -629,3 +629,12 @@ a.eyebrow:hover{ color: #9ff5dc; border-color: rgba(62,230,181,.5); }
 .ph-sum{ margin: 0 0 14px; color: var(--muted); font-weight: 600; }
 @media (max-width: 640px){ .ph-stage{ padding: 12px; } .m-phone{ border-width: 4px; } }
 .ph-mock.reveal .m-btn[data-f]{ background: #2456c9; }
+
+/* розширений конспект: картки з фото пристроїв/програм */
+.t-figs{ display:grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; margin-bottom: 8px; }
+.t-figs figure{ margin: 0; border-radius: 16px; overflow: hidden; background: var(--panel-soft); border: 1px solid var(--border-strong); display:flex; flex-direction: column; }
+.t-figs .tf-img{ background: #fff; height: 160px; display:grid; place-items:center; padding: 10px; }
+.t-figs .tf-img img{ max-width: 100%; max-height: 140px; object-fit: contain; display:block; }
+.t-figs figcaption{ padding: 11px 13px 13px; }
+.t-figs b{ display:block; font-size: 14.5px; margin-bottom: 3px; }
+.t-figs span{ color: var(--muted); font-size: 13px; font-weight: 500; line-height: 1.55; }
