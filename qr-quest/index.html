@@ -32,10 +32,13 @@ const $app = document.getElementById('app');
 const qs = new URLSearchParams(location.search);
 const P = qs.get('p'), K = qs.get('k');
 const LS = 'qrq_id';
+// ID учасника: localStorage + cookie (у Safari одне з них іноді очищається)
+const cookieGet = () => { const m = document.cookie.match(/(?:^|; )qrq_id=([^;]+)/); return m ? decodeURIComponent(m[1]) : null; };
 const store = {
-  get() { try { return localStorage.getItem(LS); } catch (e) { return window._id || null; } },
-  set(v) { try { localStorage.setItem(LS, v); } catch (e) { window._id = v; } },
-  del() { try { localStorage.removeItem(LS); } catch (e) { window._id = null; } }
+  get() { let v = null; try { v = localStorage.getItem(LS); } catch (e) {} return v || cookieGet() || window._id || null; },
+  set(v) { window._id = v; try { localStorage.setItem(LS, v); } catch (e) {}
+           document.cookie = 'qrq_id=' + encodeURIComponent(v) + '; max-age=' + 60 * 60 * 24 * 60 + '; path=/; SameSite=Lax'; },
+  del() { window._id = null; try { localStorage.removeItem(LS); } catch (e) {} document.cookie = 'qrq_id=; max-age=0; path=/'; }
 };
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const LETTERS = 'АБВГДЕ';
@@ -43,7 +46,7 @@ const LETTERS = 'АБВГДЕ';
 if (QuestAPI.demo) document.getElementById('demo').classList.remove('hidden');
 document.getElementById('notme').onclick = e => {
   e.preventDefault();
-  if (confirm('Вийти з цього профілю? Потім можна зареєструватися з тими ж даними — прогрес збережеться.')) { store.del(); location.reload(); }
+  if (confirm('Вийти з цього профілю? Потім введіть ті самі прізвище та ім’я — прогрес збережеться.')) { store.del(); location.reload(); }
 };
 
 function view(html) { $app.innerHTML = html; window.scrollTo(0, 0); }
@@ -62,7 +65,7 @@ function gridHTML(pr, cur) {
     <div style="display:flex;justify-content:space-between;align-items:baseline">
       <b>Ваш прогрес</b><span class="muted">знайдено ${pr.answered} з ${pr.total}</span></div>
     <div class="bar"><i style="width:${Math.round(pr.answered / pr.total * 100)}%"></i></div>
-    <div class="muted">Правильних відповідей: <b style="color:var(--ink)">${pr.correct}</b></div>
+    <div class="muted score-line"><span>Правильних: <b style="color:var(--ink)">${pr.correct}</b></span><span>Бали: <b style="color:var(--brand)">${pr.points || 0}</b></span></div>
     <div class="grid">${h}</div>
     <div class="legend"><span><i style="background:var(--ok)"></i>правильно</span>
       <span><i style="background:var(--bad)"></i>помилка</span>
@@ -73,53 +76,89 @@ function gridHTML(pr, cur) {
 // ── Реєстрація ───────────────────────────────────────────────
 function registerView(then) {
   view(`<div class="card">
-    <span class="chip">Крок 1 · Реєстрація</span>
+    <span class="chip">Крок 1 · Хто ви?</span>
     <h2>Привіт! Хто проходить квест?</h2>
-    <p class="muted">Заповніть один раз — далі телефон вас запам’ятає.</p>
+    <p class="muted">Уже грали з іншого телефона чи браузер вас «забув»? Просто введіть ті самі дані — прогрес продовжиться.</p>
+    <label class="f">Я —</label>
+    <div class="roles" id="roles">
+      <button type="button" data-r="student"><span>🎓</span>Студент</button>
+      <button type="button" data-r="staff"><span>🏫</span>Працівник ліцею</button>
+    </div>
     <label class="f" for="last">Прізвище</label>
     <input type="text" id="last" autocomplete="family-name" maxlength="40" placeholder="Шевченко">
     <label class="f" for="first">Ім’я</label>
     <input type="text" id="first" autocomplete="given-name" maxlength="40" placeholder="Олена">
-    <label class="f" for="group">Група або посада</label>
-    <input type="text" id="group" maxlength="30" placeholder="напр. 202 або викладач">
+    <div id="groupBox" class="hidden">
+      <label class="f" for="group">Група</label>
+      <input type="text" id="group" maxlength="15" placeholder="напр. 202">
+    </div>
     <label class="check"><input type="checkbox" id="agree">
-      <span>Погоджуюся, що моє прізвище, ім’я та група/посада будуть використані для підрахунку результатів квесту і показані в рейтингу.</span></label>
+      <span>Погоджуюся, що моє прізвище, ім’я та група будуть використані для підрахунку результатів квесту і показані в рейтингу.</span></label>
     <button class="btn" id="go" disabled>Почати квест →</button>
+    <div id="similar"></div>
     <div class="err" id="err"></div>
   </div>`);
   const $ = id => document.getElementById(id);
+  let role = null;
   const check = () => {
-    $('go').disabled = !($('last').value.trim().length > 1 && $('first').value.trim().length > 1 &&
-      $('group').value.trim() && $('agree').checked);
+    $('go').disabled = !(role && $('last').value.trim().length > 1 && $('first').value.trim().length > 1 &&
+      (role !== 'student' || $('group').value.trim()) && $('agree').checked);
   };
-  ['last', 'first', 'group', 'agree'].forEach(id => { $(id).oninput = check; $(id).onchange = check; });
-  $('go').onclick = async () => {
-    $('go').disabled = true; $('go').textContent = 'Зберігаю…'; $('err').textContent = '';
-    const r = await QuestAPI.call({ action: 'register', last: $('last').value.trim(),
-      first: $('first').value.trim(), group: $('group').value.trim() });
-    if (!r.ok) { $('err').textContent = r.error; $('go').textContent = 'Почати квест →'; check(); return; }
+  document.querySelectorAll('#roles button').forEach(b => b.onclick = () => {
+    document.querySelectorAll('#roles button').forEach(x => x.classList.remove('on'));
+    b.classList.add('on'); role = b.dataset.r;
+    $('groupBox').classList.toggle('hidden', role !== 'student');
+    check();
+  });
+  ['last', 'first', 'group', 'agree'].forEach(id => { $(id).addEventListener('input', check); $(id).addEventListener('change', check); });
+  async function send(force) {
+    $('go').disabled = true; $('go').textContent = 'Зберігаю…'; $('err').textContent = ''; $('similar').innerHTML = '';
+    const r = await QuestAPI.call({ action: 'register', cat: role, last: $('last').value.trim(), first: $('first').value.trim(),
+                                    group: role === 'student' ? $('group').value.trim() : '', force: !!force });
+    $('go').textContent = 'Почати квест →';
+    if (r.similar) {
+      $('similar').innerHTML = `<div class="explain" style="margin-top:16px"><b>🤔 Можливо, це ви?</b>
+        <p class="muted" style="margin:4px 0 10px">Учасник з дуже схожим ім’ям уже грає.</p>
+        ${r.similar.map(x => `<button class="btn ghost" data-id="${esc(x.id)}" style="margin-top:8px">✅ Так, це я: ${esc(x.name)}${x.group ? ' · ' + esc(x.group) : ''}</button>`).join('')}
+        <button class="btn ghost" id="isNew" style="margin-top:8px;background:#fff;border:2px solid var(--line)">Ні, я новий учасник</button></div>`;
+      $('similar').querySelectorAll('[data-id]').forEach(b => b.onclick = () => { store.set(b.dataset.id); then(); });
+      $('isNew').onclick = () => send(true);
+      check(); return;
+    }
+    if (!r.ok) { $('err').textContent = r.error; check(); return; }
     store.set(r.id);
     then();
-  };
+  }
+  $('go').onclick = () => send(false);
 }
 
 // ── Запитання ────────────────────────────────────────────────
+let TICK = null;
+const mmss = t => Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0');
 async function questionFlow() {
+  clearInterval(TICK);
   view('<div class="spinner"></div>');
-  const [q, pr] = await Promise.all([
-    QuestAPI.call({ action: 'question', p: P, k: K }),
-    QuestAPI.call({ action: 'progress', id: store.get() })
-  ]);
+  const pr = await QuestAPI.call({ action: 'progress', id: store.get() });
   if (pr.reRegister) { store.del(); return registerView(questionFlow); }
-  if (!q.ok) return errorView(q.error);
   if (!pr.ok) return errorView(pr.error);
   setWho(pr);
-  const pt = q.point;
-  const was = pr.progress.done[pt.n];
-  if (was !== undefined) return alreadyView(pt, was, pr.progress);
+  const was = pr.progress.done[P];
+  if (was !== undefined) {
+    const q0 = await QuestAPI.call({ action: 'question', p: P, k: K });
+    if (!q0.ok) return errorView(q0.error);
+    return alreadyView(q0.point, was, pr.progress);
+  }
+  // запит із id запускає таймер точки на сервері (лише при першому відкритті)
+  const q = await QuestAPI.call({ action: 'question', p: P, k: K, id: store.get() });
+  if (!q.ok) return errorView(q.error);
+  const pt = q.point, limit = q.limit || 120;
+  let left = q.remaining == null ? limit : q.remaining;
+  const endAt = Date.now() + left * 1000;
 
   view(`<div class="card">
       <span class="chip">Точка ${pt.n} з ${q.total} · ${esc(pt.topic)}</span>
+      <div class="timer" id="timer"><b id="tl">${mmss(left)}</b><div class="tbar"><i id="tb" style="width:${left / limit * 100}%"></i></div></div>
+      <p class="muted" style="margin:0 0 10px">⏱ Швидше відповіси — більше балів: до ${q.maxPoints || 100} за правильну відповідь.</p>
       <h2>${esc(pt.q)}</h2>
       <div class="opts" id="opts">${pt.options.map((o, i) =>
         `<button class="opt" data-i="${i}"><b>${LETTERS[i]}</b><span>${esc(o)}</span></button>`).join('')}</div>
@@ -128,38 +167,53 @@ async function questionFlow() {
       <div class="err" id="err"></div>
     </div>` + gridHTML(pr.progress, pt.n));
 
-  let choice = null;
+  let choice = null, sent = false;
   const opts = [...document.querySelectorAll('.opt')];
   opts.forEach(b => b.onclick = () => {
     opts.forEach(x => x.classList.remove('on')); b.classList.add('on');
     choice = Number(b.dataset.i); document.getElementById('send').disabled = false;
   });
-  document.getElementById('send').onclick = async () => {
+  async function submit(ch) {
+    if (sent) return; sent = true; clearInterval(TICK);
     const send = document.getElementById('send');
-    send.disabled = true; send.textContent = 'Перевіряю…';
+    send.disabled = true; send.textContent = ch === -1 ? 'Час вийшов…' : 'Перевіряю…';
     opts.forEach(x => x.disabled = true);
-    const r = await QuestAPI.call({ action: 'answer', id: store.get(), p: P, k: K, choice });
+    const r = await QuestAPI.call({ action: 'answer', id: store.get(), p: P, k: K, choice: ch });
     if (!r.ok) {
       if (r.reRegister) { store.del(); return registerView(questionFlow); }
-      document.getElementById('err').textContent = r.error;
-      send.disabled = false; send.textContent = 'Відповісти'; opts.forEach(x => x.disabled = false);
+      sent = false; document.getElementById('err').textContent = r.error;
+      send.disabled = choice == null; send.textContent = 'Відповісти'; opts.forEach(x => x.disabled = false);
       return;
     }
-    resultView(pt, r, choice);
-  };
+    resultView(pt, r, ch);
+  }
+  document.getElementById('send').onclick = () => submit(choice);
+  function tick() {
+    left = Math.max(0, Math.round((endAt - Date.now()) / 1000));
+    const tl = document.getElementById('tl'); if (!tl) return clearInterval(TICK);
+    tl.textContent = mmss(left);
+    document.getElementById('tb').style.width = (left / limit * 100) + '%';
+    const t = document.getElementById('timer');
+    t.classList.toggle('warn', left <= 45 && left > 15); t.classList.toggle('crit', left <= 15);
+    if (left <= 0) submit(-1);
+  }
+  tick(); TICK = setInterval(tick, 1000);
 }
 
 function resultView(pt, r, choice) {
   const pr = r.progress;
   const finished = pr.answered >= pr.total;
+  const title = r.already ? 'Ви вже відповідали тут' : r.late ? 'Час вийшов ⏱' : r.correct ? 'Правильно!' : 'Неправильно';
   view(`<div class="card result ${r.correct ? 'ok' : 'bad'}">
-      <div class="big">${r.correct ? '🎉' : '🤔'}</div>
-      <h2>${r.already ? 'Ви вже відповідали тут' : r.correct ? 'Правильно!' : 'Неправильно'}</h2>
-      <p class="muted">Точка ${pt.n} · ${esc(pt.topic)}${choice != null && !r.already ? ' · ваша відповідь: ' + LETTERS[choice] : ''}</p>
+      <div class="big">${r.late ? '⌛' : r.correct ? '🎉' : '🤔'}</div>
+      <h2>${title}</h2>
+      ${r.already ? '' : `<div class="pts">+${r.points || 0} балів</div>
+      <p class="muted">${r.correct ? 'Відповідь за ' + r.sec + ' с' : r.late ? 'На запитання дається 2 хвилини' : 'За помилку бали не нараховуються'}</p>`}
+      <p class="muted">Точка ${pt.n} · ${esc(pt.topic)}${choice != null && choice >= 0 && !r.already ? ' · ваша відповідь: ' + LETTERS[choice] : ''}</p>
       <div class="explain">💡 ${esc(r.explain)}</div>
     </div>
     ${finished ? `<div class="card result ok"><div class="big">🏆</div><h2>Квест пройдено!</h2>
-      <p>Ви знайшли всі ${pr.total} точок і маєте <b>${pr.correct}</b> правильних відповідей.</p>
+      <p>Ви знайшли всі ${pr.total} точок: <b>${pr.correct}</b> правильних відповідей і <b>${pr.points}</b> балів.</p>
       <a class="btn" href="rating.html">Подивитися рейтинг</a></div>`
     : `<div class="card"><b>Шукайте наступний QR-код!</b>
       <p class="muted" style="margin:4px 0 0">Коди розклеєні по всьому ліцею — порядок не важливий.</p></div>`}
@@ -172,7 +226,7 @@ function alreadyView(pt, correct, pr) {
 
 function setWho(pr) {
   const who = document.getElementById('who');
-  who.textContent = '👤 ' + pr.name + ' · ' + (pr.group || pr.role || '');
+  who.textContent = '👤 ' + pr.name + ' · ' + (pr.group || (pr.cat === 'Працівники' ? 'працівник ліцею' : ''));
   who.classList.remove('hidden');
   document.getElementById('notme').classList.remove('hidden');
 }
@@ -192,9 +246,10 @@ async function homeFlow() {
     <ol class="rules">
       <li>По території ліцею розклеєно <b>15 QR-кодів</b>. Квест триває <b>з 23 по 27 листопада 2026</b> року включно.</li>
       <li>Відскануйте код камерою телефону — відкриється запитання.</li>
-      <li>При першому скануванні вкажіть прізвище, ім’я та групу (або посаду). Грати можуть усі — студенти, викладачі, майстри й працівники ліцею.</li>
-      <li>На кожне запитання — <b>одна спроба</b>. Порядок точок не важливий.</li>
-      <li>Вище в рейтингу той, хто має більше правильних відповідей. При рівності — хто впорався швидше.</li>
+      <li>При першому скануванні оберіть, хто ви (студент чи працівник ліцею), і вкажіть прізвище та ім’я. Якщо телефон вас «забуде» — просто введіть ті самі дані, і прогрес продовжиться.</li>
+      <li>На кожне запитання — <b>одна спроба і 2 хвилини</b>. Таймер стартує, щойно ви відкрили запитання, і не скидається при повторному скануванні.</li>
+      <li>Правильна відповідь дає <b>від 50 до 100 балів</b>: що швидше, то більше. Помилка чи «час вийшов» — 0. Порядок точок не важливий.</li>
+      <li>Вище в рейтингу той, хто набрав більше балів. Окремі <b>ТОП-10</b> для <b>студентів</b> і для <b>працівників ліцею</b>.</li>
     </ol>
   </div>${progressHTML}
   <a class="btn ghost" href="rating.html">🏆 Рейтинг учасників</a>`);

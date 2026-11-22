@@ -36,7 +36,7 @@
   .upd { text-align: center; font-size: 12px; color: var(--muted); }
   @media (min-width: 860px) {
     .tabs { display: none; }
-    .cols { max-width: 640px; margin: 0 auto; }
+    .cols { grid-template-columns: 1fr 1fr; }
     .col.hidden { display: block !important; }
   }
 </style>
@@ -49,8 +49,13 @@
       <small>КПЛТ · 23–27 листопада 2026 · оновлюється автоматично</small></div>
   </div>
   <div id="demo" class="demo hidden">🧪 Демо-режим: показано лише дані з цього браузера.</div>
+  <div class="tabs">
+    <button class="on" data-t="students">🎓 Студенти</button>
+    <button data-t="staff">🏫 Працівники</button>
+  </div>
   <div class="cols">
-    <div class="card col" id="all"><h2>🏆 ТОП-10 учасників <small></small></h2><div class="list"><div class="spinner"></div></div></div>
+    <div class="card col" id="students"><h2>🎓 Студенти <small></small></h2><div class="list"><div class="spinner"></div></div></div>
+    <div class="card col hidden" id="staff"><h2>🏫 Працівники ліцею <small></small></h2><div class="list"><div class="spinner"></div></div></div>
   </div>
   <p class="upd" id="upd"></p>
   <p class="foot"><a href="./">← До квесту</a></p>
@@ -60,6 +65,10 @@
 <script>
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 if (QuestAPI.demo) document.getElementById('demo').classList.remove('hidden');
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('on', x === b));
+  document.querySelectorAll('.col').forEach(c => c.classList.toggle('hidden', c.id !== b.dataset.t));
+});
 const MEDAL = ['🥇', '🥈', '🥉'];
 function render(id, list, total, count) {
   const box = document.querySelector('#' + id + ' .list');
@@ -69,13 +78,14 @@ function render(id, list, total, count) {
     <div class="row ${i < 3 ? 'p' + (i + 1) : ''}">
       <div class="pos">${i < 3 ? MEDAL[i] : i + 1}</div>
       <div class="nm"><b>${esc(x.name)}</b><span>${esc(x.sub || '')}</span></div>
-      <div class="sc">${x.correct}<span>з ${x.answered} знайд. · всього ${total}</span></div>
+      <div class="sc">${x.points ?? 0}<span>балів · ${x.correct}/${x.answered} правильних</span></div>
     </div>`).join('');
 }
 async function load() {
   const r = await QuestAPI.call({ action: 'rating' });
   if (!r.ok) { document.getElementById('upd').textContent = r.error; return; }
-  render('all', r.all || [], r.total, r.count ?? (r.all || []).length);
+  render('students', r.students || [], r.total, r.studentsCount ?? (r.students || []).length);
+  render('staff', r.staff || [], r.total, r.staffCount ?? (r.staff || []).length);
   document.getElementById('upd').textContent = 'Оновлено о ' + new Date().toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' });
 }
 load();

@@ -115,3 +115,20 @@ ol.rules { padding-left: 20px; margin: 8px 0 0; }
 ol.rules li { margin-bottom: 6px; }
 .hidden { display: none !important; }
 @media (max-width: 360px) { .roles { grid-template-columns: 1fr; } }
+
+/* вкладки «Новий учасник / Я вже граю» */
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: var(--idle); padding: 5px; border-radius: 16px; margin-bottom: 16px; }
+.seg button { font: inherit; font-weight: 800; font-size: 14px; border: 0; border-radius: 12px; padding: 10px 8px; background: transparent; color: var(--muted); cursor: pointer; }
+.seg button.on { background: #fff; color: var(--brand); box-shadow: 0 3px 10px rgba(50, 30, 120, .1); }
+input.pin { letter-spacing: .5em; font-weight: 800; text-align: center; font-size: 22px; }
+.hint { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+/* таймер */
+.timer { display: flex; align-items: center; gap: 12px; margin: 4px 0 6px; }
+.timer b { font-size: 26px; font-variant-numeric: tabular-nums; min-width: 72px; }
+.timer .tbar { flex: 1; height: 10px; background: var(--idle); border-radius: 99px; overflow: hidden; }
+.timer .tbar i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, var(--ok), #7bd88f); border-radius: 99px; transition: width 1s linear, background .3s; }
+.timer.warn b { color: #d97706; } .timer.warn .tbar i { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+.timer.crit b { color: var(--bad); animation: blink 1s steps(2) infinite; } .timer.crit .tbar i { background: var(--bad); }
+@keyframes blink { 50% { opacity: .45; } }
+.pts { display: inline-block; font-size: 30px; font-weight: 800; color: var(--brand); margin: 6px 0 2px; }
+.score-line { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
