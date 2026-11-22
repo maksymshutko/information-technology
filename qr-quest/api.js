@@ -15,7 +15,7 @@
     return res.json();
   }
 
-  // ── Демо: 3 тестові точки (справжні 20 — у Code.gs) ──
+  // ── Демо: 3 тестові точки (справжні 15 — у Code.gs) ──
   const DEMO_POINTS = [
     { n: 1, key: 'demo1', topic: 'Демо · Паролі', q: 'Який пароль найнадійніший?',
       options: ['qwerty123', 'Кіт-Ліхтар-Сніг-47!', 'P@ssw0rd'], correct: 1,
@@ -26,8 +26,6 @@
     { n: 3, key: 'demo3', topic: 'Демо · QR', q: 'Що перевірити перед відкриттям посилання з QR?',
       options: ['Нічого', 'Адресу сайту'], correct: 1, explain: 'Шахраї наклеюють фальшиві QR.' }
   ];
-  const ROLES = { student: ['Студент', 'Студенти'], master: ['Майстер виробничого навчання', 'Працівники'],
-                  teacher: ['Викладач', 'Працівники'], worker: ['Працівник ліцею', 'Працівники'] };
   function db() { try { return JSON.parse(localStorage.getItem('qrq_demo_db')) || { people: [], answers: [] }; } catch (e) { return { people: [], answers: [] }; } }
   function save(d) { try { localStorage.setItem('qrq_demo_db', JSON.stringify(d)); } catch (e) {} }
   function prog(d, id) {
@@ -46,12 +44,10 @@
         if (!pt) return { ok: false, error: 'Цей QR-код недійсний. Відскануйте код ще раз.' };
         return { ok: true, total: DEMO_POINTS.length, point: { n: pt.n, topic: pt.topic, q: pt.q, options: pt.options } };
       case 'register': {
-        const r = ROLES[p.role];
-        if (!r) return { ok: false, error: 'Оберіть, хто ви' };
         if (!p.last || !p.first) return { ok: false, error: 'Вкажіть прізвище та ім’я' };
-        if (p.role === 'student' && !p.group) return { ok: false, error: 'Вкажіть групу' };
+        if (!p.group) return { ok: false, error: 'Вкажіть групу або посаду' };
         const id = Math.random().toString(16).slice(2, 10);
-        d.people.push({ id, last: p.last, first: p.first, role: r[0], cat: r[1], group: p.role === 'student' ? p.group : '' });
+        d.people.push({ id, last: p.last, first: p.first, role: '', cat: 'Учасник', group: p.group });
         save(d); return { ok: true, id };
       }
       case 'answer': {
@@ -70,11 +66,10 @@
         const list = d.people.map(x => {
           const a = d.answers.filter(y => y.id === x.id);
           const good = a.filter(y => y.ok);
-          return { name: x.last + ' ' + x.first, cat: x.cat, sub: x.cat === 'Студенти' ? x.group : x.role,
+          return { name: x.last + ' ' + x.first, sub: x.group || x.role,
                    correct: good.length, answered: a.length, last: Math.max(0, ...good.map(y => y.t)) };
         }).filter(x => x.answered).sort((a, b) => b.correct - a.correct || a.last - b.last);
-        return { ok: true, total: DEMO_POINTS.length, students: list.filter(x => x.cat === 'Студенти'),
-                 staff: list.filter(x => x.cat === 'Працівники'), updated: new Date().toISOString() };
+        return { ok: true, total: DEMO_POINTS.length, all: list.slice(0, 10), count: list.length, updated: new Date().toISOString() };
       }
       case 'qrlist': {
         const base = location.href.replace(/[^/]*$/, '');

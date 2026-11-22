@@ -76,42 +76,26 @@ function registerView(then) {
     <span class="chip">Крок 1 · Реєстрація</span>
     <h2>Привіт! Хто проходить квест?</h2>
     <p class="muted">Заповніть один раз — далі телефон вас запам’ятає.</p>
-    <label class="f">Хто ви</label>
-    <div class="roles" id="roles">
-      <button type="button" data-r="student"><span>🎓</span>Студент</button>
-      <button type="button" data-r="master"><span>🛠️</span>Майстер в/н</button>
-      <button type="button" data-r="teacher"><span>📚</span>Викладач</button>
-      <button type="button" data-r="worker"><span>🏫</span>Працівник ліцею</button>
-    </div>
     <label class="f" for="last">Прізвище</label>
     <input type="text" id="last" autocomplete="family-name" maxlength="40" placeholder="Шевченко">
     <label class="f" for="first">Ім’я</label>
     <input type="text" id="first" autocomplete="given-name" maxlength="40" placeholder="Олена">
-    <div id="groupBox" class="hidden">
-      <label class="f" for="group">Група</label>
-      <input type="text" id="group" maxlength="15" placeholder="напр. 21-Е">
-    </div>
+    <label class="f" for="group">Група або посада</label>
+    <input type="text" id="group" maxlength="30" placeholder="напр. 202 або викладач">
     <label class="check"><input type="checkbox" id="agree">
       <span>Погоджуюся, що моє прізвище, ім’я та група/посада будуть використані для підрахунку результатів квесту і показані в рейтингу.</span></label>
     <button class="btn" id="go" disabled>Почати квест →</button>
     <div class="err" id="err"></div>
   </div>`);
-  let role = null;
   const $ = id => document.getElementById(id);
   const check = () => {
-    $('go').disabled = !(role && $('last').value.trim().length > 1 && $('first').value.trim().length > 1 &&
-      (role !== 'student' || $('group').value.trim()) && $('agree').checked);
+    $('go').disabled = !($('last').value.trim().length > 1 && $('first').value.trim().length > 1 &&
+      $('group').value.trim() && $('agree').checked);
   };
-  document.querySelectorAll('#roles button').forEach(b => b.onclick = () => {
-    document.querySelectorAll('#roles button').forEach(x => x.classList.remove('on'));
-    b.classList.add('on'); role = b.dataset.r;
-    $('groupBox').classList.toggle('hidden', role !== 'student');
-    check();
-  });
   ['last', 'first', 'group', 'agree'].forEach(id => { $(id).oninput = check; $(id).onchange = check; });
   $('go').onclick = async () => {
     $('go').disabled = true; $('go').textContent = 'Зберігаю…'; $('err').textContent = '';
-    const r = await QuestAPI.call({ action: 'register', role, last: $('last').value.trim(),
+    const r = await QuestAPI.call({ action: 'register', last: $('last').value.trim(),
       first: $('first').value.trim(), group: $('group').value.trim() });
     if (!r.ok) { $('err').textContent = r.error; $('go').textContent = 'Почати квест →'; check(); return; }
     store.set(r.id);
@@ -188,7 +172,7 @@ function alreadyView(pt, correct, pr) {
 
 function setWho(pr) {
   const who = document.getElementById('who');
-  who.textContent = '👤 ' + pr.name + ' · ' + (pr.group || pr.role);
+  who.textContent = '👤 ' + pr.name + ' · ' + (pr.group || pr.role || '');
   who.classList.remove('hidden');
   document.getElementById('notme').classList.remove('hidden');
 }
@@ -206,12 +190,11 @@ async function homeFlow() {
     <h2>Знайди всі QR-коди в ліцеї</h2>
     <p class="muted">Київський професійний ліцей транспорту</p>
     <ol class="rules">
-      <li>По території ліцею розклеєно <b>20 QR-кодів</b>. Квест триває <b>з 23 по 27 листопада 2026</b> року включно.</li>
+      <li>По території ліцею розклеєно <b>15 QR-кодів</b>. Квест триває <b>з 23 по 27 листопада 2026</b> року включно.</li>
       <li>Відскануйте код камерою телефону — відкриється запитання.</li>
-      <li>При першому скануванні вкажіть прізвище, ім’я та хто ви.</li>
+      <li>При першому скануванні вкажіть прізвище, ім’я та групу (або посаду). Грати можуть усі — студенти, викладачі, майстри й працівники ліцею.</li>
       <li>На кожне запитання — <b>одна спроба</b>. Порядок точок не важливий.</li>
       <li>Вище в рейтингу той, хто має більше правильних відповідей. При рівності — хто впорався швидше.</li>
-      <li>Окремі <b>ТОП-10</b> для <b>студентів</b> і для <b>працівників</b> ліцею (викладачі, майстри в/н, працівники).</li>
     </ol>
   </div>${progressHTML}
   <a class="btn ghost" href="rating.html">🏆 Рейтинг учасників</a>`);
