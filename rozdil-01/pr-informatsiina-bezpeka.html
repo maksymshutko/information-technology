@@ -4,110 +4,162 @@
 <meta charset="UTF-8">
 <script>/*clean-url*/(function(){if(location.protocol==="file:")return;var p=location.pathname,q=p.replace(/\/index\.html$/,"/").replace(/\.html$/,"");if(q!==p)history.replaceState(null,"",q+location.search+location.hash);})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Симуляція зламу слабкого пароля — вправа з кібербезпеки</title>
+<title>Злам слабкого пароля — вправа з кібербезпеки</title>
+<meta name="description" content="Навчальна гра: підбери найпоширеніші паролі на вигаданому сервісі й переконайся, чому прості паролі небезпечні.">
 <link rel="icon" href="../assets/logo.png">
 <link rel="stylesheet" href="../assets/style.css?v=23f00d98">
 <style>
-  :root{
-    --bg: #1a1330;
-    --panel: #241b38;
-    --panel-2: #2b2140;
-    --border: #3c2f5a;
-    --text: #f1ecff;
-    --muted: #a99cc9;
-    --amber: #9f75ff;
-    --amber-dim: rgba(159,117,255,.18);
-    --success: #34d399;
-    --success-dim: rgba(52,211,153,.15);
-    --danger: #fb7185;
-    --danger-dim: rgba(251,113,133,.15);
-    --mono: 'JetBrains Mono', Consolas, monospace;
-    --sans: 'Nunito', 'Segoe UI', Arial, sans-serif;
-    --display: 'Baloo 2', 'Nunito', sans-serif;
-  }
-  *{ box-sizing: border-box; }
-  html,body{
-    margin:0; padding:0; background: var(--bg); color: var(--text);
-    font-family: var(--sans); min-height:100vh;
-  }
-  .wrap{ max-width: 1080px; margin: 0 auto; padding: 28px 20px 60px; }
+.pw-page [hidden]{ display:none !important; }
+.pw-hero{ display:grid; grid-template-columns: 1.4fr .8fr; gap: 22px; align-items:end; margin-bottom: 22px; }
+.pw-hero .lead{ margin-bottom: 16px; }
+.pw-chips{ display:flex; flex-wrap:wrap; gap: 8px; }
+.pw-chip{ display:inline-flex; align-items:center; gap:6px; font-size: 12.5px; font-weight: 800; color: #d9def5;
+  background: rgba(255,255,255,.05); border: 1px solid var(--border-strong); border-radius: 999px; padding: 6px 12px; }
+.pw-next{ display:flex; flex-direction:column; gap: 8px; padding: 18px 20px; }
+.pw-next small{ color: var(--muted); font-weight: 700; font-size: 12.5px; }
+.pw-next a.btn{ justify-content:center; }
+@media (max-width: 820px){ .pw-hero{ grid-template-columns: 1fr; } }
 
-  .brief{
-    background: var(--panel); border:2px solid var(--border); border-radius: 20px;
-    padding: 18px 20px; margin-bottom: 22px; box-shadow: var(--shadow-sm);
-  }
-  .brief h1{ font-family: var(--display); font-weight:800; font-size: 20px; margin: 0 0 8px; letter-spacing: .3px; }
-  .brief p{ margin: 4px 0; color: var(--muted); font-size: 14.5px; line-height:1.55; font-weight:600; }
-  .brief b{ color: var(--text); }
+/* вікно браузера (світле, як справжнє) */
+.bw{ background:#f4f6fb; color:#1b2235; border-radius: 16px; overflow:hidden; box-shadow: var(--shadow-md), 0 0 0 1px rgba(255,255,255,.06); }
+.bw-tabs{ display:flex; align-items:flex-end; gap: 8px; background:#dfe4ef; padding: 8px 10px 0; }
+.bw-dots{ display:flex; gap:6px; padding: 0 6px 10px 2px; }
+.bw-dots i{ width:11px; height:11px; border-radius:50%; background:#ff5f57; display:block; }
+.bw-dots i:nth-child(2){ background:#febc2e; } .bw-dots i:nth-child(3){ background:#28c840; }
+.bw-tab{ display:flex; align-items:center; gap:8px; background:#f4f6fb; border-radius: 10px 10px 0 0; padding: 8px 14px;
+  font-size: 12.5px; font-weight: 700; color:#2b3350; max-width: 240px; min-width:0; }
+.bw-tab span{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.bw-tab .fav{ width:16px; height:16px; border-radius:5px; flex-shrink:0; background: linear-gradient(135deg,#ff8a3d,#ff4f7a); color:#fff;
+  font-size:10px; font-weight:900; display:grid; place-items:center; }
+.bw-tab .x{ color:#8a93ad; margin-left: 4px; }
+.bw-bar{ display:flex; align-items:center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid #e1e5ef; background:#f4f6fb; }
+.bw-nav{ color:#8a93ad; font-size: 15px; letter-spacing: 6px; user-select:none; }
+.bw-url{ flex:1; min-width:0; display:flex; align-items:center; gap:7px; background:#e6eaf3; border-radius: 999px; padding: 6px 12px;
+  font-family: var(--font-mono); font-size: 12.5px; color:#3a4363; white-space:nowrap; overflow:hidden; }
+.bw-url .lock{ color:#12a77a; font-size: 12px; }
+.bw-url b{ color:#111a33; font-weight:700; }
+.bw-body{ background:#fff; padding: 26px 22px 24px; position:relative; }
 
-  .console-bar{ display:flex; align-items:center; gap:8px; margin-bottom: 14px; }
-  .dot{ width:10px; height:10px; border-radius:50%; }
-  .dot.r{ background:#f24d63; } .dot.y{ background:#e0972a; } .dot.g{ background:#22c08f; }
-  .console-title{ font-family: var(--mono); font-size: 12.5px; color: var(--muted); margin-left: 8px; letter-spacing: .5px; }
+/* сайт «Листоноша» */
+.ln-brand{ display:flex; align-items:center; gap:10px; justify-content:center; margin-bottom: 6px; }
+.ln-logo{ width:38px; height:38px; border-radius: 12px; background: linear-gradient(135deg,#ff8a3d,#ff4f7a); display:grid; place-items:center;
+  color:#fff; font-size: 20px; box-shadow: 0 6px 16px -6px rgba(255,79,122,.7); }
+.ln-name{ font-family: var(--font-display); font-weight: 700; font-size: 19px; color:#1b2235; letter-spacing: -.3px; }
+.ln-sub{ text-align:center; color:#5c6688; font-size: 13.5px; font-weight:600; margin: 0 0 18px; }
+.ln-form{ max-width: 360px; margin: 0 auto; }
+.ln-field{ margin-bottom: 14px; }
+.ln-field label{ display:block; font-size: 12.5px; font-weight: 800; color:#3a4363; margin-bottom: 5px; }
+.ln-input{ position:relative; display:flex; align-items:center; }
+.ln-input input{ width:100%; font: 600 16px/1.3 var(--font-body); color:#111a33; background:#fff; border: 1.5px solid #cfd5e3; border-radius: 10px;
+  padding: 11px 44px 11px 12px; outline:none; transition: border-color .15s, box-shadow .15s; }
+.ln-input input:focus{ border-color:#ff6a5a; box-shadow: 0 0 0 4px rgba(255,106,90,.16); }
+.ln-input input[disabled]{ background:#f1f3f8; color:#5c6688; }
+.ln-input .eye{ position:absolute; right: 6px; width: 34px; height: 34px; border:0; background:transparent; border-radius: 8px; cursor:pointer; font-size: 16px; color:#5c6688; }
+.ln-input .eye:hover{ background:#f1f3f8; }
+.ln-btn{ width:100%; border:0; border-radius: 10px; padding: 12px; cursor:pointer; font: 800 15px var(--font-body); color:#fff;
+  background: linear-gradient(135deg,#ff7a45,#ff4f7a); box-shadow: 0 8px 20px -10px rgba(255,79,122,.9); transition: transform .1s, filter .15s; }
+.ln-btn:hover{ filter: brightness(1.05); } .ln-btn:active{ transform: translateY(1px); }
+.ln-btn:disabled{ opacity:.55; cursor: not-allowed; }
+.ln-links{ display:flex; justify-content:space-between; font-size: 12.5px; margin-top: 12px; color:#2456c9; font-weight:700; }
+.ln-links span{ cursor:default; }
+.ln-msg{ font-size: 13px; font-weight: 700; border-radius: 10px; padding: 9px 12px; margin-bottom: 12px; display:flex; gap:8px; align-items:flex-start; }
+.ln-msg.err{ background:#fdecee; color:#b4233a; border: 1px solid #f7c4cc; }
+.ln-msg.ok{ background:#e6f7f0; color:#0d7d58; border: 1px solid #b4e8d4; }
+.ln-msg.warn{ background:#fff6df; color:#8a5a00; border: 1px solid #f3dc9c; }
+.ln-input.bad input{ border-color:#e5484d; }
+.shake{ animation: shake .42s ease; }
+@keyframes shake{ 10%,90%{transform:translateX(-2px)} 20%,80%{transform:translateX(4px)} 30%,50%,70%{transform:translateX(-7px)} 40%,60%{transform:translateX(7px)} }
 
-  .grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  @media (max-width: 820px){ .grid{ grid-template-columns: 1fr; } }
+/* термінал (темний) */
+.term-win{ background:#0a0f1f; border:1px solid #1f2a4d; border-radius: 16px; overflow:hidden; box-shadow: var(--shadow-md); display:flex; flex-direction:column; }
+.term-top{ display:flex; align-items:center; gap: 8px; padding: 10px 14px; background:#0f162c; border-bottom: 1px solid #1f2a4d;
+  font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.term-top .bw-dots{ padding:0; }
+.term-top .tt{ margin-left: 6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.term-body{ padding: 14px 16px; font-family: var(--font-mono); font-size: 12.8px; line-height: 1.7; color:#b9c3e6; }
 
-  .card{ background: var(--panel); border: 2px solid var(--border); border-radius: 20px; padding: 22px; box-shadow: var(--shadow-sm); }
+/* HUD */
+.hud{ display:grid; grid-template-columns: repeat(5, minmax(0,1fr)) auto; gap: 10px; margin-bottom: 18px; }
+.hud-it{ background: var(--glass); border:1px solid var(--border); border-radius: 16px; padding: 10px 14px; min-width:0; }
+.hud-it small{ display:block; font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing:.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.hud-it b{ font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+.hud-it b.mint{ color: var(--mint); }
+.hud-btn{ border:1px solid var(--border-strong); background: rgba(255,255,255,.04); color: var(--ink); border-radius: 16px; padding: 0 16px;
+  font: 800 13px var(--font-body); cursor:pointer; white-space:nowrap; }
+.hud-btn:hover{ border-color: var(--mint); }
+.bump{ animation: bump .5s ease; }
+@keyframes bump{ 30%{ transform: scale(1.25); color: var(--mint); } }
+@media (max-width: 720px){
+  .hud{ grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .hud-btn{ grid-column: span 3; padding: 10px; }
+}
 
-  .login-card h2{ font-family: var(--display); font-size: 15px; margin: 0 0 18px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .6px; }
-  .field{ margin-bottom: 16px; }
-  .field label{ display:block; font-size: 12.5px; color: var(--muted); margin-bottom: 6px; font-weight:700; }
-  .field input{
-    width:100%; padding: 11px 12px; border-radius: 12px; border: 2px solid var(--border);
-    background: var(--panel-2); color: var(--text); font-family: var(--mono); font-size: 14.5px;
-  }
-  .field input:focus{ outline: none; border-color: var(--amber); box-shadow: 0 0 0 4px rgba(139,92,246,.15); }
-  .field input[disabled]{ color: var(--muted); }
+/* тост */
+.toast{ position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 140%); z-index: 300; background: #0f1a33; color: var(--ink);
+  border: 1px solid rgba(62,230,181,.5); box-shadow: var(--shadow-pop); border-radius: 14px; padding: 12px 18px; font-weight: 800; font-size: 14px;
+  transition: transform .35s cubic-bezier(.2,1.4,.4,1); max-width: calc(100vw - 32px); text-align:center; }
+.toast.show{ transform: translate(-50%, 0); }
+.confetti{ position: fixed; inset: 0; pointer-events:none; z-index: 290; overflow:hidden; }
+.confetti i{ position:absolute; top:-12px; width: 8px; height: 12px; border-radius: 2px; animation: fall linear forwards; }
+@keyframes fall{ to{ transform: translateY(105vh) rotate(720deg); opacity:.8; } }
+@media (prefers-reduced-motion: reduce){ .shake,.bump,.confetti i{ animation:none !important; } }
 
-  .btn{
-    width:100%; padding: 12px; border-radius: 999px; border: none; cursor:pointer;
-    background: linear-gradient(135deg, var(--amber), #f472b6); color: #fff; font-family: var(--display);
-    font-weight: 700; font-size: 14.5px; letter-spacing:.2px; box-shadow: 0 6px 0 rgba(109,63,214,.35);
-  }
-  .btn:active{ transform: translateY(4px); box-shadow: 0 2px 0 rgba(109,63,214,.35); }
-  .btn:disabled{ opacity: .5; cursor:not-allowed; }
+/* поради */
+.pw-tips{ margin-top: 30px; }
+.pw-tips h2{ font-family: var(--font-display); font-size: 20px; margin: 0 0 14px; }
+.pw-tip-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(196px,1fr)); gap: 14px; }
+.pw-tip{ padding: 18px 20px; }
+.pw-tip .ic{ font-size: 26px; }
+.pw-tip h3{ font-size: 15.5px; margin: 6px 0 6px; font-family: var(--font-display); font-weight: 600; }
+.pw-tip p{ margin:0; color: var(--muted); font-size: 14px; font-weight: 500; line-height:1.6; }
+.pw-tip code{ font-family: var(--font-mono); color: var(--mint); background: rgba(62,230,181,.08); padding: 1px 6px; border-radius: 6px; font-size: 13px; overflow-wrap: anywhere; }
 
-  .progress-row{ display:flex; justify-content:space-between; align-items:center; margin: 16px 0 8px; font-family: var(--mono); font-size: 13px; color: var(--muted); }
-  .progress-bar{ height: 9px; border-radius: 999px; background: var(--panel-2); border: 2px solid var(--border); overflow:hidden; }
-  .progress-fill{ height:100%; background: linear-gradient(90deg, var(--amber), var(--success)); width:0%; transition: width .35s ease; }
+.gm-grid{ display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 20px; align-items:start; }
+@media (max-width: 900px){ .gm-grid{ grid-template-columns: 1fr; } }
+.gm-note{ font-size: 12px; color:#6b7595; text-align:center; margin-top: 14px; font-weight:600; }
 
-  .hints-panel{ margin-top: 16px; }
-  .hints-panel h3{ font-family: var(--display); font-size: 12.5px; text-transform: uppercase; letter-spacing:.5px; color: var(--muted); margin: 0 0 8px; font-weight:700; }
-  .hint-item{
-    padding: 9px 11px; border-radius: 12px; border-left: 4px solid var(--amber);
-    background: var(--amber-dim); color: #d9c6ff; font-size: 13px; font-weight:600; margin-bottom: 7px; line-height:1.5;
-  }
-  .hints-empty{ color: var(--muted); font-size: 13px; font-style: italic; }
+.slots{ display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; padding: 14px 16px 6px; }
+@media (max-width: 520px){ .slots{ grid-template-columns: repeat(3, minmax(0,1fr)); } }
+.slot{ position:relative; border:1px dashed #2a3762; border-radius: 10px; padding: 8px 6px 7px; text-align:center; background:#0c1328;
+  font-family: var(--font-mono); min-height: 58px; transition: background .3s, border-color .3s; }
+.slot .n{ position:absolute; top:3px; left:6px; font-size: 9.5px; color:#56618a; }
+.slot .v{ display:block; margin-top: 10px; font-size: 13px; letter-spacing: 1.5px; color:#56618a; word-break: break-all; line-height:1.3; }
+.slot .v em{ font-style:normal; color: #fbbf24; }
+.slot.hinted{ border-color: rgba(251,191,36,.55); }
+.slot.solved{ border: 1px solid rgba(62,230,181,.6); background: rgba(62,230,181,.1); animation: flip .55s ease; }
+.slot.solved .v{ color: var(--mint); letter-spacing: .3px; font-weight: 700; }
+.slot.solved::after{ content:'✓'; position:absolute; top:2px; right:6px; color: var(--mint); font-size: 11px; }
+@keyframes flip{ 0%{ transform: rotateX(90deg); } 100%{ transform: rotateX(0); } }
+.sec-label{ padding: 12px 16px 0; font-family: var(--font-mono); font-size: 11px; color:#56618a; text-transform: uppercase; letter-spacing: 1px; }
+.log{ height: 250px; overflow-y:auto; padding: 8px 16px 14px; font-family: var(--font-mono); font-size: 12.5px; line-height:1.75; }
+.log .l{ white-space: pre-wrap; word-break: break-all; animation: fadein .25s ease; }
+.log .t{ color:#56618a; }
+.log .ok{ color: var(--mint); } .log .bad{ color: #fb7185; } .log .hn{ color: #fbbf24; } .log .sys{ color:#7f8bb8; }
+@keyframes fadein{ from{ opacity:0; transform: translateY(-3px); } }
+.hints{ padding: 0 16px 14px; display:grid; gap: 6px; }
+.hint{ border-left: 3px solid #fbbf24; background: rgba(251,191,36,.08); color:#f6dc9a; border-radius: 8px; padding: 7px 10px; font-size: 12.3px; line-height:1.5; font-family: var(--font-body); font-weight: 600; }
+.cursor-blink{ display:inline-block; width: 8px; height: 14px; background: var(--mint); vertical-align: -2px; animation: blink 1s steps(1) infinite; }
+@keyframes blink{ 50%{ opacity:0; } }
+.gm-actions{ display:flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
 
-  .finish{ display:none; text-align:center; padding: 10px 4px 4px; }
-  .finish.show{ display:block; }
-  .finish .big{ font-size: 34px; margin-bottom: 4px; }
-  .finish h3{ font-family: var(--display); margin: 6px 0 10px; font-size: 18px; }
-  .finish p{ color: var(--muted); font-size: 14px; line-height:1.6; font-weight:600; }
-
-  .btn-row{ display:flex; gap:10px; margin-top: 16px; }
-  .btn-secondary{
-    flex:1; background: transparent; border: 2px solid var(--border); color: var(--muted);
-    padding: 9px 12px; border-radius: 999px; cursor:pointer; font-size: 13px; font-weight:700; font-family: var(--display);
-  }
-  .btn-secondary:hover{ color: var(--text); border-color: var(--amber); }
-
-  .log-card h2{ font-family: var(--display); font-size: 15px; margin: 0 0 14px; color: var(--muted); font-weight:700; text-transform: uppercase; letter-spacing:.6px; }
-  .log-list{ display:flex; flex-direction:column; gap:8px; max-height: 480px; overflow-y:auto; padding-right: 4px; }
-  .log-empty{ color: var(--muted); font-size: 13.5px; font-style: italic; }
-  .log-item{
-    font-family: var(--mono); font-size: 13.5px; padding: 9px 11px; border-radius: 12px;
-    border-left: 4px solid var(--border); background: var(--panel-2); display:flex; justify-content:space-between; gap:10px;
-  }
-  .log-item.ok{ border-left-color: var(--success); background: var(--success-dim); color: #a7f3d3; }
-  .log-item.bad{ border-left-color: var(--danger); background: var(--danger-dim); color: #ffd0d8; }
-  .log-tag{ color: var(--muted); font-size: 11.5px; white-space:nowrap; }
-
-  .tips{ margin-top: 22px; background: var(--panel); border:2px solid var(--border); border-radius: 20px; padding: 20px 22px; box-shadow: var(--shadow-sm); }
-  .tips h2{ font-family: var(--display); font-size: 16px; margin: 0 0 10px; }
-  .tips ul{ margin: 0; padding-left: 20px; color: var(--muted); font-size: 14px; font-weight:600; line-height: 1.7; }
-  .tips li b{ color: var(--text); }
+/* підсумок */
+.modal[hidden]{ display:none; }
+.modal{ position: fixed; inset: 0; z-index: 250; background: rgba(4,7,16,.72); backdrop-filter: blur(6px); display:grid; place-items:center; padding: 16px; }
+.modal-card{ width: min(640px, 100%); max-height: calc(100vh - 32px); overflow-y:auto; background: var(--panel); border:1px solid var(--border-strong);
+  border-radius: 22px; padding: 24px 24px 20px; box-shadow: var(--shadow-md); animation: pop .35s cubic-bezier(.2,1.3,.4,1); }
+@keyframes pop{ from{ transform: scale(.9); opacity:0; } }
+.modal-card h2{ font-family: var(--font-display); margin: 4px 0 6px; font-size: 22px; }
+.stars{ font-size: 30px; letter-spacing: 4px; }
+.sum-grid{ display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; margin: 14px 0; }
+@media (max-width: 520px){ .sum-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
+.sum-grid div{ background: rgba(255,255,255,.04); border:1px solid var(--border); border-radius: 12px; padding: 8px 10px; }
+.sum-grid small{ display:block; color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; }
+.sum-grid b{ font-family: var(--font-display); font-size: 18px; }
+.sum-list{ list-style:none; padding:0; margin: 0 0 12px; display:grid; gap: 5px; font-size: 13.5px; }
+.sum-list li{ display:flex; gap: 8px; align-items:flex-start; color: #d9def5; font-weight: 600; }
+.sum-list li code{ font-family: var(--font-mono); color: var(--mint); }
+.sum-list li.miss{ color: var(--muted); }
+.sum-p{ color: var(--muted); font-weight: 600; font-size: 14px; margin: 0 0 14px; }
 </style>
 </head>
 <body>
@@ -125,84 +177,157 @@
     </div>
   </div>
 </nav>
-<div class="wrap">
-
-  <div class="console-bar">
-    <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-    <span class="console-title">SECURE-LOGIN-SIM // НАВЧАЛЬНИЙ РЕЖИМ, ДАНІ ВИГАДАНІ</span>
+<main class="wrap pw-page">
+  <div class="pw-hero">
+    <div>
+      <div class="eyebrow">Розділ 1 · Практична вправа</div>
+      <h1>Злам <span class="grad">слабкого пароля</span></h1>
+      <p class="lead">Ти — «етичний хакер» на навчальному полігоні. Сервіс «Листоноша» вигаданий, а в його базі — <b>12 найпоширеніших паролів світу</b>, випадково вибраних із 24. Підбери якомога більше: так ти побачиш, чому прості паролі — легка здобич.</p>
+      <div class="pw-chips">
+        <span class="pw-chip">🎯 1 бал за пароль</span><span class="pw-chip">💡 підказка після кожних 10 помилок</span><span class="pw-chip">🔐 у коді — лише хеші</span>
+      </div>
+    </div>
+    <div class="card-glass pw-next">
+      <small>Наступний крок уроку</small>
+      <b>Тепер навпаки: склади пароль, який не зламати</b>
+      <a class="btn" href="parol-konstruktor">🛡️ Конструктор надійного пароля</a>
+    </div>
   </div>
 
-  <div class="brief">
-    <h1>🔐 Вправа: «Наскільки надійний твій пароль?»</h1>
-    <p>Перед тобою фейкова форма входу. У системі — пул із <b>24 найпоширеніших паролів світу</b>, а тобі особисто випадково призначено <b>12 із них</b>. Вводь варіанти в будь-якому порядку — система сама розпізнає, який із твоїх 12 паролів вгадано.</p>
-    <p>За кожен вгаданий пароль — <b>1 бал</b> (максимум 12 балів за урок). Кожна спроба потрапляє до журналу праворуч: <b style="color:#4fd68c">зелений</b> — правильно, <b style="color:#ef5b5b">червоний</b> — неправильно.</p>
-    <p>Після <b>кожних 10 невдалих спроб</b> система розкриває розгорнуту підказку (довжина, тип і перші символи одного з ще не вгаданих паролів).</p>
-    <p>Це безпечне навчальне середовище — жодні реальні акаунти тут не задіяні. Самі паролі в коді сторінки не зберігаються — лише їхні хеші, так само, як це роблять реальні системи.</p>
+  <div class="hud">
+    <div class="hud-it"><small>Зламано</small><b class="mint" id="hScore">0 / 12</b></div>
+    <div class="hud-it"><small>Спроби</small><b id="hTries">0</b></div>
+    <div class="hud-it"><small>Влучність</small><b id="hAcc">—</b></div>
+    <div class="hud-it"><small>Час</small><b id="hTime">0:00</b></div>
+    <div class="hud-it"><small>Підказки</small><b id="hHints">0</b></div>
+    <button class="hud-btn" type="button" id="sndBtn">🔇 Звук</button>
   </div>
 
-  <div class="grid">
-
-    <div class="card login-card">
-      <h2>Вхід у обліковий запис</h2>
-
-      <div class="field">
-        <label>Логін</label>
-        <input type="text" value="user@email.com" disabled>
-      </div>
-
-      <div class="field">
-        <label>Пароль</label>
-        <input type="text" id="passInput" placeholder="Введи варіант пароля..." autocomplete="off">
-      </div>
-
-      <button class="btn" id="submitBtn" onclick="tryPassword()">Спробувати увійти</button>
-
-      <div class="progress-row">
-        <span id="progressLabel">Вгадано: 0 з 12</span>
-        <span id="scoreLabel">Бали: 0 / 12</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-
-      <div class="hints-panel">
-        <h3>Розкриті підказки</h3>
-        <div id="hintsList"><div class="hints-empty">Підказки з'являться після 10 невдалих спроб...</div></div>
-      </div>
-
-      <div class="finish" id="finishBox">
-        <div class="big">🏁</div>
-        <h3>Спробу завершено!</h3>
-        <p id="finishText"></p>
-      </div>
-
-      <div class="btn-row">
-        <button class="btn-secondary" onclick="finishNow()">Завершити спробу</button>
-        <button class="btn-secondary" onclick="resetGame()">Почати спочатку (нові 12)</button>
+  <div class="gm-grid">
+    <div>
+      <div class="bw ">
+      <div class="bw-tabs"><div class="bw-dots"><i></i><i></i><i></i></div>
+        <div class="bw-tab"><span class="fav">✉</span><span>Листоноша — вхід</span><span class="x">×</span></div></div>
+      <div class="bw-bar"><span class="bw-nav">‹ › ⟳</span><div class="bw-url"><span class="lock">🔒</span><span><b>lystonosha.mail</b>/login</span></div></div>
+      <div class="bw-body"><div class="ln-brand"><div class="ln-logo">✉</div><div class="ln-name">Листоноша</div></div>
+        <p class="ln-sub">Увійдіть, щоб перейти до пошти</p>
+        <form class="ln-form" id="loginForm" autocomplete="off" onsubmit="return false">
+          <div id="lnMsg"></div>
+          <div class="ln-field"><label for="lnUser">Електронна пошта</label>
+            <div class="ln-input"><input id="lnUser" type="text" value="user@lystonosha.mail" disabled></div></div>
+          <div class="ln-field"><label for="passInput">Пароль</label>
+            <div class="ln-input" id="passWrap"><input id="passInput" type="password" placeholder="Введи варіант пароля…" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+            <button class="eye" type="button" id="eyeBtn" aria-label="Показати пароль">👁</button></div></div>
+          <button class="ln-btn" id="submitBtn" type="submit">Увійти</button>
+          <div class="ln-links"><span>Забули пароль?</span><span>Створити акаунт</span></div>
+        </form>
+        <div class="gm-note">Навчальний полігон: сервіс і акаунт вигадані, нічого нікуди не надсилається.</div></div>
+    </div>
+      <div class="gm-actions">
+        <button class="btn btn-ghost btn-sm" type="button" id="finishBtn">🏁 Завершити й побачити підсумок</button>
+        <button class="btn btn-ghost btn-sm" type="button" id="resetBtn">🔄 Почати спочатку (нові 12)</button>
       </div>
     </div>
 
-    <div class="card log-card">
-      <h2>Журнал спроб</h2>
-      <div class="log-list" id="logList">
-        <div class="log-empty">Тут з'являтимуться твої спроби...</div>
-      </div>
+    <div class="term-win" aria-label="Консоль атаки">
+      <div class="term-top"><div class="bw-dots"><i></i><i></i><i></i></div><span class="tt">attack-console — target: lystonosha.mail — навчальний режим</span></div>
+      <div class="sec-label">// база цілей: ••• — довжина пароля</div>
+      <div class="slots" id="slots"></div>
+      <div class="sec-label">// перехоплені підказки</div>
+      <div class="hints" id="hintsList"><div class="hint" style="border-color:#2a3762;background:transparent;color:#56618a">Перша підказка — після 10 невдалих спроб.</div></div>
+      <div class="sec-label">// журнал спроб</div>
+      <div class="log" id="logList" aria-live="polite"></div>
     </div>
-
   </div>
 
-  <div class="tips">
+  <section class="pw-tips">
     <h2>Чому це важливо</h2>
-    <ul>
-      <li><b>Прості паролі зламують за секунди.</b> Усі паролі в цій вправі щороку входять до списків найпоширеніших і найненадійніших паролів світу.</li>
-      <li><b>Довжина важливіша за складність написання.</b> Пароль із 12+ символів надійніший за короткий пароль зі спецсимволами.</li>
-      <li><b>Уникай особистої інформації.</b> Дати народження, імена, «qwerty» та послідовності цифр — перше, що перевіряють зловмисники.</li>
-      <li><b>Реальні системи зберігають не сам пароль, а його хеш</b> — так само, як зроблено в коді цієї сторінки. Але навіть хеш не рятує слабкий пароль: його можна підібрати за словником поширених варіантів.</li>
-      <li>Використовуй різні паролі для різних сервісів та, за можливості, менеджер паролів і двофакторну автентифікацію.</li>
-    </ul>
+    <div class="pw-tip-grid">
+      <div class="card-glass pw-tip"><div class="ic">⚡</div><h3>Прості паролі падають за секунди</h3><p>Усі паролі з гри щороку входять до списків найпоширеніших. Зломщики перебирають такі списки першими — ще до будь-якого «справжнього» підбору.</p></div>
+      <div class="card-glass pw-tip"><div class="ic">📏</div><h3>Довжина важливіша за «хитрість»</h3><p>Пароль із 12+ символів, а краще — фраза з кількох слів, надійніший за короткий пароль зі спецсимволами.</p></div>
+      <div class="card-glass pw-tip"><div class="ic">🎂</div><h3>Без особистої інформації</h3><p>Дати народження, імена, клички тварин, <code>qwerty</code> і <code>123456</code> — перше, що перевіряють.</p></div>
+      <div class="card-glass pw-tip"><div class="ic">#️⃣</div><h3>Хеш — не панацея</h3><p>Сайти зберігають не пароль, а його хеш (як і ця сторінка). Але слабкий пароль підбирають і за хешем — за словником.</p></div>
+      <div class="card-glass pw-tip"><div class="ic">🔑</div><h3>Різні паролі + 2FA</h3><p>Для кожного сервісу — свій пароль у менеджері паролів, а для важливих акаунтів — двофакторна автентифікація.</p></div>
+    </div>
+  </section>
+</main>
+
+<div class="modal" id="sumModal" hidden role="dialog" aria-modal="true" aria-labelledby="sumTitle">
+  <div class="modal-card">
+    <div class="stars" id="sumStars"></div>
+    <h2 id="sumTitle"></h2>
+    <p class="sum-p" id="sumText"></p>
+    <div class="sum-grid">
+      <div><small>Бали</small><b id="sScore"></b></div><div><small>Спроби</small><b id="sTries"></b></div>
+      <div><small>Влучність</small><b id="sAcc"></b></div><div><small>Час</small><b id="sTime"></b></div>
+    </div>
+    <ul class="sum-list" id="sumList"></ul>
+    <p class="sum-p">Висновок: жоден із цих паролів не протримався б і секунди проти програми-перебирача. Обговоріть у групі, чим сильний пароль відрізняється від слабкого.</p>
+    <div class="gm-actions">
+      <a class="btn" href="parol-konstruktor">🛡️ До конструктора паролів</a>
+      <button class="btn btn-ghost" type="button" id="againBtn">🔄 Ще раз</button>
+      <button class="btn btn-ghost" type="button" id="closeBtn">Закрити</button>
+    </div>
   </div>
-
 </div>
-
+<div class="toast" id="toast" role="status"></div>
+<footer class="site-footer">
+  <div class="sf-inner">
+    <div class="sf-brand"><img src="../assets/logo.png" alt=""><div><b>Інформатика</b><small>Київський професійний ліцей транспорту</small></div></div>
+    <div class="sf-teacher">Викладач інформатики — <b>Шутько Максим Олександрович</b></div>
+    <div class="sf-links"><a href="../#rozdily">Розділи</a><a href="../submit">Здати роботу</a><a href="../qr-quest/">QR-квест</a><a href="https://kplt.in.ua/" target="_blank" rel="noopener">Сайт ліцею ↗</a></div>
+    <div class="sf-credits">Ілюстрації: <a href="https://storyset.com/" target="_blank" rel="noopener">Storyset</a>, <a href="https://undraw.co/" target="_blank" rel="noopener">unDraw</a></div>
+  </div>
+</footer>
 <script>
+  // ---------- звук (за бажанням, Web Audio без файлів) ----------
+  var SND_KEY = 'inf-sound';
+  var soundOn = false; try { soundOn = localStorage.getItem(SND_KEY) === '1'; } catch (e) {}
+  var actx = null;
+  function beep(freq, dur, type, vol, delay){
+    if (!soundOn) return;
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      var t = actx.currentTime + (delay || 0), o = actx.createOscillator(), g = actx.createGain();
+      o.type = type || 'sine'; o.frequency.setValueAtTime(freq, t);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol || 0.12, t + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + dur + 0.02);
+    } catch (e) {}
+  }
+  var SFX = {
+    ok: function(){ beep(660, .12, 'triangle'); beep(880, .14, 'triangle', .12, .1); beep(1320, .2, 'triangle', .1, .2); },
+    bad: function(){ beep(180, .18, 'square', .06); },
+    hint: function(){ beep(520, .1, 'sine'); beep(780, .16, 'sine', .1, .09); },
+    win: function(){ [523,659,784,1047].forEach(function(f,i){ beep(f, .22, 'triangle', .12, i*.12); }); },
+    key: function(){ beep(1200 + Math.random()*300, .025, 'square', .015); }
+  };
+  function bindSound(btn){
+    function paint(){ btn.textContent = soundOn ? '🔊 Звук' : '🔇 Звук'; btn.setAttribute('aria-pressed', soundOn ? 'true' : 'false'); }
+    btn.addEventListener('click', function(){ soundOn = !soundOn; try { localStorage.setItem(SND_KEY, soundOn ? '1' : '0'); } catch (e) {} paint(); if (soundOn) SFX.hint(); });
+    paint();
+  }
+  // ---------- тост і конфеті ----------
+  var toastT = null;
+  function toast(text){
+    var el = document.getElementById('toast'); el.textContent = text; el.classList.add('show');
+    clearTimeout(toastT); toastT = setTimeout(function(){ el.classList.remove('show'); }, 2200);
+  }
+  function confetti(n){
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var box = document.createElement('div'); box.className = 'confetti';
+    var cols = ['#3ee6b5','#8b5cf6','#5fb8ff','#f472b6','#fbbf24'];
+    for (var i = 0; i < (n || 70); i++) {
+      var p = document.createElement('i');
+      p.style.left = (Math.random()*100) + 'vw'; p.style.background = cols[i % cols.length];
+      p.style.animationDuration = (1.6 + Math.random()*1.6) + 's'; p.style.animationDelay = (Math.random()*.4) + 's';
+      p.style.transform = 'rotate(' + (Math.random()*360) + 'deg)';
+      box.appendChild(p);
+    }
+    document.body.appendChild(box); setTimeout(function(){ box.remove(); }, 3800);
+  }
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
   // Сіль для хешування (та сама, що використана під час генерації хешів нижче)
   const SALT = "CyberSafe10_2026_Salt_XQ7";
 
@@ -236,152 +361,157 @@
   ];
 
   let assignment = [];   // 12 випадкових елементів пулу для цього учня
-  let score = 0;
-  let wrongCount = 0;
-  let hintPointer = 0;
-  let finished = false;
-  let busy = false;      // блокування подвійних кліків під час обчислення хешу
+  let score = 0, wrongCount = 0, hintPointer = 0, hintsShown = 0, tries = 0;
+  let finished = false, busy = false, lockNoted = false;
+  let t0 = 0, timer = null;
 
-  const input = document.getElementById('passInput');
-  const logList = document.getElementById('logList');
-  const progressLabel = document.getElementById('progressLabel');
-  const scoreLabel = document.getElementById('scoreLabel');
-  const progressFill = document.getElementById('progressFill');
-  const hintsList = document.getElementById('hintsList');
-  const submitBtn = document.getElementById('submitBtn');
-  const finishBox = document.getElementById('finishBox');
-  const finishText = document.getElementById('finishText');
+  const $ = id => document.getElementById(id);
+  const input = $('passInput'), submitBtn = $('submitBtn'), logList = $('logList'), hintsList = $('hintsList');
+  const msg = $('lnMsg'), passWrap = $('passWrap'), form = $('loginForm');
 
   function shuffle(arr){
     const a = arr.slice();
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
+    for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
     return a;
   }
-
   function initAssignment(){
-    assignment = shuffle(pool).slice(0, 12).map(item => ({ ...item, solved: false }));
+    assignment = shuffle(pool).slice(0, 12).map(item => ({ ...item, solved: false, hinted: false, word: '' }));
   }
-
   async function sha256Hex(text){
     const enc = new TextEncoder().encode(text);
     const buf = await crypto.subtle.digest('SHA-256', enc);
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
   }
+  function clock(){ const s = t0 ? Math.floor((Date.now() - t0) / 1000) : 0; return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
+  function acc(){ return tries ? Math.round(score / tries * 100) + '%' : '—'; }
+  function stamp(){ const d = new Date(); return [d.getHours(), d.getMinutes(), d.getSeconds()].map(x => String(x).padStart(2, '0')).join(':'); }
 
-  input.addEventListener('keydown', function(e){
-    if (e.key === 'Enter') tryPassword();
-  });
-
+  function renderSlots(){
+    $('slots').innerHTML = assignment.map((a, i) => {
+      let v;
+      if (a.solved) v = esc(a.word);
+      else if (a.hinted) v = '<em>' + esc(a.first2) + '</em>' + '•'.repeat(Math.max(0, a.len - 2));
+      else v = '•'.repeat(a.len);
+      return '<div class="slot' + (a.solved ? ' solved' : '') + (a.hinted && !a.solved ? ' hinted' : '') + '" data-i="' + i + '"><span class="n">#' + String(i + 1).padStart(2, '0') + '</span><span class="v">' + v + '</span></div>';
+    }).join('');
+  }
+  function bump(el){ el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
   function updateHeader(){
-    const solvedCount = assignment.filter(a => a.solved).length;
-    progressLabel.textContent = finished ? "Готово!" : ("Вгадано: " + solvedCount + " з " + assignment.length);
-    scoreLabel.textContent = "Бали: " + score + " / " + assignment.length;
-    progressFill.style.width = Math.round((score / assignment.length) * 100) + "%";
+    $('hScore').textContent = score + ' / ' + assignment.length;
+    $('hTries').textContent = tries; $('hAcc').textContent = acc(); $('hHints').textContent = hintsShown; $('hTime').textContent = clock();
   }
-
-  function addLog(text, kind, tag){
-    const empty = logList.querySelector('.log-empty');
-    if (empty) empty.remove();
-    const item = document.createElement('div');
-    item.className = 'log-item ' + kind;
-    item.innerHTML = '<span>' + text + '</span><span class="log-tag">' + (tag || '') + '</span>';
-    logList.insertBefore(item, logList.firstChild);
+  function addLog(html, kind){
+    const d = document.createElement('div'); d.className = 'l';
+    d.innerHTML = '<span class="t">[' + stamp() + ']</span> <span class="' + kind + '">' + html + '</span>';
+    const cur = logList.querySelector('.cursor-line'); logList.insertBefore(d, cur); logList.scrollTop = logList.scrollHeight;
   }
-
-  function addHint(text){
-    const empty = hintsList.querySelector('.hints-empty');
-    if (empty) empty.remove();
-    const item = document.createElement('div');
-    item.className = 'hint-item';
-    item.textContent = '💡 ' + text;
-    hintsList.appendChild(item);
+  function resetLog(){
+    logList.innerHTML = '<div class="l cursor-line"><span class="sys">$</span> <span class="cursor-blink"></span></div>';
+    addLog('ціль: user@lystonosha.mail · завантажено 12 хешів SHA-256', 'sys');
+    addLog('очікую варіанти пароля…', 'sys');
   }
+  function setMsg(kind, text){ msg.innerHTML = text ? '<div class="ln-msg ' + kind + '">' + text + '</div>' : ''; }
 
   function revealNextHint(){
     const unsolved = assignment.filter(a => !a.solved);
     if (unsolved.length === 0) return;
     if (hintPointer >= assignment.length) hintPointer = 0;
-    // знайти наступний ще не вгаданий пароль, рухаючись по колу
-    let tries = 0;
-    while (assignment[hintPointer].solved && tries < assignment.length) {
-      hintPointer = (hintPointer + 1) % assignment.length;
-      tries++;
-    }
+    let t = 0;   // знайти наступний ще не вгаданий пароль, рухаючись по колу
+    while (assignment[hintPointer].solved && t < assignment.length) { hintPointer = (hintPointer + 1) % assignment.length; t++; }
     const target = assignment[hintPointer];
-    const msg = 'Довжина: ' + target.len + ' символів. Тип: ' + target.category + '. Починається на: «' + target.first2 + '».';
-    addHint(msg);
-    addLog('💡 нова підказка розкрита', 'bad', 'підказка');
+    target.hinted = true; hintsShown++;
+    if (hintsShown === 1) hintsList.innerHTML = '';
+    const d = document.createElement('div'); d.className = 'hint';
+    d.textContent = '💡 Ціль #' + String(hintPointer + 1).padStart(2, '0') + ': ' + target.len + ' символів · ' + target.category + ' · починається на «' + target.first2 + '»';
+    hintsList.appendChild(d);
+    addLog('перехоплено підказку для цілі #' + String(hintPointer + 1).padStart(2, '0'), 'hn');
     hintPointer = (hintPointer + 1) % assignment.length;
+    SFX.hint(); bump($('hHints'));
   }
 
   async function tryPassword(){
     if (finished || busy) return;
     const raw = input.value.trim();
-    if (raw === '') return;
-
-    busy = true;
-    submitBtn.disabled = true;
+    if (raw === '') { input.focus(); return; }
+    busy = true; submitBtn.disabled = true; submitBtn.textContent = 'Перевірка…';
+    if (!t0) { t0 = Date.now(); timer = setInterval(() => { $('hTime').textContent = clock(); }, 1000); }
 
     const guessHash = await sha256Hex(SALT + raw.toLowerCase());
     const match = assignment.find(a => !a.solved && a.hash === guessHash);
+    tries++;
+    passWrap.classList.remove('bad');
 
     if (match) {
-      match.solved = true;
-      score++;
-      addLog('✓ "' + raw + '"', 'ok', 'вірно');
-      if (score >= assignment.length) {
-        endGame(true);
-      }
+      match.solved = true; match.word = raw.toLowerCase(); score++;
+      const i = assignment.indexOf(match);
+      addLog('try "' + esc(raw) + '" → HASH MATCH ✓ ціль #' + String(i + 1).padStart(2, '0') + ' зламано', 'ok');
+      setMsg('ok', '✓ Вхід виконано! Пароль «' + esc(raw) + '» підійшов. Шукай наступний.');
+      renderSlots(); bump($('hScore')); SFX.ok(); toast('🔓 Зламано! +1 бал (' + score + ' з ' + assignment.length + ')');
+      if (score >= assignment.length) endGame(true);
     } else {
       wrongCount++;
-      addLog('✕ "' + raw + '"', 'bad', 'спроба ' + wrongCount);
-      if (wrongCount % 10 === 0) {
-        revealNextHint();
+      const dup = assignment.find(a => a.solved && a.word === raw.toLowerCase());
+      addLog('try "' + esc(raw) + '" → ' + (dup ? 'вже зламано раніше' : 'FAIL') + ' (помилка ' + wrongCount + ')', 'bad');
+      let text = '✕ Неправильний пароль. ' + (dup ? 'Цей пароль ти вже вгадав(-ла).' : 'Спробуй інший варіант.');
+      setMsg('err', text);
+      passWrap.classList.add('bad');
+      form.classList.remove('shake'); void form.offsetWidth; form.classList.add('shake');
+      SFX.bad();
+      if (wrongCount === 5 && !lockNoted) {
+        lockNoted = true;
+        setMsg('warn', '⚠ У справжньому сервісі після 5 невдалих спроб вхід заблокували б на кілька хвилин, а власнику прийшов би лист. Тут — навчальний режим без блокування.');
       }
+      if (wrongCount % 10 === 0) { revealNextHint(); renderSlots(); }
     }
-
-    input.value = '';
-    updateHeader();
-    busy = false;
-    submitBtn.disabled = false;
-    input.focus();
-  }
-
-  function finishNow(){
-    if (finished) return;
-    endGame(false);
+    input.value = ''; updateHeader();
+    busy = false; submitBtn.disabled = finished; submitBtn.textContent = 'Увійти';
+    if (!finished) input.focus();
   }
 
   function endGame(allSolved){
-    finished = true;
-    submitBtn.disabled = true;
-    input.disabled = true;
-    finishBox.classList.add('show');
-    if (allSolved) {
-      finishText.textContent = 'Вітаємо! Ти вгадав(-ла) усі 12 паролів і отримав(-ла) максимальні ' + score + ' балів. Усі ці паролі — одні з найпоширеніших у світі: саме тому їх так легко підібрати навіть без спеціальних програм.';
-    } else {
-      finishText.textContent = 'Спробу завершено достроково. Твій результат: ' + score + ' із ' + assignment.length + ' балів. Обговоріть у групі, чим сильний пароль відрізняється від слабкого.';
-    }
-    updateHeader();
+    finished = true; clearInterval(timer);
+    submitBtn.disabled = true; input.disabled = true; updateHeader();
+    const pct = score / assignment.length;
+    const stars = pct >= 1 ? 3 : pct >= .5 ? 2 : pct > 0 ? 1 : 0;
+    $('sumStars').textContent = '★'.repeat(stars) + '☆'.repeat(3 - stars);
+    $('sumTitle').textContent = allSolved ? '🏆 Усі 12 паролів зламано!' : (score ? '🏁 Спробу завершено' : '🏁 Цього разу без зламів');
+    $('sumText').textContent = allSolved
+      ? 'Вітаємо! Ти вгадав(-ла) усі 12 паролів і отримав(-ла) максимальні ' + score + ' балів. Усі ці паролі — одні з найпоширеніших у світі: саме тому їх так легко підібрати навіть без спеціальних програм.'
+      : 'Твій результат: ' + score + ' із ' + assignment.length + ' балів. Нижче — які паролі були в базі (для невгаданих показано лише підказку).';
+    $('sScore').textContent = score + ' / ' + assignment.length; $('sTries').textContent = tries; $('sAcc').textContent = acc(); $('sTime').textContent = clock();
+    $('sumList').innerHTML = assignment.map((a, i) => a.solved
+      ? '<li>✅ <span><code>' + esc(a.word) + '</code> — ' + esc(a.category) + '</span></li>'
+      : '<li class="miss">⬜ <span>#' + String(i + 1).padStart(2, '0') + ' (' + a.len + ' симв., на «' + esc(a.first2) + '») — ' + esc(a.category) + '</span></li>').join('');
+    $('sumModal').hidden = false;
+    if (allSolved) { SFX.win(); confetti(110); } else if (score) SFX.win();
+    addLog('сеанс завершено: ' + score + '/' + assignment.length, 'sys');
   }
 
   function resetGame(){
     initAssignment();
-    score = 0; wrongCount = 0; hintPointer = 0; finished = false;
-    input.disabled = false; submitBtn.disabled = false;
-    input.value = '';
-    hintsList.innerHTML = '<div class="hints-empty">Підказки з\'являться після 10 невдалих спроб...</div>';
-    finishBox.classList.remove('show');
-    logList.innerHTML = '<div class="log-empty">Тут з\'являтимуться твої спроби...</div>';
-    updateHeader();
-    input.focus();
+    score = 0; wrongCount = 0; hintPointer = 0; hintsShown = 0; tries = 0; finished = false; lockNoted = false;
+    t0 = 0; clearInterval(timer);
+    input.disabled = false; submitBtn.disabled = false; input.value = '';
+    hintsList.innerHTML = '<div class="hint" style="border-color:#2a3762;background:transparent;color:#56618a">Перша підказка — після 10 невдалих спроб.</div>';
+    $('sumModal').hidden = true; setMsg('', ''); passWrap.classList.remove('bad');
+    resetLog(); renderSlots(); updateHeader(); input.focus();
   }
 
-  initAssignment();
-  updateHeader();
+  form.addEventListener('submit', e => { e.preventDefault(); tryPassword(); });
+  input.addEventListener('input', () => SFX.key());
+  $('eyeBtn').addEventListener('click', () => {
+    const show = input.type === 'password'; input.type = show ? 'text' : 'password';
+    $('eyeBtn').textContent = show ? '🙈' : '👁'; $('eyeBtn').setAttribute('aria-label', show ? 'Сховати пароль' : 'Показати пароль'); input.focus();
+  });
+  $('finishBtn').addEventListener('click', () => { if (finished) $('sumModal').hidden = false; else endGame(false); });
+  $('resetBtn').addEventListener('click', resetGame);
+  $('againBtn').addEventListener('click', resetGame);
+  $('closeBtn').addEventListener('click', () => { $('sumModal').hidden = true; });
+  $('sumModal').addEventListener('click', e => { if (e.target.id === 'sumModal') $('sumModal').hidden = true; });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') $('sumModal').hidden = true; });
+  bindSound($('sndBtn'));
+
+  initAssignment(); resetLog(); renderSlots(); updateHeader();
 </script>
 </body>
 </html>
