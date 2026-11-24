@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<script>/*clean-url*/(function(){if(location.protocol==="file:")return;var p=location.pathname,q=p.replace(/\/index\.html$/,"/").replace(/\.html$/,"");if(q!==p)history.replaceState(null,"",q+location.search+location.hash);})();</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тест: прикладні програми</title>
+<meta name="description" content="Тест на 19 питань про прикладне програмне забезпечення: офісні програми, редактори, СКБД, хмарні сервіси, спеціалізовані програми для бізнесу, формати файлів.">
+<link rel="icon" href="../assets/logo.png">
+<link rel="stylesheet" href="../assets/style.css?v=23f00d98">
+<style>
+.qz{ --ok:#12a77a; --bad:#e5484d; }
+.qz-hero{ border-radius: 28px; padding: 26px 30px; margin-bottom: 20px; display:grid; grid-template-columns: 1fr auto; gap: 18px; align-items:center;
+  background: linear-gradient(120deg, rgba(62,230,181,.18), rgba(95,184,255,.18) 50%, rgba(139,92,246,.22)), var(--panel); border: 1px solid rgba(95,184,255,.4); }
+.qz-hero h1{ margin: 6px 0 10px; } .qz-hero .lead{ margin-bottom: 0; }
+.qz-hero .ic{ font-size: 72px; line-height: 1; filter: drop-shadow(0 12px 24px rgba(0,0,0,.4)); }
+@media (max-width: 640px){ .qz-hero{ grid-template-columns: 1fr; padding: 20px; } .qz-hero .ic{ display:none; } }
+.qz-prog{ display:flex; align-items:center; gap: 10px; font-weight: 700; font-size: 14px; position: sticky; top: 78px; z-index: 5; background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 10px 14px; margin-bottom: 14px; }
+.qz-prog .bar{ flex: 1; height: 8px; background: rgba(255,255,255,.08); border-radius: 8px; overflow: hidden; }
+.qz-prog .bar i{ display:block; height: 100%; width: 0; background: var(--grad-brand); transition: width .3s; }
+.qs{ display:grid; gap: 14px; counter-reset: q; }
+.q{ background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 16px 18px; }
+.q h3{ margin: 0 0 12px; font-size: 16px; display:flex; gap: 10px; align-items: baseline; line-height: 1.45; }
+.q h3::before{ counter-increment: q; content: counter(q); flex-shrink: 0; width: 28px; height: 28px; border-radius: 9px; display:grid; place-items:center; background: var(--mint); color: #06201a; font: 800 13px var(--font-body); }
+.q h3 small{ display:block; font-weight: 700; color: #fbbf24; font-size: 12px; margin-top: 2px; }
+.opts{ display:grid; gap: 8px; grid-template-columns: 1fr 1fr; }
+@media (max-width: 640px){ .opts{ grid-template-columns: 1fr; } }
+.opt{ display:flex; gap: 10px; align-items:center; padding: 11px 13px; border-radius: 12px; border: 1.5px solid var(--border-strong); background: rgba(255,255,255,.03); cursor:pointer; font-weight: 600; font-size: 14.5px; line-height: 1.4; }
+.opt:hover{ border-color: var(--mint); }
+.opt input{ accent-color: var(--mint); width: 18px; height: 18px; flex-shrink:0; margin:0; }
+.opt:has(input:checked){ border-color: var(--mint); background: var(--mint-soft); }
+.mrow{ display:grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 10px; align-items:center; padding: 6px 0; border-bottom: 1px dashed var(--border); }
+.mrow:last-child{ border-bottom: 0; }
+.mrow b{ font-size: 14.5px; }
+.mrow select{ width: 100%; font: 600 14.5px var(--font-body); color: var(--ink); background: #0d1430; border: 1.5px solid var(--border-strong); border-radius: 10px; padding: 9px 10px; }
+.mrow select:focus{ border-color: var(--mint); outline: none; }
+@media (max-width: 520px){ .mrow{ grid-template-columns: 1fr; gap: 6px; } }
+.olist{ list-style:none; margin:0; padding:0; display:grid; gap: 8px; }
+.olist li{ display:flex; align-items:center; gap: 10px; padding: 9px 10px 9px 12px; border-radius: 12px; border: 1.5px solid var(--border-strong); background: rgba(255,255,255,.03); font-weight: 600; font-size: 14.5px; transition: transform .2s; }
+.olist li .n{ flex-shrink:0; width: 24px; height: 24px; border-radius: 7px; display:grid; place-items:center; background: var(--violet-soft); color: var(--purple-dark); font-weight: 900; font-size: 12px; }
+.olist li .tx{ flex:1; min-width: 0; }
+.olist li .mv{ display:flex; gap: 4px; }
+.olist li button{ width: 36px; height: 36px; border-radius: 9px; border: 1px solid var(--border-strong); background: rgba(255,255,255,.05); color: var(--ink); cursor:pointer; font-size: 15px; }
+.olist li button:hover:not(:disabled){ border-color: var(--mint); }
+.olist li button:disabled{ opacity: .3; cursor: default; }
+.q.ok{ border-color: rgba(18,167,122,.7); } .q.bad{ border-color: rgba(229,72,77,.7); }
+.q .why{ display:none; margin-top: 12px; padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,.04); color: var(--muted); font-size: 14px; font-weight: 600; line-height: 1.55; }
+.q.ok .why, .q.bad .why{ display:block; }
+.q .verdict{ font-weight: 800; display:block; margin-bottom: 4px; }
+.q.ok .verdict{ color: #34d399; } .q.bad .verdict{ color: #fb7185; }
+.opt.is-right{ border-color: var(--ok); background: rgba(18,167,122,.14); }
+.opt.is-wrong{ border-color: var(--bad); background: rgba(229,72,77,.14); }
+.mrow.is-wrong select, .olist li.is-wrong{ border-color: var(--bad); } .mrow.is-right select, .olist li.is-right{ border-color: var(--ok); }
+.mrow .fix{ grid-column: 1 / -1; font-size: 12.5px; color: #fb7185; font-weight: 700; }
+.done .opt, .done select, .done .olist button{ pointer-events: none; }
+.score{ display:none; text-align:center; padding: 22px; margin-top: 18px; }
+.score.show{ display:block; }
+.score .big{ font-family: var(--font-display); font-size: 42px; font-weight: 700; background: var(--grad-brand); -webkit-background-clip:text; background-clip:text; color: transparent; }
+.score p{ color: var(--muted); font-weight: 600; margin: 6px 0 0; }
+.send{ margin-top: 18px; padding: 20px 22px; }
+.send h2{ margin: 0 0 12px; font-family: var(--font-display); font-size: 18px; }
+.send .row{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
+@media (max-width: 640px){ .send .row{ grid-template-columns: 1fr; } }
+.send label{ display:grid; gap: 5px; font-size: 12.5px; font-weight: 800; color: var(--muted); }
+.send input, .send select{ font: 600 15px var(--font-body); color: var(--ink); background: #0d1430; border: 1.5px solid var(--border-strong); border-radius: 10px; padding: 10px 12px; }
+.qz-actions{ display:flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.status-ok{ background: var(--green-bg); color: var(--green); } .status-err{ background: var(--red-bg); color: var(--red); }
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="logo" href="../">
+      <img src="../assets/logo.png" alt="Логотип КПЛТ">
+      <span class="brand"><b>Інформатика</b><small>КПЛТ</small></span>
+    </a>
+    <div class="links">
+      <a href="../">Головна</a>
+      <a href="../#rozdily" class="active">Розділи</a>
+      <a href="../pidruchnyk">Підручник</a>
+      <a href="../submit">Здати роботу</a>
+    </div>
+  </div>
+</nav>
+<main class="wrap narrow qz">
+  <div class="qz-hero">
+    <div>
+      <div class="eyebrow">Інформаційні технології · Прикладні програми · Тест</div>
+      <h1>Тест «Прикладні <span class="grad">програми</span>»</h1>
+      <p class="lead">19 питань: вибір відповіді, кілька правильних, відповідність і порядок дій. Відповідай, натисни «Перевірити», переглянь пояснення — і надішли результат учителю.</p>
+    </div>
+    <div class="ic">🧰</div>
+  </div>
+  <div class="qz-prog"><span id="progTxt">0 / 0</span><div class="bar"><i id="progBar"></i></div></div>
+  <div class="qs" id="qs"></div>
+  <div class="card-glass score" id="score"><div class="big" id="scoreBig"></div><p id="scoreTxt"></p></div>
+  <div class="qz-actions">
+    <button class="btn" type="button" id="checkBtn">✅ Перевірити відповіді</button>
+    <button class="btn btn-ghost" type="button" id="resetBtn">🔄 Пройти заново</button>
+    <a class="btn btn-ghost" href="ofis-symuliator">🎮 Гра «Цифрове бюро»</a>
+  </div>
+  <div class="card-glass send">
+    <h2>📨 Надіслати результат учителю</h2>
+    <div class="row">
+      <label>Прізвище<input id="lastname" autocomplete="family-name"></label>
+      <label>Ім’я<input id="firstname" autocomplete="given-name"></label>
+      <label>Група<select id="klass"><option value="">— обери —</option><option>102</option><option>105</option><option>109</option><option>110</option><option>201</option><option>202</option><option>205</option><option>209</option><option>210</option><option>301</option><option>310</option></select></label>
+    </div>
+    <div class="qz-actions"><button class="btn" type="button" id="sendBtn">Надіслати</button></div>
+    <div class="status-msg" id="statusMsg"></div>
+  </div>
+</main>
+<footer class="site-footer">
+  <div class="sf-inner">
+    <div class="sf-brand"><img src="../assets/logo.png" alt=""><div><b>Інформатика</b><small>Київський професійний ліцей транспорту</small></div></div>
+    <div class="sf-teacher">Викладач інформатики — <b>Шутько Максим Олександрович</b></div>
+    <div class="sf-links"><a href="../#rozdily">Розділи</a><a href="../submit">Здати роботу</a><a href="../qr-quest/">QR-квест</a><a href="https://kplt.in.ua/" target="_blank" rel="noopener">Сайт ліцею ↗</a></div>
+    <div class="sf-credits">Ілюстрації: <a href="https://storyset.com/" target="_blank" rel="noopener">Storyset</a>, <a href="https://undraw.co/" target="_blank" rel="noopener">unDraw</a></div>
+  </div>
+</footer>
+<script src="../assets/config.js"></script>
+<script>
+(function(){
+  var Q = [{"t": "one", "q": "Що таке прикладне програмне забезпечення?", "o": ["Програми для розв’язання задач користувача", "Програми для керування апаратною частиною", "Програми для перевірки й обслуговування диска", "Програми для створення інших нових програм"], "why": "Прикладні програми розв’язують задачі користувача: тексти, таблиці, фото, пошта. Керує «залізом» ОС і драйвери, обслуговують — утиліти.", "a": [0]}, {"t": "one", "q": "Яка з цих програм є прикладною?", "o": ["Операційна система Linux", "Утиліта дефрагментації", "Драйвер принтера HP", "Табличний процесор Calc"], "why": "Calc (LibreOffice) — табличний процесор, прикладна програма. Драйвер і ОС — системне ПЗ, дефрагментатор — службове.", "a": [3]}, {"t": "match", "q": "Установи відповідність: програма → її призначення", "why": "Excel — табличний процесор, PowerPoint — презентації, GIMP — растровий редактор, Audacity — аудіоредактор, Access — СКБД, Telegram — месенджер.", "left": ["Excel", "PowerPoint", "GIMP", "Audacity", "Access", "Telegram"], "right": ["Ретуш фотографій", "Слайди для виступу", "Розрахунки й таблиці", "Обмін повідомленнями", "Бази даних", "Редагування звуку"], "a": [2, 1, 0, 5, 4, 3]}, {"t": "match", "q": "Установи відповідність: розширення файлу → що в ньому", "why": ".docx — Word, .xlsx — Excel, .pptx — PowerPoint, .mp4 — відео, .mp3 — звук, .svg — векторна графіка.", "left": [".docx", ".xlsx", ".pptx", ".mp4", ".mp3", ".svg"], "right": ["Відеоролик", "Презентація", "Електронна таблиця", "Текстовий документ", "Векторне зображення", "Аудіозапис"], "a": [3, 2, 1, 0, 5, 4]}, {"t": "one", "q": "Логотип має бути чітким і на значку, і на великому банері. У якому форматі його зберегти?", "o": [".bmp", ".gif", ".svg", ".jpg"], "why": "SVG — векторний формат: зображення будується за формулами і масштабується без втрати якості. JPG, BMP, GIF — растрові.", "a": [2]}, {"t": "order", "q": "Розстав кроки створення кошторису в табличному процесорі", "steps": ["Відкрити табличний процесор", "Ввести назви товарів, ціни й кількість", "Записати формулу суми", "Зберегти файл як .xlsx"], "why": "Спершу програма, далі дані, потім формула, і лише тоді — збереження готового файлу.", "start": [1, 0, 3, 2]}, {"t": "many", "q": "Познач усі програми, що входять до офісного пакета LibreOffice:", "o": ["Impress", "GIMP", "Audacity", "7-Zip", "Writer", "Calc"], "a": [0, 4, 5], "why": "LibreOffice: Writer (тексти), Calc (таблиці), Impress (презентації), а також Draw і Base. GIMP, Audacity і 7-Zip — окремі програми."}, {"t": "one", "q": "Чим растровий редактор відрізняється від векторного?", "o": ["Відкриває тільки файли формату .svg", "Працює з пікселями, а не з кривими", "Не дає змоги зберігати свої файли", "Працює лише з текстом, без малюнків"], "why": "Растрове зображення — сітка пікселів (фото), векторне — набір кривих і фігур (логотипи, іконки).", "a": [1]}, {"t": "one", "q": "Для чого призначена СКБД?", "o": ["Перевіряти флешки й диски на віруси", "Зберігати дані й шукати потрібні записи", "Монтувати відео й накладати музику", "Малювати логотипи, іконки та банери"], "why": "СКБД (Access, LibreOffice Base, MySQL) — це система керування базами даних: таблиці, запити, форми, звіти.", "a": [1]}, {"t": "one", "q": "Головна перевага хмарного офісу (Google Документи, Microsoft 365)…", "o": ["Спільне редагування з будь-якого пристрою", "Робота без інтернету та електроживлення", "Документи неможливо комусь показати", "Файли займають більше місця на диску"], "why": "Хмарні документи зберігаються на сервері: їх відкривають з телефона чи ПК і редагують одночасно кілька людей.", "a": [0]}, {"t": "one", "q": "Кухарю треба порахувати собівартість 20 страв і швидко змінювати ціни продуктів. Що обрати?", "o": ["Растровий редактор", "Програму презентацій", "Текстовий процесор", "Табличний процесор"], "why": "Табличний процесор перераховує формули автоматично, коли змінюються ціни.", "a": [3]}, {"t": "many", "q": "Познач усі дії, які виконують у відеоредакторі:", "o": ["Накласти музику", "Обрізати кліп", "Заповнити PDF-форму", "Сортувати таблицю", "Додати титри"], "a": [0, 1, 4], "why": "Відеоредактор (CapCut, DaVinci Resolve) обрізає, склеює кліпи, накладає звук, титри й ефекти."}, {"t": "match", "q": "Установи відповідність: завдання на роботі → спеціалізована програма", "why": "Це спеціалізовані програми для бізнесу: CRM — клієнти, M.E.Doc/BAS — бухгалтерія, САПР — креслення, POS — каса, Trello — задачі.", "left": ["Облік історії клієнтів", "Податкова звітність", "Креслення деталі", "Чек у ресторані", "Розподіл задач команди"], "right": ["САПР (AutoCAD)", "CRM-система", "Касова програма POS", "Бухгалтерська програма", "Планувальник (Trello)"], "a": [1, 3, 0, 2, 4]}, {"t": "one", "q": "До якого виду програмного забезпечення належить архіватор 7-Zip?", "o": ["Системи програмування", "Операційні системи", "Службове ПЗ (утиліти)", "Прикладне ПЗ (офісні)"], "why": "Архіватори, антивіруси, дефрагментатори — службові програми (утиліти): вони обслуговують комп’ютер і файли.", "a": [2]}, {"t": "order", "q": "Розстав кроки: як поділитися файлом через Google Диск", "steps": ["Завантажити файл на Диск", "Натиснути «Поділитися»", "Обрати рівень доступу", "Надіслати посилання адресату"], "why": "Спочатку файл має опинитися в хмарі, потім налаштовують доступ — і лише тоді надсилають посилання.", "start": [1, 0, 3, 2]}, {"t": "one", "q": "Чому договір зазвичай надсилають у PDF, а не в DOCX?", "o": ["PDF завжди займає менше місця", "DOCX не можна надіслати поштою", "Вигляд однаковий на всіх пристроях", "PDF відкривається лише у Word"], "why": "PDF фіксує вигляд документа: шрифти й поля не «з’їдуть», текст не зміниться випадково.", "a": [2]}, {"t": "one", "q": "Файл має розширення .odt. Яка програма його створила?", "o": ["Adobe Photoshop", "LibreOffice Writer", "Microsoft Excel", "LibreOffice Calc"], "why": ".odt — відкритий формат текстових документів (OpenDocument Text) LibreOffice Writer; Calc створює .ods. Відкривається і в Word.", "a": [1]}, {"t": "order", "q": "Розстав кроки підготовки презентації", "steps": ["Обрати тему або шаблон", "Додати слайди з текстом", "Вставити фото й діаграми", "Налаштувати переходи", "Запустити показ клавішею F5"], "why": "Від загального до деталей: дизайн → зміст → ілюстрації → ефекти → показ.", "start": [1, 4, 2, 0, 3]}, {"t": "one", "q": "Колега просить надіслати офіційний лист із рахунком. Що найкраще підійде?", "o": ["Електронна пошта", "Голосове в Telegram", "Сторіс в Instagram", "Коментар у YouTube"], "why": "Офіційне ділове листування з вкладеннями ведуть поштою: є тема, адресат, підпис і історія листування.", "a": [0]}], KEY = 'inf-test-prykladni', LESSON = "ІТ, Тема 2 — Прикладні програми: налаштування та принцип дії (тест)";
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  var S; try { S = JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { S = null; }
+  if (!S || !S.ans || S.ans.length !== Q.length) S = { ans: Q.map(function(q){ return q.t === 'order' ? q.start.slice() : q.t === 'match' ? q.left.map(function(){ return -1; }) : []; }), done: false, who: {} };
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
+  function answered(i){
+    var q = Q[i], a = S.ans[i];
+    if (q.t === 'order') return !!S.touched && S.touched[i];
+    if (q.t === 'match') return a.every(function(x){ return x >= 0; });
+    return a.length > 0;
+  }
+  function correct(i){
+    var q = Q[i], a = S.ans[i];
+    if (q.t === 'order') return a.every(function(x, k){ return x === k; });
+    if (q.t === 'match') return a.every(function(x, k){ return x === q.a[k]; });
+    return a.length === q.a.length && a.slice().sort().every(function(x, k){ return x === q.a[k]; });
+  }
+  function render(){
+    $('qs').innerHTML = Q.map(function(q, i){
+      var inner, note = '';
+      if (q.t === 'one' || q.t === 'many'){
+        var typ = q.t === 'many' ? 'checkbox' : 'radio'; if (q.t === 'many') note = 'кілька правильних';
+        inner = '<div class="opts">' + q.o.map(function(o, k){ return '<label class="opt"><input type="' + typ + '" name="q' + i + '" value="' + k + '"' + (S.ans[i].indexOf(k) >= 0 ? ' checked' : '') + '><span>' + esc(o) + '</span></label>'; }).join('') + '</div>';
+      } else if (q.t === 'match'){
+        note = 'обери пару для кожного рядка';
+        inner = q.left.map(function(l, k){
+          return '<div class="mrow" data-k="' + k + '"><b>' + esc(l) + '</b><select data-k="' + k + '" aria-label="' + esc(l) + '"><option value="-1">— обери —</option>' +
+            q.right.map(function(r, j){ return '<option value="' + j + '"' + (S.ans[i][k] === j ? ' selected' : '') + '>' + esc(r) + '</option>'; }).join('') + '</select></div>';
+        }).join('');
+      } else {
+        note = 'стрілками ▲▼ упорядкуй кроки';
+        inner = '<ol class="olist">' + S.ans[i].map(function(s, k){
+          return '<li data-s="' + s + '"><span class="n">' + (k + 1) + '</span><span class="tx">' + esc(q.steps[s]) + '</span><span class="mv">' +
+            '<button type="button" data-d="-1" aria-label="Вище"' + (k === 0 ? ' disabled' : '') + '>▲</button><button type="button" data-d="1" aria-label="Нижче"' + (k === S.ans[i].length - 1 ? ' disabled' : '') + '>▼</button></span></li>';
+        }).join('') + '</ol>';
+      }
+      return '<div class="q" data-i="' + i + '"><h3><span>' + esc(q.q) + (note ? '<small>' + note + '</small>' : '') + '</span></h3>' + inner + '<div class="why"></div></div>';
+    }).join('');
+    if (S.done) grade();
+    prog();
+  }
+  function prog(){
+    var n = Q.filter(function(q, i){ return answered(i); }).length;
+    $('progTxt').textContent = 'Відповіді: ' + n + ' / ' + Q.length; $('progBar').style.width = (n / Q.length * 100) + '%';
+  }
+  $('qs').addEventListener('change', function(e){
+    if (S.done) return;
+    var qe = e.target.closest('.q'); if (!qe) return; var i = +qe.getAttribute('data-i'), q = Q[i];
+    if (q.t === 'one') S.ans[i] = [+e.target.value];
+    else if (q.t === 'many') S.ans[i] = Array.prototype.filter.call(qe.querySelectorAll('input'), function(x){ return x.checked; }).map(function(x){ return +x.value; });
+    else if (q.t === 'match') S.ans[i][+e.target.getAttribute('data-k')] = +e.target.value;
+    save(); prog();
+  });
+  $('qs').addEventListener('click', function(e){
+    var b = e.target.closest('.olist button'); if (!b || S.done) return;
+    var qe = b.closest('.q'), i = +qe.getAttribute('data-i'), li = b.closest('li');
+    var k = Array.prototype.indexOf.call(li.parentNode.children, li), d = +b.getAttribute('data-d'), a = S.ans[i];
+    if (k + d < 0 || k + d >= a.length) return;
+    var t = a[k]; a[k] = a[k + d]; a[k + d] = t; S.touched = S.touched || {}; S.touched[i] = true; save();
+    var y = qe.getBoundingClientRect().top; render();
+    var nq = document.querySelector('.q[data-i="' + i + '"]'); window.scrollBy(0, nq.getBoundingClientRect().top - y);
+    var nb = nq.querySelectorAll('.olist li')[k + d]; if (nb){ var f = nb.querySelector('button[data-d="' + d + '"]:not([disabled])') || nb.querySelector('button:not([disabled])'); if (f) f.focus({preventScroll: true}); }
+  });
+
+  function grade(){
+    var sc = 0;
+    Q.forEach(function(q, i){
+      var qe = document.querySelector('.q[data-i="' + i + '"]'), ok = correct(i); if (ok) sc++;
+      qe.classList.add(ok ? 'ok' : 'bad'); qe.classList.add('done');
+      if (q.t === 'one' || q.t === 'many'){
+        qe.querySelectorAll('.opt').forEach(function(l, k){
+          var right = q.a.indexOf(k) >= 0, ch = S.ans[i].indexOf(k) >= 0;
+          if (right) l.classList.add('is-right'); else if (ch) l.classList.add('is-wrong');
+        });
+      } else if (q.t === 'match'){
+        qe.querySelectorAll('.mrow').forEach(function(r, k){
+          var good = S.ans[i][k] === q.a[k]; r.classList.add(good ? 'is-right' : 'is-wrong');
+          if (!good) r.insertAdjacentHTML('beforeend', '<span class="fix">Правильно: ' + esc(q.right[q.a[k]]) + '</span>');
+        });
+      } else {
+        qe.querySelectorAll('.olist li').forEach(function(li, k){ li.classList.add(S.ans[i][k] === k ? 'is-right' : 'is-wrong'); });
+      }
+      var extra = q.t === 'order' && !ok ? ' Правильний порядок: ' + q.steps.map(function(s, k){ return (k + 1) + ') ' + s; }).join('; ') + '.' : '';
+      qe.querySelector('.why').innerHTML = '<span class="verdict">' + (ok ? '✓ Правильно' : '✗ Неправильно') + '</span>💡 ' + esc(q.why + extra);
+    });
+    var g12 = Math.max(1, Math.round(sc / Q.length * 12));
+    $('scoreBig').textContent = sc + ' / ' + Q.length;
+    $('scoreTxt').textContent = 'Орієнтовна оцінка: ' + g12 + ' з 12. ' + (sc === Q.length ? 'Бездоганно! 🏆' : sc >= Q.length * .75 ? 'Дуже добре! Переглянь пояснення до помилок.' : 'Переглянь пояснення й зіграй ще раз у «Цифрове бюро».');
+    $('score').classList.add('show');
+    return sc;
+  }
+  $('checkBtn').addEventListener('click', function(){
+    var miss = Q.map(function(q, i){ return answered(i) ? 0 : i + 1; }).filter(Boolean);
+    var st = $('statusMsg');
+    if (miss.length && !S.done){
+      st.textContent = '⚠ Дай відповідь на всі питання. Пропущено: ' + miss.join(', ') + '.' + (miss.some(function(n){ return Q[n - 1].t === 'order'; }) ? ' (У питаннях на порядок переставте хоча б один крок.)' : '');
+      st.className = 'status-msg show status-err'; st.scrollIntoView({behavior: 'smooth', block: 'center'}); return;
+    }
+    st.className = 'status-msg'; S.done = true; save(); render();
+    $('score').scrollIntoView({behavior: 'smooth', block: 'center'});
+  });
+  ['lastname', 'firstname', 'klass'].forEach(function(id){ if (S.who[id]) $(id).value = S.who[id];
+    ['input', 'change'].forEach(function(ev){ $(id).addEventListener(ev, function(){ S.who[id] = $(id).value; save(); }); }); });
+  $('sendBtn').addEventListener('click', function(){
+    var st = $('statusMsg');
+    if (!S.done){ st.textContent = '⚠ Спершу натисни «Перевірити відповіді».'; st.className = 'status-msg show status-err'; return; }
+    if (!$('lastname').value.trim() || !$('firstname').value.trim() || !$('klass').value){ st.textContent = '⚠ Вкажи прізвище, ім’я та групу.'; st.className = 'status-msg show status-err'; return; }
+    if (typeof SCRIPT_URL === 'undefined' || SCRIPT_URL.indexOf('ВСТАВ_СЮДИ') !== -1){ st.textContent = '⚠ Форма тимчасово не працює. Повідом, будь ласка, вчителя.'; st.className = 'status-msg show status-err'; return; }
+    var sc = 0, L = [];
+    Q.forEach(function(q, i){
+      var ok = correct(i); if (ok) sc++; var a = S.ans[i], txt;
+      if (q.t === 'match') txt = q.left.map(function(l, k){ return l + ' — ' + (a[k] >= 0 ? q.right[a[k]] : '?'); }).join('; ');
+      else if (q.t === 'order') txt = a.map(function(s){ return q.steps[s]; }).join(' → ');
+      else txt = a.map(function(k){ return q.o[k]; }).join('; ');
+      L.push((i + 1) + '. ' + (ok ? '✓ ' : '✗ ') + q.q + ' → ' + txt);
+    });
+    L.unshift('РЕЗУЛЬТАТ: ' + sc + '/' + Q.length + ' (≈ ' + Math.max(1, Math.round(sc / Q.length * 12)) + ' з 12)', '');
+    var data = new URLSearchParams({ lastname: $('lastname').value.trim(), firstname: $('firstname').value.trim(), klass: $('klass').value,
+      lesson: LESSON, worktype: 'Тест', link: '', answer: L.join('\n'), timestamp: new Date().toLocaleString('uk-UA') });
+    st.textContent = '⏳ Надсилаю...'; st.className = 'status-msg show';
+    fetch(SCRIPT_URL, {method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: data.toString()})
+      .then(function(){ st.textContent = '✓ Результат надіслано! Учитель побачить його в таблиці.'; st.className = 'status-msg show status-ok'; })
+      .catch(function(){ st.textContent = '✕ Не вдалося надіслати. Перевір інтернет і спробуй ще раз.'; st.className = 'status-msg show status-err'; });
+  });
+  $('resetBtn').addEventListener('click', function(){ if (confirm('Пройти тест заново? Відповіді на цій сторінці буде стерто.')){ try { localStorage.removeItem(KEY); } catch(e){} location.reload(); } });
+  render();
+  window.__test = { Q: Q, get S(){ return S; }, correct: correct, grade: grade, render: render };
+})();
+</script>
+</body>
+</html>
