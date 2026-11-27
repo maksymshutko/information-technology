@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<script>/*clean-url*/(function(){if(location.protocol==="file:")return;var p=location.pathname,q=p.replace(/\/index\.html$/,"/").replace(/\.html$/,"");if(q!==p)history.replaceState(null,"",q+location.search+location.hash);})();</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Детективне бюро доброчесності — гра до Тижня академічної доброчесності</title>
+<meta name="description" content="Інтерактивна гра: розслідуй 8 справ про академічну доброчесність — плагіат, фабрикація, фальсифікація, списування, обман, хабарництво. Пошук, ISBN, метадані файлів, історія версій.">
+<link rel="icon" href="../assets/logo.png">
+<link rel="stylesheet" href="../assets/style.css?v=23f00d98">
+<style>
+.pw-page [hidden]{ display:none !important; }
+.pw-hero{ display:grid; grid-template-columns: 1.4fr .8fr; gap: 22px; align-items:end; margin-bottom: 22px; }
+.pw-hero .lead{ margin-bottom: 16px; }
+.pw-chips{ display:flex; flex-wrap:wrap; gap: 8px; }
+.pw-chip{ display:inline-flex; align-items:center; gap:6px; font-size: 12.5px; font-weight: 800; color: #d9def5;
+  background: rgba(255,255,255,.05); border: 1px solid var(--border-strong); border-radius: 999px; padding: 6px 12px; }
+.pw-next{ display:flex; flex-direction:column; gap: 8px; padding: 18px 20px; }
+.pw-next small{ color: var(--muted); font-weight: 700; font-size: 12.5px; }
+.pw-next a.btn{ justify-content:center; }
+@media (max-width: 820px){ .pw-hero{ grid-template-columns: 1fr; } }
+
+/* вікно браузера (світле, як справжнє) */
+.bw{ background:#f4f6fb; color:#1b2235; border-radius: 16px; overflow:hidden; box-shadow: var(--shadow-md), 0 0 0 1px rgba(255,255,255,.06); }
+.bw-tabs{ display:flex; align-items:flex-end; gap: 8px; background:#dfe4ef; padding: 8px 10px 0; }
+.bw-dots{ display:flex; gap:6px; padding: 0 6px 10px 2px; }
+.bw-dots i{ width:11px; height:11px; border-radius:50%; background:#ff5f57; display:block; }
+.bw-dots i:nth-child(2){ background:#febc2e; } .bw-dots i:nth-child(3){ background:#28c840; }
+.bw-tab{ display:flex; align-items:center; gap:8px; background:#f4f6fb; border-radius: 10px 10px 0 0; padding: 8px 14px;
+  font-size: 12.5px; font-weight: 700; color:#2b3350; max-width: 240px; min-width:0; }
+.bw-tab span{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.bw-tab .fav{ width:16px; height:16px; border-radius:5px; flex-shrink:0; background: linear-gradient(135deg,#ff8a3d,#ff4f7a); color:#fff;
+  font-size:10px; font-weight:900; display:grid; place-items:center; }
+.bw-tab .x{ color:#8a93ad; margin-left: 4px; }
+.bw-bar{ display:flex; align-items:center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid #e1e5ef; background:#f4f6fb; }
+.bw-nav{ color:#8a93ad; font-size: 15px; letter-spacing: 6px; user-select:none; }
+.bw-url{ flex:1; min-width:0; display:flex; align-items:center; gap:7px; background:#e6eaf3; border-radius: 999px; padding: 6px 12px;
+  font-family: var(--font-mono); font-size: 12.5px; color:#3a4363; white-space:nowrap; overflow:hidden; }
+.bw-url .lock{ color:#12a77a; font-size: 12px; }
+.bw-url b{ color:#111a33; font-weight:700; }
+.bw-body{ background:#fff; padding: 26px 22px 24px; position:relative; }
+
+/* сайт «Листоноша» */
+.ln-brand{ display:flex; align-items:center; gap:10px; justify-content:center; margin-bottom: 6px; }
+.ln-logo{ width:38px; height:38px; border-radius: 12px; background: linear-gradient(135deg,#ff8a3d,#ff4f7a); display:grid; place-items:center;
+  color:#fff; font-size: 20px; box-shadow: 0 6px 16px -6px rgba(255,79,122,.7); }
+.ln-name{ font-family: var(--font-display); font-weight: 700; font-size: 19px; color:#1b2235; letter-spacing: -.3px; }
+.ln-sub{ text-align:center; color:#5c6688; font-size: 13.5px; font-weight:600; margin: 0 0 18px; }
+.ln-form{ max-width: 360px; margin: 0 auto; }
+.ln-field{ margin-bottom: 14px; }
+.ln-field label{ display:block; font-size: 12.5px; font-weight: 800; color:#3a4363; margin-bottom: 5px; }
+.ln-input{ position:relative; display:flex; align-items:center; }
+.ln-input input{ width:100%; font: 600 16px/1.3 var(--font-body); color:#111a33; background:#fff; border: 1.5px solid #cfd5e3; border-radius: 10px;
+  padding: 11px 44px 11px 12px; outline:none; transition: border-color .15s, box-shadow .15s; }
+.ln-input input:focus{ border-color:#ff6a5a; box-shadow: 0 0 0 4px rgba(255,106,90,.16); }
+.ln-input input[disabled]{ background:#f1f3f8; color:#5c6688; }
+.ln-input .eye{ position:absolute; right: 6px; width: 34px; height: 34px; border:0; background:transparent; border-radius: 8px; cursor:pointer; font-size: 16px; color:#5c6688; }
+.ln-input .eye:hover{ background:#f1f3f8; }
+.ln-btn{ width:100%; border:0; border-radius: 10px; padding: 12px; cursor:pointer; font: 800 15px var(--font-body); color:#fff;
+  background: linear-gradient(135deg,#ff7a45,#ff4f7a); box-shadow: 0 8px 20px -10px rgba(255,79,122,.9); transition: transform .1s, filter .15s; }
+.ln-btn:hover{ filter: brightness(1.05); } .ln-btn:active{ transform: translateY(1px); }
+.ln-btn:disabled{ opacity:.55; cursor: not-allowed; }
+.ln-links{ display:flex; justify-content:space-between; font-size: 12.5px; margin-top: 12px; color:#2456c9; font-weight:700; }
+.ln-links span{ cursor:default; }
+.ln-msg{ font-size: 13px; font-weight: 700; border-radius: 10px; padding: 9px 12px; margin-bottom: 12px; display:flex; gap:8px; align-items:flex-start; }
+.ln-msg.err{ background:#fdecee; color:#b4233a; border: 1px solid #f7c4cc; }
+.ln-msg.ok{ background:#e6f7f0; color:#0d7d58; border: 1px solid #b4e8d4; }
+.ln-msg.warn{ background:#fff6df; color:#8a5a00; border: 1px solid #f3dc9c; }
+.ln-input.bad input{ border-color:#e5484d; }
+.shake{ animation: shake .42s ease; }
+@keyframes shake{ 10%,90%{transform:translateX(-2px)} 20%,80%{transform:translateX(4px)} 30%,50%,70%{transform:translateX(-7px)} 40%,60%{transform:translateX(7px)} }
+
+/* термінал (темний) */
+.term-win{ background:#0a0f1f; border:1px solid #1f2a4d; border-radius: 16px; overflow:hidden; box-shadow: var(--shadow-md); display:flex; flex-direction:column; }
+.term-top{ display:flex; align-items:center; gap: 8px; padding: 10px 14px; background:#0f162c; border-bottom: 1px solid #1f2a4d;
+  font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.term-top .bw-dots{ padding:0; }
+.term-top .tt{ margin-left: 6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.term-body{ padding: 14px 16px; font-family: var(--font-mono); font-size: 12.8px; line-height: 1.7; color:#b9c3e6; }
+
+/* HUD */
+.hud{ display:grid; grid-template-columns: repeat(5, minmax(0,1fr)) auto; gap: 10px; margin-bottom: 18px; }
+.hud-it{ background: var(--glass); border:1px solid var(--border); border-radius: 16px; padding: 10px 14px; min-width:0; }
+.hud-it small{ display:block; font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing:.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.hud-it b{ font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+.hud-it b.mint{ color: var(--mint); }
+.hud-btn{ border:1px solid var(--border-strong); background: rgba(255,255,255,.04); color: var(--ink); border-radius: 16px; padding: 0 16px;
+  font: 800 13px var(--font-body); cursor:pointer; white-space:nowrap; }
+.hud-btn:hover{ border-color: var(--mint); }
+.bump{ animation: bump .5s ease; }
+@keyframes bump{ 30%{ transform: scale(1.25); color: var(--mint); } }
+@media (max-width: 720px){
+  .hud{ grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .hud-btn{ grid-column: span 3; padding: 10px; }
+}
+
+/* тост */
+.toast{ position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 140%); z-index: 300; background: #0f1a33; color: var(--ink);
+  border: 1px solid rgba(62,230,181,.5); box-shadow: var(--shadow-pop); border-radius: 14px; padding: 12px 18px; font-weight: 800; font-size: 14px;
+  transition: transform .35s cubic-bezier(.2,1.4,.4,1); max-width: calc(100vw - 32px); text-align:center; }
+.toast.show{ transform: translate(-50%, 0); }
+.confetti{ position: fixed; inset: 0; pointer-events:none; z-index: 290; overflow:hidden; }
+.confetti i{ position:absolute; top:-12px; width: 8px; height: 12px; border-radius: 2px; animation: fall linear forwards; }
+@keyframes fall{ to{ transform: translateY(105vh) rotate(720deg); opacity:.8; } }
+@media (prefers-reduced-motion: reduce){ .shake,.bump,.confetti i{ animation:none !important; } }
+
+/* поради */
+.pw-tips{ margin-top: 30px; }
+.pw-tips h2{ font-family: var(--font-display); font-size: 20px; margin: 0 0 14px; }
+.pw-tip-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(196px,1fr)); gap: 14px; }
+.pw-tip{ padding: 18px 20px; }
+.pw-tip .ic{ font-size: 26px; }
+.pw-tip h3{ font-size: 15.5px; margin: 6px 0 6px; font-family: var(--font-display); font-weight: 600; }
+.pw-tip p{ margin:0; color: var(--muted); font-size: 14px; font-weight: 500; line-height:1.6; }
+.pw-tip code{ font-family: var(--font-mono); color: var(--mint); background: rgba(62,230,181,.08); padding: 1px 6px; border-radius: 6px; font-size: 13px; overflow-wrap: anywhere; }
+/* підсумок */
+.modal[hidden]{ display:none; }
+.modal{ position: fixed; inset: 0; z-index: 250; background: rgba(4,7,16,.72); backdrop-filter: blur(6px); display:grid; place-items:center; padding: 16px; }
+.modal-card{ width: min(640px, 100%); max-height: calc(100vh - 32px); overflow-y:auto; background: var(--panel); border:1px solid var(--border-strong);
+  border-radius: 22px; padding: 24px 24px 20px; box-shadow: var(--shadow-md); animation: pop .35s cubic-bezier(.2,1.3,.4,1); }
+@keyframes pop{ from{ transform: scale(.9); opacity:0; } }
+.modal-card h2{ font-family: var(--font-display); margin: 4px 0 6px; font-size: 22px; }
+.stars{ font-size: 30px; letter-spacing: 4px; }
+.sum-grid{ display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; margin: 14px 0; }
+@media (max-width: 520px){ .sum-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
+.sum-grid div{ background: rgba(255,255,255,.04); border:1px solid var(--border); border-radius: 12px; padding: 8px 10px; }
+.sum-grid small{ display:block; color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; }
+.sum-grid b{ font-family: var(--font-display); font-size: 18px; }
+.sum-list{ list-style:none; padding:0; margin: 0 0 12px; display:grid; gap: 5px; font-size: 13.5px; }
+.sum-list li{ display:flex; gap: 8px; align-items:flex-start; color: #d9def5; font-weight: 600; }
+.sum-list li code{ font-family: var(--font-mono); color: var(--mint); }
+.sum-list li.miss{ color: var(--muted); }
+.sum-p{ color: var(--muted); font-weight: 600; font-size: 14px; margin: 0 0 14px; }
+
+.db-page [hidden]{ display:none !important; }
+.toast{ transform: translate(-50%, calc(100% + 40px)); } .toast.show{ transform: translate(-50%, 0); }
+.db-hero{ display:grid; grid-template-columns: 1.35fr .9fr; gap: 22px; align-items:center; margin-bottom: 18px; }
+@media (max-width: 860px){ .db-hero{ grid-template-columns: 1fr; } .db-badge{ display:none; } }
+.db-badge{ justify-self:center; width: 230px; }
+.db-page.playing .db-hero{ display:none; }
+
+/* старт */
+.db-start{ display:grid; grid-template-columns: 1.1fr 1fr; gap: 18px; }
+@media (max-width: 860px){ .db-start{ grid-template-columns: 1fr; } }
+.db-start h2{ font-family: var(--font-display); font-size: 19px; margin: 0 0 12px; font-weight: 600; }
+.db-rules{ margin:0; padding-left: 20px; color:#d9def5; font-weight: 600; font-size: 14.5px; line-height: 1.7; }
+.db-rules b{ color: var(--mint); }
+.db-note{ margin-top: 12px; font-size: 13px; color: var(--muted); font-weight: 600; }
+.seg{ display:grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.seg button{ border:1px solid var(--border-strong); background: rgba(255,255,255,.04); color: var(--ink); border-radius: 12px; padding: 10px; font: 800 14px var(--font-body); cursor:pointer; }
+.seg button.on{ border-color: var(--mint); background: var(--mint-soft); color: var(--mint); }
+.fld{ margin-bottom: 12px; }
+.fld label{ display:block; font-size: 12.5px; font-weight: 800; color: var(--muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .4px; }
+.fld input, .fld select{ width:100%; font: 600 16px var(--font-body); color: var(--ink); background: #0b1226; border:1.5px solid var(--border-strong); border-radius: 12px; padding: 11px 12px; outline:none; }
+.fld input:focus, .fld select:focus{ border-color: var(--mint); box-shadow: 0 0 0 4px rgba(62,230,181,.12); }
+.db-err{ color: var(--red); font-weight: 700; font-size: 13.5px; min-height: 1.2em; margin-top: 6px; }
+.db-cont{ border:1px dashed rgba(62,230,181,.5); border-radius: 14px; padding: 12px 14px; margin-bottom: 14px; font-weight: 700; font-size: 14px; }
+.db-cont .btn{ margin-top: 8px; }
+
+/* HUD і прогрес */
+.hud{ grid-template-columns: repeat(4, minmax(0,1fr)) auto auto; }
+@media (max-width: 720px){ .hud{ grid-template-columns: repeat(2, minmax(0,1fr)); } .hud-btn{ grid-column: span 1; padding: 10px; } }
+.pills{ display:flex; gap: 6px; flex-wrap: wrap; margin: -6px 0 16px; }
+.pills span{ min-width: 34px; height: 34px; padding: 0 8px; border-radius: 10px; display:grid; place-items:center; font: 800 13px var(--font-body);
+  background: rgba(255,255,255,.04); border:1px solid var(--border-strong); color: var(--muted); }
+.pills span.cur{ border-color: var(--mint); color: var(--ink); box-shadow: 0 0 0 3px rgba(62,230,181,.15); }
+.pills span.ok{ background: rgba(52,211,153,.15); border-color: rgba(52,211,153,.6); color: #7ef0c4; }
+.pills span.half{ background: rgba(251,191,36,.13); border-color: rgba(251,191,36,.55); color: #f6d36b; }
+.pills span.bad{ background: rgba(251,113,133,.13); border-color: rgba(251,113,133,.55); color: #fda4b4; }
+
+.db-grid{ display:grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.25fr); gap: 18px; align-items:start; }
+@media (max-width: 960px){ .db-grid{ grid-template-columns: minmax(0, 1fr); } }
+.db-grid > *{ min-width: 0; }
+
+/* справа — паперова тека */
+.folder{ position:relative; background: #efe4cb; color: #2b2416; border-radius: 6px 18px 18px 18px; padding: 22px 22px 18px; box-shadow: var(--shadow-md);
+  background-image: repeating-linear-gradient(0deg, rgba(120,90,40,.05) 0 1px, transparent 1px 28px); }
+.folder::before{ content:''; position:absolute; top:-14px; left: 0; width: 140px; height: 16px; background:#e6d7b6; border-radius: 10px 10px 0 0; }
+.folder .clip{ position:absolute; top:-18px; right: 26px; font-size: 34px; transform: rotate(20deg); filter: drop-shadow(0 2px 2px rgba(0,0,0,.3)); }
+.folder .no{ font-family: var(--font-mono); font-size: 12.5px; font-weight: 700; color:#7a6646; letter-spacing: 1px; }
+.folder h2{ font-family: var(--font-display); font-size: 21px; margin: 4px 0 12px; color:#2b2416; font-weight: 700; line-height:1.25; }
+.folder dl{ margin: 0; display:grid; grid-template-columns: auto 1fr; gap: 6px 12px; font-size: 14.5px; }
+.folder dt{ font-weight: 800; color:#7a6646; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; padding-top: 3px; }
+.folder dd{ margin:0; font-weight: 600; line-height: 1.55; }
+.folder .task{ margin-top: 14px; background: rgba(255,255,255,.55); border-left: 4px solid #c0392b; border-radius: 6px; padding: 9px 12px; font-weight: 800; font-size: 14.5px; }
+.folder .stamp-top{ position:absolute; right: 16px; top: 34px; border: 2.5px solid rgba(192,57,43,.65); color: rgba(192,57,43,.75); font: 900 11px var(--font-mono);
+  letter-spacing: 2px; padding: 3px 8px; border-radius: 6px; transform: rotate(8deg); }
+.folder.bonus{ background-color:#e9e0f7; }
+.folder.bonus::before{ background:#ddd0f3; }
+.hint-row{ display:flex; gap: 8px; flex-wrap:wrap; align-items:center; margin-top: 12px; }
+.hint-btn{ border: 1.5px dashed #b08a3e; background: transparent; color:#6b4f15; border-radius: 10px; padding: 7px 12px; font: 800 13px var(--font-body); cursor:pointer; }
+.hint-btn.glow{ animation: glow 1.4s ease-in-out infinite; }
+@keyframes glow{ 50%{ box-shadow: 0 0 0 5px rgba(251,191,36,.35); background: rgba(251,191,36,.18); } }
+.hint-txt{ margin-top: 10px; background: #fff6d6; border:1px solid #ecd48a; border-radius: 8px; padding: 9px 12px; font-weight: 700; font-size: 14px; color:#5a4410; }
+.ctime{ margin-left:auto; font: 700 12.5px var(--font-mono); color:#7a6646; }
+
+/* вердикт */
+.verdict{ margin-top: 16px; padding: 18px 18px 16px; }
+.verdict h3{ margin: 0 0 4px; font-family: var(--font-display); font-size: 16px; font-weight: 600; }
+.verdict .sub{ color: var(--muted); font-size: 13px; font-weight: 600; margin: 0 0 10px; }
+.vtypes{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 7px; margin-bottom: 14px; }
+@media (max-width: 520px){ .vtypes{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
+.vt, .vev{ text-align:left; border:1.5px solid var(--border-strong); background: rgba(255,255,255,.03); color: var(--ink); border-radius: 12px; cursor:pointer;
+  font: 700 13px/1.3 var(--font-body); padding: 9px 10px; transition: border-color .15s, background .15s; }
+.vt span{ display:block; font-size: 18px; margin-bottom: 2px; }
+.vt:hover, .vev:hover{ border-color: rgba(62,230,181,.6); }
+.vt.on, .vev.on{ border-color: var(--mint); background: var(--mint-soft); }
+.vevs{ display:grid; gap: 7px; }
+.vev{ font-size: 13.5px; padding: 10px 12px; display:flex; gap: 10px; align-items:flex-start; }
+.vev b{ flex-shrink:0; width: 22px; height: 22px; border-radius: 7px; display:grid; place-items:center; background: rgba(255,255,255,.07); font-size: 12px; }
+.vev.on b{ background: var(--mint); color:#04121a; }
+.vt:disabled, .vev:disabled{ cursor: default; opacity: .9; }
+.vt.right, .vev.right{ border-color: #34d399; background: rgba(52,211,153,.14); }
+.vt.wrong, .vev.wrong{ border-color: #fb7185; background: rgba(251,113,133,.12); }
+.close-btn{ width:100%; margin-top: 14px; justify-content:center; }
+
+/* результат справи */
+.res{ position:relative; margin-top: 16px; padding: 20px 20px 18px; overflow:hidden; }
+.res .stamp{ display:inline-block; font: 900 17px var(--font-mono); letter-spacing: 3px; padding: 6px 14px; border: 3px solid; border-radius: 8px;
+  transform: rotate(-6deg); animation: stamp .45s cubic-bezier(.2,1.6,.4,1); margin-bottom: 10px; }
+.res .stamp.ok{ color:#34d399; border-color:#34d399; } .res .stamp.half{ color:#fbbf24; border-color:#fbbf24; } .res .stamp.bad{ color:#fb7185; border-color:#fb7185; }
+@keyframes stamp{ from{ transform: rotate(-6deg) scale(2.4); opacity: 0; } }
+.res .pts{ position:absolute; right: 18px; top: 18px; font: 800 26px var(--font-display); }
+.res .pts.pos{ color: var(--mint); } .res .pts.neg{ color: var(--red); } .res .pts.zero{ color: var(--muted); }
+.res p{ margin: 8px 0 0; font-size: 14.5px; line-height: 1.65; color:#d9def5; font-weight: 500; }
+.res .ans{ font-weight: 800; color: var(--ink); }
+.res .fix{ border-left: 3px solid var(--mint); padding-left: 10px; color: #bff5e2; }
+.res .btn{ margin-top: 14px; width:100%; justify-content:center; }
+
+/* робочий стіл слідчого */
+.desk2{ background:#05070f; border:1px solid #1c2547; border-radius: 20px; padding: 10px; box-shadow: var(--shadow-md); position: sticky; top: 76px; }
+@media (max-width: 960px){ .desk2{ position: static; } }
+.desk2-top{ display:flex; align-items:center; gap: 8px; padding: 4px 6px 10px; font: 700 12px var(--font-mono); color: var(--muted); }
+.desk2-top i{ width:8px; height:8px; border-radius:50%; background: var(--mint); box-shadow: 0 0 8px var(--mint); }
+.tabs{ display:flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.tabs button{ display:flex; align-items:center; gap: 6px; border:1px solid #1f2a4d; background:#0d1430; color:#c9d1ef; border-radius: 10px; padding: 8px 11px;
+  font: 700 12.5px var(--font-body); cursor:pointer; max-width: 100%; }
+.tabs button span{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tabs button.on{ border-color: var(--mint); color: var(--ink); background:#12204a; }
+.tabs button .new{ width:7px; height:7px; border-radius:50%; background:#fbbf24; flex-shrink:0; }
+.win{ background:#fff; color:#1b2235; border-radius: 12px; overflow:hidden; min-height: 380px; display:flex; flex-direction:column; }
+.win-bar{ display:flex; align-items:center; gap: 10px; padding: 8px 12px; background:#e9edf5; border-bottom:1px solid #d7dce8; font: 700 12.5px var(--font-body); color:#3a4363; }
+.win-bar .dots{ display:flex; gap:6px; } .win-bar .dots i{ width:11px; height:11px; border-radius:50%; background:#ff5f57; } .win-bar .dots i:nth-child(2){ background:#febc2e; } .win-bar .dots i:nth-child(3){ background:#28c840; }
+.win-bar .t{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.win-body{ padding: 16px; flex:1; overflow:auto; max-height: 620px; }
+.win button.wbtn{ border:0; border-radius: 8px; padding: 9px 14px; font: 800 13.5px var(--font-body); background:#2456c9; color:#fff; cursor:pointer; }
+.win button.wbtn.alt{ background:#eef1f8; color:#2456c9; border:1px solid #cdd6ea; }
+.win input.winp{ font: 600 15px var(--font-body); border:1.5px solid #cfd5e3; border-radius: 8px; padding: 9px 10px; color:#111a33; outline:none; min-width:0; }
+.win input.winp:focus{ border-color:#2456c9; box-shadow: 0 0 0 3px rgba(36,86,201,.15); }
+.wtip{ font-size: 12.5px; color:#5c6688; font-weight: 600; margin-top: 8px; }
+
+/* Word */
+.ribbon{ background:#2b579a; color:#fff; padding: 6px 12px 0; font: 700 12px var(--font-body); display:flex; gap: 14px; }
+.ribbon span{ padding: 4px 2px 7px; opacity:.8; } .ribbon span.on{ opacity:1; border-bottom: 3px solid #fff; }
+.paper-bg{ background:#e6e9ef; padding: 16px; flex:1; overflow:auto; max-height: 620px; }
+.paper{ background:#fff; max-width: 560px; margin: 0 auto; padding: 26px 28px; box-shadow: 0 2px 8px rgba(0,0,0,.15); font-family: 'Times New Roman', Georgia, serif; font-size: 15.5px; line-height: 1.6; color:#111; }
+.paper h4{ font-family: Georgia, serif; text-align:center; font-size: 18px; margin: 0 0 14px; }
+.paper p{ margin: 0 0 10px; text-align: justify; }
+.paper p.sus{ background: #fff59d; box-shadow: -6px 0 0 #fff59d, 6px 0 0 #fff59d; }
+.paper ::selection{ background:#bcd4ff; }
+
+/* пошук */
+.se{ text-align:center; padding: 8px 0 14px; }
+.se .logo{ font: 900 26px var(--font-display); letter-spacing: -1px; }
+.se .logo b:nth-child(1){ color:#4285f4 } .se .logo b:nth-child(2){ color:#ea4335 } .se .logo b:nth-child(3){ color:#fbbc05 } .se .logo b:nth-child(4){ color:#34a853 }
+.srow{ display:flex; gap: 8px; } .srow input{ flex:1; }
+.sres{ margin-top: 14px; text-align:left; }
+.sres .cnt{ font-size: 12.5px; color:#5c6688; font-weight: 600; margin-bottom: 10px; }
+.sr{ margin-bottom: 14px; } .sr .u{ font-size: 12.5px; color:#1d6b3a; font-weight: 600; } .sr .h{ color:#1a0dab; font-size: 16.5px; font-weight: 700; margin: 2px 0; }
+.sr .s{ font-size: 13.5px; color:#3c4257; line-height: 1.5; } .sr .s mark{ background:#fff3b0; font-weight: 700; } .sr .d{ color:#70757a; }
+.sr.hit{ border-left: 3px solid #34a853; padding-left: 10px; }
+.stip{ background:#eef4ff; border:1px solid #c9dafc; border-radius: 8px; padding: 8px 10px; font-size: 13px; color:#1b3a7a; font-weight: 700; margin-bottom: 12px; }
+
+/* ISBN */
+.isbn-out{ margin-top: 14px; font-size: 14px; }
+.isbn-calc{ font-family: var(--font-mono); font-size: 12.5px; background:#f4f6fb; border-radius: 8px; padding: 10px; line-height: 1.7; overflow-wrap:anywhere; }
+.okline{ color:#0d7d58; font-weight: 800; } .badline{ color:#b4233a; font-weight: 800; }
+.cat{ margin-top: 10px; border:1px solid #d7dce8; border-radius: 8px; padding: 10px; font-weight: 700; }
+
+/* таблиця */
+.win{ min-width: 0; max-width: 100%; }
+.xl-bar{ display:flex; flex-wrap: wrap; align-items:center; gap: 8px; padding: 6px 10px; background:#217346; color:#fff; font: 700 12px var(--font-body); }
+.xl-f{ display:flex; gap: 8px; align-items:center; padding: 6px 10px; border-bottom:1px solid #d7dce8; font: 600 13px var(--font-mono); background:#fff; overflow:hidden; }
+.xl-f span:last-child{ min-width:0; overflow:hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hist .hi span{ min-width: 0; overflow-wrap: anywhere; }
+.xl-f .nm{ min-width: 44px; color:#5c6688; } .xl-f .fx{ color:#217346; font-style: italic; font-weight: 800; }
+.xl-wrap{ overflow:auto; max-height: 420px; }
+table.xl{ border-collapse: collapse; font: 600 13px var(--font-body); width:100%; }
+table.xl th{ background:#f0f2f6; color:#5c6688; font-weight: 700; border:1px solid #d7dce8; padding: 4px 6px; position: sticky; top: 0; }
+table.xl td{ border:1px solid #e1e5ef; padding: 5px 8px; white-space: nowrap; cursor: cell; }
+table.xl td.rn{ background:#f0f2f6; color:#5c6688; text-align:center; font-weight:700; cursor: default; }
+table.xl td.sel{ outline: 2px solid #217346; outline-offset: -2px; }
+table.xl td.chg{ background:#ffe1e1; position:relative; }
+table.xl td.chg::after{ content:'✎'; position:absolute; right: 3px; top: 1px; font-size: 10px; color:#c0392b; }
+table.xl tr.tot td{ font-weight: 900; background:#f7fbf8; }
+.xl-status{ display:flex; gap: 14px; flex-wrap:wrap; padding: 6px 10px; background:#f0f2f6; font: 700 12px var(--font-body); color:#3a4363; border-top:1px solid #d7dce8; }
+.hist{ border-top:1px solid #d7dce8; padding: 10px 12px; background:#fbfcfe; }
+.hist h5{ margin: 0 0 8px; font-size: 13.5px; }
+.hist .hi{ display:flex; gap: 10px; padding: 7px 0; border-bottom: 1px dashed #e1e5ef; font-size: 13px; }
+.hist .hi.mark{ background:#fff1f1; border-radius: 6px; padding: 7px 8px; }
+.hist .hi small{ color:#5c6688; font-weight: 700; min-width: 112px; }
+
+/* властивості */
+.props-tabs{ display:flex; gap: 2px; padding: 8px 12px 0; background:#f0f2f6; border-bottom:1px solid #d7dce8; }
+.props-tabs button{ border:1px solid transparent; border-bottom:0; background: transparent; padding: 7px 14px; font: 700 13px var(--font-body); color:#3a4363; border-radius: 6px 6px 0 0; cursor:pointer; }
+.props-tabs button.on{ background:#fff; border-color:#d7dce8; margin-bottom:-1px; }
+table.pr{ width:100%; border-collapse: collapse; font-size: 13.5px; }
+table.pr td{ padding: 7px 8px; border-bottom: 1px solid #eef1f6; vertical-align: top; }
+table.pr td:first-child{ color:#5c6688; font-weight: 700; width: 44%; }
+table.pr td:last-child{ font-weight: 700; }
+
+/* порівняння / унікальність */
+.prog{ height: 10px; background:#eef1f6; border-radius: 10px; overflow:hidden; margin: 12px 0; }
+.prog i{ display:block; height:100%; width:0; background: linear-gradient(90deg,#2456c9,#34a853); transition: width 1.4s ease; }
+.big-pct{ font: 900 34px var(--font-display); }
+.src{ border:1px solid #d7dce8; border-radius: 10px; padding: 10px 12px; margin-top: 8px; font-size: 13.5px; font-weight: 600; }
+.src .bar{ height: 6px; background:#eef1f6; border-radius: 6px; margin-top: 6px; overflow:hidden; } .src .bar i{ display:block; height:100%; background:#e5484d; }
+.src.own{ border-color:#f0c36b; background:#fffaf0; }
+.cmp-list{ margin: 10px 0 0; padding-left: 18px; font-size: 13.5px; line-height: 1.7; font-weight: 600; }
+.cmp-list code{ font-family: var(--font-mono); background:#fff3b0; padding: 0 4px; border-radius: 4px; }
+
+/* месенджер */
+.chat{ background:#e4ecf5; flex:1; padding: 14px; display:flex; flex-direction:column; gap: 8px; overflow:auto; max-height: 620px;
+  background-image: radial-gradient(rgba(36,86,201,.08) 1px, transparent 1px); background-size: 16px 16px; }
+.msg{ max-width: 82%; padding: 8px 12px 6px; border-radius: 14px; font-size: 14.5px; line-height: 1.45; box-shadow: 0 1px 1px rgba(0,0,0,.08); }
+.msg.them{ background:#fff; align-self:flex-start; border-bottom-left-radius: 4px; }
+.msg.me{ background:#d9fdd3; align-self:flex-end; border-bottom-right-radius: 4px; }
+.msg .n{ font-size: 12px; font-weight: 800; color:#2456c9; margin-bottom: 2px; }
+.msg .tm{ font-size: 11px; color:#8a93ad; text-align:right; margin-top: 2px; }
+.chat-top{ display:flex; align-items:center; gap: 10px; padding: 9px 12px; background:#fff; border-bottom:1px solid #d7dce8; font-weight: 800; font-size: 14px; }
+.chat-top .av{ width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg,#5fb8ff,#8b5cf6); color:#fff; display:grid; place-items:center; font-size: 14px; }
+.chat-top small{ display:block; color:#34a853; font-size: 11.5px; font-weight: 700; }
+
+/* слайд і фото */
+.slide{ aspect-ratio: 16/9; background: linear-gradient(135deg,#7a2e1f,#4a1c12); color:#fff7ea; border-radius: 6px; padding: 4% 5%; display:grid; grid-template-columns: 1fr 1.15fr; gap: 4%; align-items:center; box-shadow: 0 4px 14px rgba(0,0,0,.25); }
+.slide h4{ font-family: Georgia, serif; font-size: clamp(14px, 2.3vw, 22px); margin: 0 0 8px; } .slide p{ font-size: clamp(11px, 1.4vw, 14px); margin: 0; line-height: 1.5; opacity: .92; }
+.slide svg, .imgq svg, .thumb svg{ width:100%; height:auto; display:block; border-radius: 4px; }
+.imgq{ display:grid; grid-template-columns: 140px 1fr; gap: 14px; align-items:center; }
+.ir{ display:grid; grid-template-columns: 92px 1fr; gap: 12px; padding: 10px 0; border-bottom:1px solid #eef1f6; }
+.ir .site{ font-size: 12px; color:#1d6b3a; font-weight: 700; } .ir .tt{ color:#1a0dab; font-weight: 800; font-size: 14.5px; } .ir .mm{ font-size: 13px; color:#3c4257; font-weight: 600; margin-top: 2px; }
+.ir.main{ background:#f1fbf4; border-radius: 8px; padding: 10px; }
+.spin{ width: 26px; height: 26px; border: 3px solid #d7dce8; border-top-color:#2456c9; border-radius:50%; animation: sp .7s linear infinite; margin: 14px auto; }
+@keyframes sp{ to{ transform: rotate(360deg); } }
+
+/* довідник */
+.dos-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(210px,1fr)); gap: 10px; margin-top: 10px; }
+.dos{ background: rgba(255,255,255,.04); border:1px solid var(--border); border-radius: 14px; padding: 12px 14px; }
+.dos b{ display:block; font-size: 14.5px; margin-bottom: 3px; } .dos b span{ margin-right: 6px; }
+.dos p{ margin:0; font-size: 13.5px; color: var(--muted); font-weight: 600; line-height: 1.5; }
+
+/* посвідчення */
+.cert{ max-width: 760px; margin: 0 auto; background: linear-gradient(160deg,#121c3f,#0c1330); border:2px solid rgba(62,230,181,.45); border-radius: 22px; padding: 26px 26px 22px; box-shadow: var(--shadow-md); position:relative; overflow:hidden; }
+.cert::after{ content:'🕵️'; position:absolute; right: -10px; bottom: -24px; font-size: 150px; opacity: .07; }
+.cert .top{ display:flex; align-items:center; gap: 12px; }
+.cert .top img{ width: 48px; }
+.cert .top small{ display:block; color: var(--muted); font-weight: 700; font-size: 12.5px; }
+.cert h2{ font-family: var(--font-display); margin: 16px 0 2px; font-size: 24px; }
+.cert .names{ font-size: 19px; font-weight: 800; color: var(--mint); }
+.cert .rank{ display:inline-block; margin-top: 10px; font-weight: 900; font-size: 15px; padding: 6px 12px; border-radius: 10px; background: var(--violet-soft); border:1px solid rgba(139,92,246,.5); }
+.cert .score{ font: 800 48px var(--font-display); line-height: 1; } .cert .score small{ font-size: 18px; color: var(--muted); }
+.cert-row{ display:grid; grid-template-columns: auto 1fr; gap: 20px; align-items:end; margin-top: 16px; }
+@media (max-width: 560px){ .cert-row{ grid-template-columns: 1fr; } }
+.cert .tbl{ width:100%; border-collapse: collapse; margin-top: 16px; font-size: 13.5px; }
+.cert .tbl td{ padding: 6px 4px; border-bottom: 1px solid var(--border); font-weight: 600; }
+.cert .tbl td:last-child{ text-align:right; font-weight: 800; white-space: nowrap; }
+.cert .attempt{ margin-top: 10px; font-weight: 800; color: #fbbf24; font-size: 13.5px; }
+.cert .show{ margin-top: 14px; text-align:center; font-weight: 800; color: #bff5e2; }
+.fin-actions{ display:flex; gap: 10px; flex-wrap: wrap; justify-content:center; margin-top: 16px; }
+.bonus-offer{ max-width: 760px; margin: 0 auto 16px; padding: 18px 20px; display:flex; gap: 14px; align-items:center; flex-wrap: wrap; }
+.bonus-offer div{ flex:1; min-width: 220px; } .bonus-offer b{ font-size: 16px; } .bonus-offer p{ margin: 4px 0 0; color: var(--muted); font-weight: 600; font-size: 14px; }
+@media print{ .topnav, .site-footer, .hud, .fin-actions, .db-hero, .pills{ display:none !important; } body{ background:#fff; } }
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="logo" href="../">
+      <img src="../assets/logo.png" alt="Логотип КПЛТ">
+      <span class="brand"><b>Інформатика</b><small>КПЛТ</small></span>
+    </a>
+    <div class="links">
+      <a href="../">Головна</a>
+      <a href="../#rozdily" class="active">Розділи</a>
+      <a href="../pidruchnyk">Підручник</a>
+      <a href="../submit">Здати роботу</a>
+    </div>
+  </div>
+</nav>
+<main class="wrap db-page">
+  <div class="db-hero">
+    <div>
+      <div class="eyebrow">Тиждень академічної доброчесності · Розділ 1</div>
+      <h1>Детективне бюро <span class="grad">доброчесності</span></h1>
+      <p class="lead">Ти — слідчий бюро. На столі 8 справ про можливі порушення академічної доброчесності. Відкривай докази, користуйся інструментами слідчого й винеси вердикт: що саме сталося — і чи сталося взагалі.</p>
+    </div>
+    <svg class="db-badge" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs><linearGradient id="dbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3ee6b5"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
+  <circle cx="120" cy="120" r="104" fill="#10172e" stroke="url(#dbg)" stroke-width="6"/>
+  <circle cx="120" cy="120" r="88" fill="none" stroke="#2f3b6b" stroke-width="2" stroke-dasharray="4 7"/>
+  <path d="M120 52 l14 28 31 4-22 22 6 31-29-15-29 15 6-31-22-22 31-4z" fill="url(#dbg)" opacity=".95"/>
+  <circle cx="104" cy="168" r="22" fill="none" stroke="#eef2ff" stroke-width="7"/>
+  <line x1="120" y1="184" x2="146" y2="210" stroke="#eef2ff" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="104" cy="168" r="14" fill="rgba(95,184,255,.25)"/>
+</svg>
+  </div>
+
+  <!-- СТАРТ -->
+  <section id="scrStart" class="db-start">
+    <div class="card-glass">
+      <h2>🕵️ Як працює бюро</h2>
+      <ol class="db-rules">
+        <li>У тебе <b>8 справ</b> у випадковому порядку + <b>бонусна</b> для найшвидших.</li>
+        <li>У кожній справі вивчи докази на «Робочому столі слідчого»: документи, пошук, таблиці, властивості файлів, листування.</li>
+        <li>Вердикт: <b>вид порушення</b> (+2 бали) і <b>ключовий доказ</b> (+1 бал).</li>
+        <li>Обережно: не в кожній справі є порушення. Хибне звинувачення — <b>−1 бал</b>.</li>
+        <li>Підказка коштує <b>−1 бал</b>. На справу орієнтовно 3–4 хвилини.</li>
+        <li>Наприкінці отримаєш <b>посвідчення слідчого</b> з результатом — покажи його викладачу.</li>
+      </ol>
+      <p class="db-note">📚 Довідник з 8 видами порушень можна відкрити будь-коли. Усі люди, документи, книжки й сайти в грі вигадані — шукай докази інструментами всередині гри.</p>
+    </div>
+    <div class="card-glass">
+      <h2>🪪 Оформлення посвідчення</h2>
+      <div class="db-cont" id="contBox" hidden></div>
+      <div class="seg" role="group" aria-label="Як працюєте">
+        <button type="button" class="on" data-m="1">👤 Працюю сам(а)</button>
+        <button type="button" data-m="2">👥 Працюємо вдвох</button>
+      </div>
+      <div class="fld"><label for="n1">Прізвище та ім’я</label><input id="n1" maxlength="40" autocomplete="off" placeholder="напр. Коваленко Ірина"></div>
+      <div class="fld" id="n2box" hidden><label for="n2">Прізвище та ім’я напарника</label><input id="n2" maxlength="40" autocomplete="off" placeholder="напр. Шевчук Дмитро"></div>
+      <div class="fld"><label for="grp">Група</label><select id="grp"><option value="">— обери групу —</option><option>102</option><option>105</option><option>109</option><option>110</option><option>201</option><option>202</option><option>205</option><option>209</option><option>210</option><option>301</option><option>310</option></select></div>
+      <button class="btn close-btn" type="button" id="startBtn">🕵️ Отримати посвідчення й почати</button>
+      <div class="db-err" id="startErr"></div>
+    </div>
+  </section>
+
+  <!-- ГРА -->
+  <section id="scrGame" hidden>
+    <div class="hud">
+      <div class="hud-it"><small>Справа</small><b id="hCase">1 / 8</b></div>
+      <div class="hud-it"><small>Бали</small><b class="mint" id="hScore">0</b></div>
+      <div class="hud-it"><small>Час</small><b id="hTime">0:00</b></div>
+      <div class="hud-it"><small>Підказки</small><b id="hHints">0</b></div>
+      <button class="hud-btn" type="button" id="dosBtn">📚 Довідник</button>
+      <button class="hud-btn" type="button" id="sndBtn">🔇 Звук</button>
+    </div>
+    <div class="pills" id="pills"></div>
+    <div class="db-grid">
+      <div>
+        <div id="caseBox"></div>
+        <div id="verdictBox"></div>
+      </div>
+      <div class="desk2">
+        <div class="desk2-top"><i></i> Робочий стіл слідчого · відкривай вкладки з доказами</div>
+        <div class="tabs" id="tabs"></div>
+        <div id="toolBox"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ФІНАЛ -->
+  <section id="scrFinal" hidden></section>
+
+  <div class="modal" id="dosModal" hidden>
+    <div class="modal-card" style="width:min(820px,100%)">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+        <h2>📚 Довідник слідчого</h2>
+        <button class="btn btn-ghost btn-sm" type="button" id="dosClose">✕ Закрити</button>
+      </div>
+      <p class="sum-p">Основні види порушень академічної доброчесності — за ст. 42 Закону України «Про освіту» (скорочено, своїми словами).</p>
+      <div class="dos-grid" id="dosGrid"></div>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</main>
+<footer class="site-footer">
+  <div class="sf-inner">
+    <div class="sf-brand"><img src="../assets/logo.png" alt=""><div><b>Інформатика</b><small>Київський професійний ліцей транспорту</small></div></div>
+    <div class="sf-teacher">Викладач інформатики — <b>Шутько Максим Олександрович</b></div>
+    <div class="sf-links"><a href="../#rozdily">Розділи</a><a href="../submit">Здати роботу</a><a href="../qr-quest/">QR-квест</a><a href="https://kplt.in.ua/" target="_blank" rel="noopener">Сайт ліцею ↗</a></div>
+    <div class="sf-credits">Ілюстрації: <a href="https://storyset.com/" target="_blank" rel="noopener">Storyset</a>, <a href="https://undraw.co/" target="_blank" rel="noopener">unDraw</a></div>
+  </div>
+</footer>
+<script>
+  // ---------- звук (за бажанням, Web Audio без файлів) ----------
+  var SND_KEY = 'inf-sound';
+  var soundOn = false; try { soundOn = localStorage.getItem(SND_KEY) === '1'; } catch (e) {}
+  var actx = null;
+  function beep(freq, dur, type, vol, delay){
+    if (!soundOn) return;
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      var t = actx.currentTime + (delay || 0), o = actx.createOscillator(), g = actx.createGain();
+      o.type = type || 'sine'; o.frequency.setValueAtTime(freq, t);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol || 0.12, t + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + dur + 0.02);
+    } catch (e) {}
+  }
+  var SFX = {
+    ok: function(){ beep(660, .12, 'triangle'); beep(880, .14, 'triangle', .12, .1); beep(1320, .2, 'triangle', .1, .2); },
+    bad: function(){ beep(180, .18, 'square', .06); },
+    hint: function(){ beep(520, .1, 'sine'); beep(780, .16, 'sine', .1, .09); },
+    win: function(){ [523,659,784,1047].forEach(function(f,i){ beep(f, .22, 'triangle', .12, i*.12); }); },
+    key: function(){ beep(1200 + Math.random()*300, .025, 'square', .015); }
+  };
+  function bindSound(btn){
+    function paint(){ btn.textContent = soundOn ? '🔊 Звук' : '🔇 Звук'; btn.setAttribute('aria-pressed', soundOn ? 'true' : 'false'); }
+    btn.addEventListener('click', function(){ soundOn = !soundOn; try { localStorage.setItem(SND_KEY, soundOn ? '1' : '0'); } catch (e) {} paint(); if (soundOn) SFX.hint(); });
+    paint();
+  }
+  // ---------- тост і конфеті ----------
+  var toastT = null;
+  function toast(text){
+    var el = document.getElementById('toast'); el.textContent = text; el.classList.add('show');
+    clearTimeout(toastT); toastT = setTimeout(function(){ el.classList.remove('show'); }, 2200);
+  }
+  function confetti(n){
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var box = document.createElement('div'); box.className = 'confetti';
+    var cols = ['#3ee6b5','#8b5cf6','#5fb8ff','#f472b6','#fbbf24'];
+    for (var i = 0; i < (n || 70); i++) {
+      var p = document.createElement('i');
+      p.style.left = (Math.random()*100) + 'vw'; p.style.background = cols[i % cols.length];
+      p.style.animationDuration = (1.6 + Math.random()*1.6) + 's'; p.style.animationDelay = (Math.random()*.4) + 's';
+      p.style.transform = 'rotate(' + (Math.random()*360) + 'deg)';
+      box.appendChild(p);
+    }
+    document.body.appendChild(box); setTimeout(function(){ box.remove(); }, 3800);
+  }
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+(function(){
+  var DATA = {"types": [["plagiat", "Академічний плагіат", "📄", "Видати чужі тексти, ідеї, фото чи результати за свої — без зазначення автора й джерела."], ["samoplagiat", "Самоплагіат", "♻️", "Видати власну раніше здану чи оприлюднену роботу за нову."], ["fabrykatsiia", "Фабрикація", "🧪", "Вигадати дані, факти чи джерела, яких насправді не існує."], ["falsyfikatsiia", "Фальсифікація", "✏️", "Свідомо змінити вже наявні справжні дані, щоб отримати «потрібний» результат."], ["spysuvannia", "Списування", "👀", "Виконати роботу з недозволеними джерелами чи підказками, зокрема з роботи іншого студента."], ["obman", "Обман", "🎭", "Надати неправдиву інформацію про власне навчання: напр. здати як свою роботу, яку виконав хтось інший."], ["khabarnytstvo", "Хабарництво", "💸", "Запропонувати чи взяти гроші, подарунок або послугу за оцінку чи іншу неправомірну перевагу."], ["neobiektyvne", "Необ’єктивне оцінювання", "⚖️", "Свідомо завищити або занизити оцінку — не за якість роботи."], ["nema", "Порушення немає", "✅", "Усе зроблено чесно: джерела вказано, дані справжні, робота власна."]], "cases": [{"id": "c1", "emoji": "📄", "title": "Підозріло гладенький реферат", "who": "Олег Кравчук", "what": "реферат «Історія комп’ютерних вірусів»", "story": "Викладачка помітила, що один абзац у рефераті Олега написано зовсім іншим стилем, ніж решта тексту: жодної помилки, складні звороти, точні цифри. В інших абзацах — «я думаю що» без ком. Олег запевняє: «Усе писав сам, нічого не копіював».", "task": "Перевір, чи є в цього абзацу інше джерело.", "tools": [{"type": "doc", "name": "Referat_Kravchuk.docx", "title": "Історія комп’ютерних вірусів", "paras": [{"t": "Віруси це програми які шкодять компютеру. Я думаю що віруси були завжди відколи є компютери і вони дуже небезпечні для людей."}, {"t": "Перший відомий мережевий хробак з’явився 1988 року: програма, написана студентом Робертом Моррісом, за одну ніч вивела з ладу близько шести тисяч комп’ютерів — приблизно десяту частину тогочасного інтернету.", "cls": "sus"}, {"t": "Зараз вірусів дуже багато тому треба ставити антивірус і не качати всяке з інтернету. Також треба оновлювати систему."}, {"t": "Список джерел: 1) Інтернет. 2) Підручник з інформатики."}]}, {"type": "search", "engine": "Шукайко", "hits": [{"q": "Перший відомий мережевий хробак з’явився 1988 року: програма, написана студентом Робертом Моррісом, за одну ніч вивела з ладу близько шести тисяч комп’ютерів — приблизно десяту частину тогочасного інтернету.", "title": "Хробак Морріса: як одна програма зупинила інтернет", "url": "it-istoriia.org.ua › morris-worm", "date": "12 берез. 2019", "snip": "Перший відомий мережевий хробак з’явився 1988 року: програма, написана студентом Робертом Моррісом, за одну ніч вивела з ладу близько шести тисяч комп’ютерів — приблизно десяту частину тогочасного інтернету."}], "generic": [{"title": "Комп’ютерні віруси: види, ознаки зараження, захист", "url": "kiberosvita.ua › virusy", "snip": "Розповідаємо, які бувають шкідливі програми і як не стати жертвою…"}, {"title": "Історія комп’ютерів — від ЕНІАКа до смартфона", "url": "muzei-it.org.ua › istoriia", "snip": "Хронологія розвитку обчислювальної техніки з фото та цікавими фактами…"}, {"title": "Як написати реферат: структура та оформлення", "url": "osvita-porady.com › referat", "snip": "Титульний аркуш, зміст, вступ, основна частина, висновки, список джерел…"}]}], "ev": ["У списку джерел указано лише «Інтернет» і «Підручник»", "В інших абзацах реферату є граматичні помилки", "Пошук фрази в лапках знайшов той самий абзац на сайті 2019 року", "Абзац написано іншим стилем і без жодної помилки"], "hint": "Виділи 6–8 слів з підозрілого абзацу, скопіюй (Ctrl+C) і шукай у «Шукайку», узявши фразу в лапки \"…\"."}, {"id": "c2", "emoji": "📚", "title": "Книжка-привид", "who": "Софія Мельник", "what": "доповідь «Штучний інтелект в освіті»", "story": "У доповіді Софії ключова цифра: «73 % викладачів уже щодня користуються ШІ» — з посиланням на книжку Гордієнка. Бібліотекарка ліцею не змогла знайти цю книжку. Софія каже: «Не пам’ятаю, де її бачила, але вона точно є».", "task": "Перевір кожне джерело зі списку літератури.", "tools": [{"type": "doc", "name": "Dopovid_Melnyk.docx", "title": "Список використаних джерел", "paras": [{"t": "1. Бондар О. І. Цифрова школа: практичний посібник. — Харків: Ранок-Освіта, 2021. — 176 с. — ISBN 978-617-7408-12-2"}, {"t": "2. Гордієнко В. П. Нейромережі для кожного. — Київ: Технопрес, 2022. — 248 с. — ISBN 978-617-7409-21-4", "cls": "sus"}, {"t": "3. Лисенко Т. М. Інформатика і суспільство. — Київ: Знання, 2019. — 312 с. — ISBN 978-966-1034-55-5"}, {"t": "4. Ткачук Н. В. Медіаграмотність щодня. — Львів: Каменяр-Нова, 2023. — 140 с. — ISBN 978-617-7680-32-0"}, {"t": "5. Савчук І. Р. Цифрові інструменти вчителя. — Одеса: Освіта Півдня, 2020. — 204 с. — ISBN 978-617-5520-90-1"}]}, {"type": "isbn", "name": "Перевірка ISBN і каталог", "catalog": {"9786177408122": "Бондар О. І. «Цифрова школа» — є в 14 бібліотеках", "9789661034555": "Лисенко Т. М. «Інформатика і суспільство» — є в 31 бібліотеці", "9786177680320": "Ткачук Н. В. «Медіаграмотність щодня» — є в 6 бібліотеках", "9786175520901": "Савчук І. Р. «Цифрові інструменти вчителя» — є в 9 бібліотеках"}}], "ev": ["У списку літератури лише п’ять джерел замість десяти", "Прізвища авторів у списку подано без повних імен", "ISBN книжки не проходить перевірку, і її немає в жодному каталозі", "Книжку Гордієнка видано у 2022 році, тобто надто давно"], "hint": "Введи ISBN кожної книжки в інструмент «Перевірка ISBN». Остання цифра ISBN — контрольна, її можна порахувати."}, {"id": "c3", "emoji": "📊", "title": "Опитування, яке «покращили»", "who": "Вікторія Гончар", "what": "проєкт «Чи потрібна в ліцеї зона коворкінгу?»", "story": "Вікторія провела справжнє опитування через Google Форму. У звіті вона пише: «Опитано 30 студентів, 87 % — за коворкінг». Одногрупниця каже, що більшість, кого вона знає, голосувала «Ні». Таблиця відповідей відкрита для перевірки.", "task": "Переконайся, що дані в таблиці — ті самі, що надійшли з форми.", "tools": [{"type": "doc", "name": "Zvit_Honchar.docx", "title": "Звіт про опитування", "paras": [{"t": "Мета: з’ясувати, чи потрібна студентам зона коворкінгу в ліцеї."}, {"t": "Опитано 30 студентів 1–3 курсів. Результат: 26 відповіли «Так» (87 %), 4 — «Ні» (13 %).", "cls": "sus"}, {"t": "Висновок: переважна більшість студентів підтримує створення коворкінгу."}]}, {"type": "sheet", "name": "Відповіді форми (1).xlsx", "cols": ["Позначка часу", "Курс", "Чи потрібен коворкінг?"], "gen": "survey"}], "ev": ["Історія версій: 12 відповідей «Ні» вручну змінено на «Так»", "Відповіді надходили в різний час протягом трьох днів", "У звіті немає діаграми з результатами опитування", "Опитали тільки 30 студентів, а не весь ліцей"], "hint": "Відкрий у таблиці «🕘 Історія версій» — там видно, хто й що змінював після того, як відповіді надійшли."}, {"id": "c4", "emoji": "🕰️", "title": "Курсова за один вечір", "who": "Тарас Савчук", "what": "індивідуальний проєкт «Розумний будинок»", "story": "Тарас здав великий проєкт на 25 сторінок і написав викладачу: «Працював над ним сам два тижні, щовечора». Проте на консультаціях він не міг пояснити жодного розділу. Файл проєкту є в теці «Здані роботи».", "task": "Подивись на файл уважніше — не лише на текст.", "tools": [{"type": "doc", "name": "Proiekt_Savchuk.docx", "title": "Розумний будинок: система керування освітленням", "paras": [{"t": "Виконав: студент групи 202 Савчук Тарас. Перевірив: викладач інформатики."}, {"t": "Розділ 1. Аналіз предметної області. Розділ 2. Вибір апаратної платформи. Розділ 3. Програмна реалізація…"}, {"t": "Обсяг: 25 сторінок, 14 рисунків, 3 таблиці."}]}, {"type": "props", "name": "Proiekt_Savchuk.docx", "rows": [["Тип", "Документ Microsoft Word (.docx)"], ["Розмір", "2,4 МБ"], ["Назва", "Розумний будинок"], ["Автор", "Наталія Шевчук"], ["Організація", "Курсові-Експрес · замовлення під ключ"], ["Створено", "03.05.2024, 14:12"], ["Змінено", "21.11.2026, 22:47"], ["Останнім зберіг(ла)", "Тарас"], ["Загальний час редагування", "4 хв"], ["Кількість редагувань", "2"]], "sus": ["Автор", "Організація", "Створено", "Загальний час редагування"]}, {"type": "chat", "title": "Тарас Савчук", "msgs": [{"me": false, "name": "Тарас", "time": "22:51", "text": "Добрий вечір! Надіслав проєкт 👍 Працював над ним сам два тижні, щовечора сидів 😅"}, {"me": true, "name": "Викладач", "time": "22:58", "text": "Дякую, Тарасе. Завтра на консультації розкажеш про розділ 3?"}, {"me": false, "name": "Тарас", "time": "23:02", "text": "Ну… я вже трохи забув, що там 😬"}]}], "ev": ["Титульна сторінка оформлена не за зразком ліцею", "Властивості файлу: інший автор, створено у 2024, редагування — 4 хв", "Тарас не зміг пояснити розділ 3 на консультації", "Проєкт надіслано пізно ввечері, о 22:47"], "hint": "У справжньому Word це «Файл → Відомості» або правою кнопкою на файлі → «Властивості» → «Подробиці». Тут — вікно «Властивості»."}, {"id": "c5", "emoji": "👯", "title": "Близнюки в Excel", "who": "Ірина Лисенко та Денис Ткач", "what": "контрольна практична «Кошторис поїздки»", "story": "Контрольну виконували самостійно на уроці, без інтернету й без допомоги сусідів. Ірина й Денис сиділи поруч. Підсумки в них різні від інших, але однакові між собою. Обидва кажуть: «Ми просто однаково думаємо».", "task": "Порівняй дві роботи — шукай не правильні відповіді, а однакові помилки.", "tools": [{"type": "sheet", "name": "Lysenko_koshtorys.xlsx", "gen": "budgetA"}, {"type": "sheet", "name": "Tkach_koshtorys.xlsx", "gen": "budgetB"}, {"type": "compare", "name": "Порівняння файлів", "a": "Lysenko_koshtorys.xlsx", "b": "Tkach_koshtorys.xlsx"}], "ev": ["Обидва файли збережено того самого дня на уроці", "Однакова помилка у формулі й та сама описка в обох файлах", "Обидва студенти використали для підсумку функцію СУМ", "Обидва студенти отримали однакову суму в підсумку"], "hint": "Однакова правильна відповідь нічого не доводить. А от дві однакові помилки в одних і тих самих місцях — майже неможливий збіг."}, {"id": "c6", "emoji": "♻️", "title": "Старе-нове есе", "who": "Андрій Бойко", "what": "есе «Мій цифровий слід» з інформатики", "story": "Андрій здав есе вчасно, текст грамотний і цікавий. Але викладачу інформатики він здався знайомим: схожу роботу він бачив торік на виставці робіт з громадянської освіти.", "task": "Перевір текст на унікальність.", "tools": [{"type": "doc", "name": "Ese_Boiko_2026.docx", "title": "Мій цифровий слід", "paras": [{"t": "Кожен лайк, коментар і фото залишає слід, який неможливо повністю стерти. Роботодавці дедалі частіше перевіряють соцмережі кандидатів…"}, {"t": "Я переглянув свої акаунти й знайшов фото п’ятирічної давнини, яке сьогодні точно не хотів би показувати…"}, {"t": "«Інтернет пам’ятає все» [1] — і тому думати треба до публікації, а не після. [1] Посилання: kiberosvita.ua"}]}, {"type": "uniq", "name": "Перевірка унікальності", "pct": 4, "sources": [{"name": "Бойко А. «Цифровий слід і репутація» — есе, громадянська освіта, гр. 102, 2025 (оцінка 11)", "pct": 94, "own": true}, {"name": "kiberosvita.ua — «Інтернет пам’ятає все» (цитата з посиланням)", "pct": 2, "own": false}]}], "ev": ["В есе є цитата з сайту kiberosvita.ua з посиланням", "Тема есе повторює тему уроку з інформатики", "Збіг 94 % із чужою статтею в інтернеті без посилання", "Збіг 94 % з власним есе Андрія, яке він уже здавав торік"], "hint": "Натисни «Перевірити» й уважно прочитай, ЧИЯ це робота, з якою знайдено збіг, і коли її здавали."}, {"id": "c7", "emoji": "💅", "title": "Вигідна пропозиція", "who": "Марта Коваль", "what": "оцінка за проєкт з інформатики", "story": "Марта отримала за проєкт 7 балів і написала викладачці ввечері в месенджер. Викладачка переслала скриншот у бюро й запитала: «Я ж відмовилася — чи було тут порушення?»", "task": "Прочитай листування.", "tools": [{"type": "chat", "title": "Олена Петрівна (інформатика)", "msgs": [{"me": true, "name": "Марта", "time": "20:14", "text": "Олено Петрівно, добрий вечір! Я бачила, що за проєкт у мене 7 😔"}, {"me": false, "name": "Олена Петрівна", "time": "20:20", "text": "Добрий вечір, Марто. Так, бракує розділу з висновками. Можеш доробити до п’ятниці."}, {"me": true, "name": "Марта", "time": "20:22", "text": "А може, просто поставите 10? Мама працює в салоні краси — зробить вам манікюр безкоштовно 💅😉"}, {"me": false, "name": "Олена Петрівна", "time": "20:25", "text": "Марто, так не можна. Оцінка залежить лише від твоєї роботи. Чекаю висновки до п’ятниці."}]}], "ev": ["Студентка відкрито незадоволена своєю оцінкою", "Студентка використовувала в листуванні емодзі", "Пропозиція безкоштовної послуги в обмін на вищу оцінку", "Студентка написала викладачці пізно ввечері"], "hint": "Порушення — не лише отримати, а й запропонувати щось за оцінку. Навіть якщо пропозицію відхилили."}, {"id": "c8", "emoji": "🔐", "title": "Чужі слова в доповіді", "who": "Дмитро Литвин", "what": "доповідь «Як працює шифрування»", "story": "Одногрупник подав скаргу: «Дмитро скопіював речення з інтернету! Я знайшов його на сайті». Дмитро здивований і просить перевірити доповідь повністю.", "task": "Перевір скаргу — і подивись, як оформлено це речення.", "tools": [{"type": "doc", "name": "Dopovid_Lytvyn.docx", "title": "Як працює шифрування", "paras": [{"t": "Щодня ми надсилаємо повідомлення, паролі та фото. Але чому їх не може прочитати сторонній?"}, {"t": "Як зазначає автор блогу «Кібер-Блог», «Шифрування перетворює зрозумілий текст на набір символів, який неможливо прочитати без ключа, тому навіть перехоплене повідомлення залишається таємницею.» [2].", "cls": "sus"}, {"t": "Я порівняв, як шифрують повідомлення різні месенджери, і склав власну таблицю (с. 3)."}, {"t": "Джерела: [1] Підручник «Інформатика», розд. 10. [2] Кібер-Блог. Шифрування для чайників — cyber-blog.net/shyfruvannia (дата звернення 18.11.2026)."}]}, {"type": "search", "engine": "Шукайко", "hits": [{"q": "Шифрування перетворює зрозумілий текст на набір символів, який неможливо прочитати без ключа, тому навіть перехоплене повідомлення залишається таємницею.", "title": "Шифрування для чайників: просто про складне", "url": "cyber-blog.net › shyfruvannia", "date": "4 вер. 2025", "snip": "Шифрування перетворює зрозумілий текст на набір символів, який неможливо прочитати без ключа, тому навіть перехоплене повідомлення залишається таємницею."}], "generic": [{"title": "Шифрування для чайників: просто про складне", "url": "cyber-blog.net › shyfruvannia", "snip": "Що таке ключ, чим симетричне шифрування відрізняється від асиметричного…"}, {"title": "Комп’ютерні віруси: види, ознаки зараження, захист", "url": "kiberosvita.ua › virusy", "snip": "Розповідаємо, які бувають шкідливі програми і як не стати жертвою…"}, {"title": "Як написати реферат: структура та оформлення", "url": "osvita-porady.com › referat", "snip": "Титульний аркуш, зміст, вступ, основна частина, висновки, список джерел…"}]}], "ev": ["Дмитро склав власну таблицю порівняння месенджерів", "Речення взято в лапки, а джерело вказано у списку [2]", "Пошук знайшов це саме речення на сайті cyber-blog.net", "Скаргу подав одногрупник, а не викладач"], "hint": "Знайти речення в інтернеті — ще не доказ плагіату. Перевір, чи є лапки й посилання на джерело."}], "bonus": {"id": "b1", "emoji": "⭐", "title": "Справа викладача", "bonus": true, "who": "Ігор Степанович, викладач історії", "what": "презентація «Історія залізниці України»", "story": "Бонусна справа! Правила доброчесності однакові для всіх — і для студентів, і для викладачів. У презентації викладача на слайді 4 є красиве фото локомотива. Підпису під фото немає.", "task": "З’ясуй, звідки фото і чи можна було використати його без підпису.", "tools": [{"type": "slide", "name": "Istoriia_zaliznytsi.pptx — слайд 4", "title": "Електровози ХХІ століття", "text": "Сучасні електровози розвивають швидкість до 160 км/год і перевозять тисячі тонн вантажу."}, {"type": "imgsearch", "name": "Пошук за зображенням", "results": [{"site": "vidkryte-foto.org.ua", "title": "«Електровоз на світанку» — Олена Мирна", "meta": "Ліцензія CC BY 4.0: можна використовувати безкоштовно, але обов’язково вказати автора", "main": true}, {"site": "zaliznychnyi-blog.com", "title": "Добірка фото потягів (фото: Олена Мирна / Відкрите Фото)", "meta": "Фото з підписом автора"}, {"site": "shpalery-hd.net", "title": "Шпалери «Потяг» 1920×1080", "meta": "Копія без зазначення автора"}]}], "ev": ["Ту саму фотографію знайдено на сайті шпалер", "Пошук за зображенням: фото має автора й вимагає підпису (CC BY)", "На слайді забагато тексту для однієї фотографії", "Фото на слайді має низьку якість і темні кольори"], "hint": "Натисни «Шукати за зображенням» і прочитай умови ліцензії на сайті, де фото з’явилося першим."}, "sheets": {"survey": {"cols": ["Позначка часу", "Курс", "Чи потрібен коворкінг?"], "rows": [["18.11.2026 09:23", "2 курс", "Так"], ["18.11.2026 09:42", "2 курс", "Так"], ["18.11.2026 10:33", "3 курс", "Так"], ["18.11.2026 11:13", "1 курс", "Так"], ["18.11.2026 12:18", "3 курс", "Ні"], ["18.11.2026 12:40", "2 курс", "Так"], ["18.11.2026 12:57", "3 курс", "Так"], ["18.11.2026 13:41", "3 курс", "Так"], ["18.11.2026 15:07", "2 курс", "Так"], ["18.11.2026 16:27", "1 курс", "Так"], ["18.11.2026 16:42", "1 курс", "Так"], ["19.11.2026 09:13", "2 курс", "Так"], ["19.11.2026 09:30", "1 курс", "Так"], ["19.11.2026 09:49", "2 курс", "Так"], ["19.11.2026 10:31", "2 курс", "Так"], ["19.11.2026 11:59", "2 курс", "Ні"], ["19.11.2026 12:26", "2 курс", "Так"], ["19.11.2026 13:18", "1 курс", "Так"], ["19.11.2026 14:50", "2 курс", "Ні"], ["19.11.2026 16:24", "3 курс", "Так"], ["19.11.2026 16:40", "3 курс", "Так"], ["20.11.2026 09:08", "3 курс", "Так"], ["20.11.2026 09:46", "1 курс", "Так"], ["20.11.2026 10:52", "2 курс", "Так"], ["20.11.2026 11:33", "3 курс", "Так"], ["20.11.2026 13:08", "3 курс", "Так"], ["20.11.2026 13:43", "3 курс", "Так"], ["20.11.2026 14:31", "1 курс", "Так"], ["20.11.2026 15:07", "1 курс", "Так"], ["20.11.2026 15:54", "2 курс", "Ні"]], "changed": {"0,2": "Ні", "1,2": "Ні", "3,2": "Ні", "9,2": "Ні", "11,2": "Ні", "12,2": "Ні", "13,2": "Ні", "14,2": "Ні", "20,2": "Ні", "21,2": "Ні", "23,2": "Ні", "26,2": "Ні"}, "history": [{"when": "20.11.2026, 23:41", "who": "Вікторія Гончар", "what": "Змінено 12 клітинок у стовпці C («Ні» → «Так»)", "mark": true}, {"when": "20.11.2026, 18:02", "who": "Google Форми", "what": "Отримано відповідь №30 (останню)"}, {"when": "18.11.2026, 09:12", "who": "Google Форми", "what": "Створено таблицю відповідей"}]}, "budgetA": {"cols": ["Стаття витрат", "К-сть", "Ціна, грн", "Сума, грн"], "rows": [["Квиток на потяг Київ - Львв", "2", "650", "1300"], ["Хостел (ніч)", "2", "480", "960"], ["Обід у кафе", "4", "220", "880"], ["Квиток до музею", "2", "150", "300"], ["Проїзд у трамваї", "6", "20", "120"], ["Кава", "4", "60", "240"], ["Сувеніри", "1", "300", "300"], ["РАЗОМ", "", "", "3800"]], "formulas": {"0": "=B2*C2", "1": "=B3*C3", "2": "=B4*C4", "3": "=B5*C5", "4": "=B6*C6", "5": "=B7*C7", "6": "=B8*C8", "7": "=СУМ(D2:D7)"}, "note": "Підказка Excel: клацни на клітинку в стовпці «Сума», щоб побачити формулу."}, "budgetB": {"cols": ["Стаття витрат", "К-сть", "Ціна, грн", "Сума, грн"], "rows": [["Квиток на потяг Київ - Львв", "2", "650", "1300"], ["Хостел (ніч)", "2", "480", "960"], ["Обід (кафе)", "4", "220", "880"], ["Квиток до музею", "2", "150", "300"], ["Проїзд у трамваї", "6", "20", "120"], ["Кава з собою", "4", "60", "240"], ["Сувеніри", "1", "300", "300"], ["РАЗОМ", "", "", "3800"]], "formulas": {"0": "=B2*C2", "1": "=B3*C3", "2": "=B4*C4", "3": "=B5*C5", "4": "=B6*C6", "5": "=B7*C7", "6": "=B8*C8", "7": "=СУМ(D2:D7)"}, "note": "Підказка Excel: клацни на клітинку в стовпці «Сума», щоб побачити формулу."}}};
+  var ANS_RAW = 'EFIPRQ9eTxlQDklKTFZdCA4FGw4fUkBUDxxNWFJNu+C8xf3Tv9Kj6Uug2KSTte6yyb79oN6kkLTRQqLYu8G94v3Xv9Kj+7ryvfj85b7tUr/cofpU/OW+4KLfuvK99v3RvuxSXVtBVVT85L/cotW680BU/dRPss2/1aHtpJW01LLCv9ag0aWiRL/fot9LoNGkmLX4QqLSu8W8yP3UvvZcT7v2vMn87L/aotZLoe2lr7TXssm+51CO9LlEv9mi17r4vMENtNCz5L/foNKkmrXvssJDS6DYpJO01bLCv9yg0qSRRL7jo+27wL3gDbTYss+/26DVpJm02rLPv95QvMD90r/Xo++7xbzP/dpBQrDEu/a8yfzmv9ej77vNvMH85q3ZUr7oUL31/du/2qPuu8q99w2027LEv96h7KSYtNRCkO//ULzJ/dFPss2/1aHtpJW01LLCv9ag0aWiXk+z8L7roNmknLTfQqLdu8q8xP3TvuGi3bvAvfb93E+yyL/VoNGkl7Xvsse+6aDRpa5EvuOj7bvOvfT88r/fotW680JWAURNBFBVS1K82/3eT7LDvuig16STRL/TUr7soNmlrLTSssxVS6DepJq14LPwv9NQvfT90b7lotq7zbzJ/OtPssBPu8u8xP3bv9ii10ug1VT90L/So+27yEykkrTRs/O/06DXpJ200rLPvuRQvMn91E+z877poNylr7Xts/xPu8C8xf3aT7LNv96h7KSYtNWywr/coNylr7TXQqPuu8K8yvzzv96i10uh7aSWtNGywL/boNCklUS/1VK/1KDSpay017LJv9ug0aSQteCyzkFJXExWSEZVQlC/9KDSpaW17LLIT7r0vfT91L/VotdLoN5U/d+/0qLQu8q8xPzhT7LFv9ag3KSUteeyzL/ZUL32/dq/21K+6qDcpJG017LLT7vAvMX907/So+lLoNGknUS+46Lfu8m99vzyT1BCXlJQvfT92r/Yo+xJXExWSA1NWFJdFlxMVk5WTVhSFEkRTk4NRgkDEB0SGw0AXg0GA1BDS1IUVhdETSshLSVQvM792b/aotm7yrzMDbT8ssy+66DYpbu1+7LPv9Gg3FT92L/So/tLoNGkmLTQs/K/26DepJW01LP+v9ah71T93r/cotK68r30/dq/2aPju8299w216bLKvu+h7KWuSE+ywk+7wkykl7Tfs/C/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1aDTpJO00rPxv9mg3KWvtNdCotC7zr31/d++4aLcuvNMXP3Vv9ei2LvKvMr87L7gotG7wrzJ/dy/21K/16DcpJC1+bLIvuWh7F0NtNiywk+7wrzM/O2+4VK/1aHqpbu00rLIvuhQjvS5RL7not+7wbzE/OS/36LXuva99v3Wv9xeT7vNvMT91r70o+26/EylorTVs/u/1VC8xv3cv9ii1LvAvMD91L7lotW7wEykn7X5ssa/16DSpJ+017LJv9uh7aWiSk+y77/eoNuknbTbssy/2aDSpJa02rLPv9ah41T92r7ko/m7zbzO/dq+7FK+7KDUVP3fv9qj7rryTKWutN2yx77soNmlrbX5QpDv/1C8yf3RT7LNv9Wh7KWuteeyx7/WoNGlokpPsuC/06DWpJa037LGv9uh66SXtN9Cot2697zM/dm/2qLUu8BMpJm00bLDvuug0qWqtNqz87/WoNJODbTds+S/36DQpJO03bLKv9Cg3FT93U+yxb/boNOlrbTRss2/1aDRpa603bLCv9Cg3FT847/Xo+67zbzM/d1Ps/q/0KHjpahKTU5STQ1SVlQPtMCyyE+7wb33/d+/3FK/2lC98/3RvuOi0rvOVlT90L/co++7zrzF/dy+4KLXS6DepJW17rLPv9Wg3qSXtNdCotu7zkykkobv+6PguvK8yf3cvuSj+UuS7OANte6ywr/XoNlU/OK/11K/0lC8w/3Uv92j77vOvMv92r/fo+y7wrzE/d+/0lK/2aDUpJe01LLCv9+g3KWqtNWywkFJXExWSEZVQlC/9KHspJO00LLMv9yg1KWrtfmz/U+7wbzB/dO/2KLRuvi99v3av9Ci0rvOveMNtNCyzL7qoNelrrTcsspPu8JMpJO03rLOvv2g0VT92b/SUr/ZoNSlpLXsQqLRuva94v3Zv9ij7ElcTFZIDU1YUl0WXExWTlxNWFIUSRFOTg1GAQcfDklcTFZVRlVCUL//oNCklbXts/K/1VC8y/zkv9yj6bvIvfb857/Qot+7wkylrbTas/W/3qDRpJC14EKi3Uug16SdtNCyyL/boelU/PJPssC/0aDcpJq037LAT7vEvML90b7iotq7y7zKDT9dP1K/3FC8xP3QvuKi2rrxvMr86k+yy0+7xLzE/Oa/3KPhS6DbpJ+02rPyv9ag2aSQtNKz/U+J8PhU/OK/11K/1KHspJ203bLKv9Ch4KSQtNpCo+m7yL32/Oe/0KLfu828yfzrQ0Ki30ug0aSYRL/dotS7wLzH/PK/0qPtRVC81f3ev9Kj77vDvMQNtN6z8b/QoNxU/OG/2qLeu828yvzqQUKiyrvOvfT92r7qote7yUykmbTas/C/3qDWpa+017LAT7vNvMENtNCyzL7qoNOlu7XnssK+/1C8w/3Wv9qi0rrzvMb91L7lo+y7wrzE/Oa/2lNNR1BOEg9eT0CizrvAvMj90U+z8L/boNZU/PJPs/C+66DZpJy030Kj77vOvMX93L7gotdRUL3y/dy+4KLfuvK8xA203UKi1LvAvMv93r/So+pLW0ykkrTRs/O/06DXpJ200rLPvuRQvMn91E+yxr/doNmlrbTassm/1V5OWA1GCkBIT0mgzKSYteiyx7/WoNGlokS/0KLYuv+99v3aT7LAT7vLvMT927/YotdHULzEDbTbssS/3qHspJi01LLMT7vCvM791L/Vot+7zbzKDbXsQqPuu8+8zPzlv9ij7EsrXikPSE9AFwZJSkxFUEhPQBBeSUpMDw8FTVhSTRscDRNEBRtAXk9JCE5ODUa/xqLRuvK8yg2007LCvv9QvMT91r7gotG68LzO/OdPSqLxu8u8wf3Zv9JSv/eg1KWttNKywkZLofpU/d++9KPpu8W8yf3TvvSj4UszL1RvPU9WXF9RULzO/dq+4qLXuvG99vznv9Ci37ryvMz85b7tUr/XoNKkm7TSssJDS6DcpJa02kKi2Eug06W7tNuyzb/Toe2kk7TTTFK/+qDZpJpEv92j+bvEvMv93L7jo+xLkuzgDbXpssdPu8K94v3QvuCi3bvOvfT90b/fotK6/0ylqrXsssS/1aH7VPzkv9yi3rvOvfb93E+yw7/eoNtU/dO/0qLYu828xPzjv9ei0rvNvfsNtN+ywL7poNKlrbXus/C/2aDcWA217bLMv9qh7qSTRL/SotW7wLzA/dG/3qP5uve8yf3cv9tSv9Sg16SdtNyz5L/boe5aDbTOssK/0qHuVPzsv92i37vLvMH85E+A8vtLoe6kmLTZQqLQu8699Pznvuqi0rvIvM4BRL/SUr/WoNlU/dC/1KLauvC8wf3fv9xcTUdQThIPXk9AosC7ykyknLXsssm/1VC8xQ216LLHvuqg0aSTXk+yzb79oNikkrTXs/NPu8+94v3QT7P2v9Wh7qSTRK3Josu7zr32/dpVQqLxu8u8wf3Zv9JSv/eg1KWttNKywkNLoP6lu7Tbssi+66DUpa+02kKiy7vOvfb92kNCMSxLMjVUGUpfoMlBS6Dzpa2037LAv9Og16SdRI3i5k+7xLzP/OtPssC+6qH6pahEn/3r7UlcTFZIRlVCUL/0oNKlpbXssshPu8e8xA202LLMv9qh7KSdtNmyx7/WoNGlorTTWFK+76DSpa+00UKi07vAveANtN+ywL7poNKlrbTfQqLWS6DepJW007LCv9ig3KW5RL/do/m7xLzL/dy+46PsS1gvNw0mNktQQ0tSCR0PXk9TDxI=';
+  var LOCO = "<svg viewBox=\"0 0 320 200\" xmlns=\"http://www.w3.org/2000/svg\"><defs>\n<linearGradient id=\"sky\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#ffb36b\"/><stop offset=\".55\" stop-color=\"#ffd8a8\"/><stop offset=\"1\" stop-color=\"#b9c7e6\"/></linearGradient>\n<linearGradient id=\"body\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#2f6fd6\"/><stop offset=\"1\" stop-color=\"#173e86\"/></linearGradient></defs>\n<rect width=\"320\" height=\"200\" fill=\"url(#sky)\"/><circle cx=\"250\" cy=\"70\" r=\"26\" fill=\"#fff1c9\" opacity=\".9\"/>\n<path d=\"M0 132 Q60 104 120 126 T240 118 T320 124 V200 H0z\" fill=\"#6f8f6a\"/>\n<path d=\"M0 150 Q80 136 160 148 T320 146 V200 H0z\" fill=\"#4f6d4c\"/>\n<g stroke=\"#3d3f46\" stroke-width=\"2\"><line x1=\"20\" y1=\"96\" x2=\"20\" y2=\"150\"/><line x1=\"140\" y1=\"96\" x2=\"140\" y2=\"150\"/><line x1=\"260\" y1=\"96\" x2=\"260\" y2=\"150\"/></g>\n<path d=\"M0 100 H320\" stroke=\"#3d3f46\" stroke-width=\"1.5\"/>\n<rect x=\"0\" y=\"168\" width=\"320\" height=\"6\" fill=\"#5a4c40\"/><rect x=\"0\" y=\"174\" width=\"320\" height=\"4\" fill=\"#9b9b9b\"/>\n<path d=\"M44 120 h170 q30 0 44 22 l8 18 H44z\" fill=\"url(#body)\"/>\n<path d=\"M212 124 q26 2 38 22 h-38z\" fill=\"#bfe3ff\" opacity=\".9\"/>\n<rect x=\"56\" y=\"128\" width=\"26\" height=\"14\" rx=\"2\" fill=\"#bfe3ff\" opacity=\".85\"/><rect x=\"90\" y=\"128\" width=\"26\" height=\"14\" rx=\"2\" fill=\"#bfe3ff\" opacity=\".85\"/>\n<rect x=\"124\" y=\"128\" width=\"26\" height=\"14\" rx=\"2\" fill=\"#bfe3ff\" opacity=\".85\"/><rect x=\"158\" y=\"128\" width=\"26\" height=\"14\" rx=\"2\" fill=\"#bfe3ff\" opacity=\".85\"/>\n<rect x=\"44\" y=\"148\" width=\"222\" height=\"5\" fill=\"#ffd23f\"/>\n<path d=\"M120 120 l14 -22 h16 l-12 22\" stroke=\"#26272c\" stroke-width=\"2.5\" fill=\"none\"/>\n<g fill=\"#26272c\"><circle cx=\"78\" cy=\"164\" r=\"7\"/><circle cx=\"104\" cy=\"164\" r=\"7\"/><circle cx=\"194\" cy=\"164\" r=\"7\"/><circle cx=\"220\" cy=\"164\" r=\"7\"/></g>\n<circle cx=\"258\" cy=\"152\" r=\"3\" fill=\"#fff6b0\"/></svg>";
+  var SKEY = 'inf-dobro-v1', AKEY = 'inf-dobro-attempts';
+  var REC_SEC = 240;
+  var TYPES = DATA.types, TMAP = {};
+  TYPES.forEach(function(t){ TMAP[t[0]] = t; });
+  var ALL = {}; DATA.cases.concat([DATA.bonus]).forEach(function(c){ ALL[c.id] = c; });
+  var ANS = (function(){
+    var b = atob(ANS_RAW), k = 'kplt-dobro', u = new Uint8Array(b.length);
+    for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i) ^ k.charCodeAt(i % k.length);
+    return JSON.parse(new TextDecoder('utf-8').decode(u));
+  })();
+  var $ = function(id){ return document.getElementById(id); };
+  function playing(on){ document.querySelector('.db-page').classList.toggle('playing', on); }
+  function toTop(){ var el = document.querySelector('.db-page'); window.scrollTo({ top: Math.max(0, el.getBoundingClientRect().top + window.scrollY - 80), behavior: 'smooth' }); }
+
+  // ---------- стан ----------
+  var S = null;
+  function load(){ try { return JSON.parse(localStorage.getItem(SKEY)); } catch (e) { return null; } }
+  function save(){ try { localStorage.setItem(SKEY, JSON.stringify(S)); } catch (e) {} }
+  function attempts(){ try { return parseInt(localStorage.getItem(AKEY) || '0', 10) || 0; } catch (e) { return 0; } }
+  function setAttempts(n){ try { localStorage.setItem(AKEY, String(n)); } catch (e) {} }
+  function shuffle(a){ a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function fmt(sec){ sec = Math.max(0, Math.round(sec)); return Math.floor(sec / 60) + ':' + ('0' + sec % 60).slice(-2); }
+
+  function newState(names, group){
+    var ids = DATA.cases.map(function(c){ return c.id; }), order;
+    do { order = shuffle(ids); } while (order[0] === 'c8' || order[1] === 'c8');
+    var opt = {};
+    ids.concat(['b1']).forEach(function(id){ opt[id] = { t: shuffle(TYPES.map(function(t){ return t[0]; })), e: shuffle([0,1,2,3]) }; });
+    var n = attempts() + 1; setAttempts(n);
+    return { names: names, group: group, order: order, opt: opt, cur: 0, res: {}, start: Date.now(), caseStart: Date.now(),
+             hints: {}, attempt: n, bonus: false, done: false, finishedAt: 0 };
+  }
+
+  // ---------- старт ----------
+  var mode = 1;
+  document.querySelectorAll('.seg button').forEach(function(b){
+    b.onclick = function(){ document.querySelectorAll('.seg button').forEach(function(x){ x.classList.toggle('on', x === b); });
+      mode = +b.dataset.m; $('n2box').hidden = mode !== 2; };
+  });
+  function validName(s){ return s.trim().split(/\s+/).length >= 2 && s.trim().length >= 5; }
+  $('startBtn').onclick = function(){
+    var n1 = $('n1').value.replace(/\s+/g, ' ').trim(), n2 = $('n2').value.replace(/\s+/g, ' ').trim(), g = $('grp').value;
+    if (!validName(n1) || (mode === 2 && !validName(n2))) { $('startErr').textContent = 'Вкажи прізвище та ім’я (два слова).'; return; }
+    if (!g) { $('startErr').textContent = 'Обери групу.'; return; }
+    S = newState(mode === 2 ? [n1, n2] : [n1], g); save();
+    SFX.hint(); showGame();
+  };
+  function showStart(){
+    $('scrStart').hidden = false; $('scrGame').hidden = true; $('scrFinal').hidden = true; playing(false);
+    var old = load();
+    if (old && !old.done) {
+      var box = $('contBox'); box.hidden = false;
+      box.innerHTML = '🗂️ Незавершене розслідування: <b>' + esc(old.names.join(' і ')) + '</b>, справа ' + (Math.min(old.cur, 7) + 1) + ' з 8.' +
+        '<br><button class="btn btn-sm" type="button" id="contBtn">▶ Продовжити</button>' +
+        '<div style="font-size:12.5px;color:var(--muted);margin-top:8px">Нове посвідчення нижче — це буде спроба №' + (attempts() + 1) + '.</div>';
+      $('contBtn').onclick = function(){ S = old; showGame(); };
+    } else if (old && old.done) {
+      var b2 = $('contBox'); b2.hidden = false;
+      b2.innerHTML = '🪪 Розслідування завершено: <b>' + esc(old.names.join(' і ')) + '</b>.<br><button class="btn btn-sm" type="button" id="certBtn">Показати посвідчення</button>';
+      $('certBtn').onclick = function(){ S = old; showFinal(); };
+    }
+  }
+
+  // ---------- гра ----------
+  var tick = null;
+  function showGame(){
+    $('scrStart').hidden = true; $('scrFinal').hidden = true; $('scrGame').hidden = false; playing(true);
+    if (S.cur >= S.order.length && !S.bonus) return showFinal();
+    renderCase(); clearInterval(tick); tick = setInterval(hud, 1000); hud();
+    toTop();
+  }
+  function curId(){ return S.bonus ? 'b1' : S.order[S.cur]; }
+  function total(){ var s = 0; Object.keys(S.res).forEach(function(k){ s += S.res[k].pts; }); return Math.max(0, s); }
+  function hud(){
+    if (!S) return;
+    $('hCase').textContent = S.bonus ? '⭐ бонус' : (Math.min(S.cur, 7) + 1) + ' / 8';
+    $('hScore').textContent = total();
+    $('hTime').textContent = fmt((Date.now() - S.start) / 1000);
+    $('hHints').textContent = Object.keys(S.hints).length;
+    var ct = document.getElementById('cTime');
+    if (ct && !S.res[curId()]) {
+      var sec = (Date.now() - S.caseStart) / 1000; ct.textContent = '⏱ ' + fmt(sec);
+      var hb = document.getElementById('hintBtn'); if (hb && sec > REC_SEC) hb.classList.add('glow');
+    }
+    var p = '';
+    S.order.forEach(function(id, i){
+      var r = S.res[id], cls = r ? (r.pts >= 3 ? 'ok' : r.pts > 0 ? 'half' : 'bad') : (i === S.cur && !S.bonus ? 'cur' : '');
+      p += '<span class="' + cls + '" title="Справа ' + (i + 1) + '">' + (r ? (r.pts > 0 ? '+' + r.pts : r.pts) : i + 1) + '</span>';
+    });
+    if (S.bonus || S.res.b1) { var rb = S.res.b1; p += '<span class="' + (rb ? (rb.pts >= 3 ? 'ok' : rb.pts > 0 ? 'half' : 'bad') : 'cur') + '">⭐</span>'; }
+    $('pills').innerHTML = p;
+  }
+
+  function renderCase(){
+    var id = curId(), c = ALL[id], r = S.res[id], no = S.bonus ? 'Б-01' : ('0' + (S.cur + 1)).slice(-2);
+    if (!r) S.caseStart = S.caseStart || Date.now();
+    $('caseBox').innerHTML =
+      '<div class="folder' + (c.bonus ? ' bonus' : '') + '"><span class="clip">📎</span><span class="stamp-top">' + (c.bonus ? 'БОНУС' : 'ТАЄМНО') + '</span>' +
+      '<div class="no">СПРАВА № ' + no + '-' + new Date().getFullYear() + '</div>' +
+      '<h2>' + c.emoji + ' ' + esc(c.title) + '</h2>' +
+      '<dl><dt>Хто</dt><dd>' + esc(c.who) + '</dd><dt>Матеріал</dt><dd>' + esc(c.what) + '</dd><dt>Обставини</dt><dd>' + esc(c.story) + '</dd></dl>' +
+      '<div class="task">🔎 ' + esc(c.task) + '</div>' +
+      '<div class="hint-row">' + (r ? '' : '<button class="hint-btn" type="button" id="hintBtn">💡 Підказка (−1 бал)</button>') +
+      '<span class="ctime" id="cTime"></span></div>' +
+      (S.hints[id] ? '<div class="hint-txt">💡 ' + esc(c.hint) + '</div>' : '') + '</div>';
+    var hb = $('hintBtn');
+    if (hb) {
+      if (S.hints[id]) hb.remove();
+      else hb.onclick = function(){ S.hints[id] = 1; save(); SFX.hint(); renderCase(); hud(); };
+    }
+    renderTabs(c);
+    if (r) renderResult(c, r); else renderVerdict(c);
+  }
+
+  // ---------- вердикт ----------
+  function renderVerdict(c){
+    var o = S.opt[c.id], pick = { t: null, e: null };
+    var h = '<div class="card-glass verdict"><h3>⚖️ Вердикт слідчого</h3><p class="sub">1. Що сталося? (+2)</p><div class="vtypes">';
+    o.t.forEach(function(k){ var t = TMAP[k]; h += '<button class="vt" type="button" data-k="' + k + '"><span>' + t[2] + '</span>' + esc(t[1]) + '</button>'; });
+    h += '</div><p class="sub">2. Який доказ це підтверджує? (+1)</p><div class="vevs">';
+    o.e.forEach(function(ei, n){ h += '<button class="vev" type="button" data-e="' + ei + '"><b>' + 'АБВГ'[n] + '</b><span>' + esc(c.ev[ei]) + '</span></button>'; });
+    h += '</div><button class="btn close-btn" type="button" id="closeBtn" disabled>🔏 Закрити справу</button></div>';
+    $('verdictBox').innerHTML = h;
+    var btn = $('closeBtn');
+    function upd(){ btn.disabled = pick.t === null || pick.e === null; }
+    document.querySelectorAll('.vt').forEach(function(b){ b.onclick = function(){ document.querySelectorAll('.vt').forEach(function(x){ x.classList.toggle('on', x === b); }); pick.t = b.dataset.k; upd(); }; });
+    document.querySelectorAll('.vev').forEach(function(b){ b.onclick = function(){ document.querySelectorAll('.vev').forEach(function(x){ x.classList.toggle('on', x === b); }); pick.e = +b.dataset.e; upd(); }; });
+    btn.onclick = function(){ decide(c, pick); };
+  }
+  function scoreOf(id, t, e, hint){
+    var a = ANS[id], typeOk = t === a.a, evOk = e === a.ei, pts = 0;
+    if (typeOk) pts += 2; else if (a.a === 'nema') pts -= 1;
+    if (evOk) pts += 1;
+    if (hint) pts -= 1;
+    return { typeOk: typeOk, evOk: evOk, pts: pts };
+  }
+  function decide(c, pick){
+    var sc = scoreOf(c.id, pick.t, pick.e, !!S.hints[c.id]);
+    S.res[c.id] = { t: pick.t, e: pick.e, pts: sc.pts, typeOk: sc.typeOk, evOk: sc.evOk, sec: Math.round((Date.now() - S.caseStart) / 1000) };
+    save();
+    if (sc.typeOk && sc.evOk) { SFX.ok(); confetti(40); } else if (sc.typeOk || sc.evOk) SFX.hint(); else SFX.bad();
+    renderCase(); hud();
+  }
+  function renderResult(c, r){
+    var a = ANS[c.id], o = S.opt[c.id];
+    var h = '<div class="card-glass verdict"><h3>⚖️ Вердикт слідчого</h3><div class="vtypes">';
+    o.t.forEach(function(k){ var t = TMAP[k], cls = k === a.a ? 'right' : (k === r.t ? 'wrong' : '');
+      h += '<button class="vt ' + cls + '" type="button" disabled><span>' + t[2] + '</span>' + esc(t[1]) + '</button>'; });
+    h += '</div><div class="vevs">';
+    o.e.forEach(function(ei, n){ var cls = ei === a.ei ? 'right' : (ei === r.e ? 'wrong' : '');
+      h += '<button class="vev ' + cls + '" type="button" disabled><b>' + 'АБВГ'[n] + '</b><span>' + esc(c.ev[ei]) + '</span></button>'; });
+    h += '</div></div>';
+    var full = r.typeOk && r.evOk, st = full ? ['ok', 'СПРАВУ РОЗКРИТО'] : (r.typeOk || r.evOk ? ['half', 'ЧАСТКОВО'] : ['bad', 'ПОМИЛКА СЛІДСТВА']);
+    var t = TMAP[a.a];
+    var last = S.bonus || S.cur >= S.order.length - 1;
+    h += '<div class="card-glass res"><span class="pts ' + (r.pts > 0 ? 'pos' : r.pts < 0 ? 'neg' : 'zero') + '">' + (r.pts > 0 ? '+' : '') + r.pts + '</span>' +
+      '<div class="stamp ' + st[0] + '">' + st[1] + '</div>' +
+      '<p>Правильний вердикт: <span class="ans">' + t[2] + ' ' + esc(t[1]) + '</span>. Ключовий доказ: <span class="ans">' + esc(a.e) + '</span>.</p>' +
+      '<p>' + esc(a.x) + '</p><p class="fix">' + esc(a.f) + '</p>' +
+      (!r.typeOk && a.a === 'nema' ? '<p style="color:var(--red);font-weight:700">Хибне звинувачення: −1 бал. Знайдений збіг ще не означає порушення!</p>' : '') +
+      (S.hints[c.id] ? '<p style="color:var(--muted);font-size:13px">Використано підказку: −1 бал.</p>' : '') +
+      '<button class="btn" type="button" id="nextBtn">' + (last ? '🏁 До підсумку' : '➡️ Наступна справа') + '</button></div>';
+    $('verdictBox').innerHTML = h;
+    $('nextBtn').onclick = next;
+  }
+  function next(){
+    if (S.bonus) { S.bonus = false; return finish(); }
+    S.cur++; S.caseStart = Date.now(); save();
+    if (S.cur >= S.order.length) return finish();
+    renderCase(); hud();
+    toTop();
+  }
+  function finish(){
+    if (!S.finishedAt) S.finishedAt = Date.now();
+    save(); clearInterval(tick); showFinal();
+  }
+  function startBonus(){ S.bonus = true; S.caseStart = Date.now(); S.done = false; save(); showGame(); }
+
+  // ---------- інструменти ----------
+  var curTool = 0, opened = {};
+  function toolLabel(t){
+    return { doc: '📄 ' + t.name, search: '🔍 Пошук «' + t.engine + '»', isbn: '📚 ' + t.name, sheet: '📊 ' + t.name, props: '🗂️ Властивості файлу',
+             compare: '⚖️ ' + t.name, uniq: '🧾 ' + t.name, chat: '💬 Месенджер', slide: '🖥️ Слайд 4', imgsearch: '🖼️ ' + t.name }[t.type];
+  }
+  function renderTabs(c){
+    curTool = 0; opened = { 0: 1 };
+    drawTabs(c); drawTool(c);
+  }
+  function drawTabs(c){
+    var h = '';
+    c.tools.forEach(function(t, i){ h += '<button type="button" class="' + (i === curTool ? 'on' : '') + '" data-i="' + i + '">' + (opened[i] ? '' : '<i class="new"></i>') + '<span>' + esc(toolLabel(t)) + '</span></button>'; });
+    $('tabs').innerHTML = h;
+    document.querySelectorAll('#tabs button').forEach(function(b){ b.onclick = function(){ curTool = +b.dataset.i; opened[curTool] = 1; drawTabs(c); drawTool(c); SFX.key(); }; });
+  }
+  function win(title, inner, cls){ return '<div class="win ' + (cls || '') + '"><div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="t">' + esc(title) + '</span></div>' + inner + '</div>'; }
+  function drawTool(c){
+    var t = c.tools[curTool], box = $('toolBox');
+    var R = { doc: tDoc, search: tSearch, isbn: tIsbn, sheet: tSheet, props: tProps, compare: tCompare, uniq: tUniq, chat: tChat, slide: tSlide, imgsearch: tImg }[t.type];
+    R(t, box, c);
+  }
+  function selText(){ var s = (window.getSelection && window.getSelection().toString()) || ''; return s.replace(/\s+/g, ' ').trim(); }
+  var lastSel = '';
+  document.addEventListener('selectionchange', function(){ var s = selText(); if (s) lastSel = s; });
+
+  function tDoc(t, box){
+    var p = '<h4>' + esc(t.title) + '</h4>';
+    t.paras.forEach(function(x){ p += '<p' + (x.cls ? ' class="' + x.cls + '"' : '') + '>' + esc(x.t) + '</p>'; });
+    box.innerHTML = win(t.name + ' — Word', '<div class="ribbon"><span>Файл</span><span class="on">Головна</span><span>Вставлення</span><span>Рецензування</span></div><div class="paper-bg"><div class="paper">' + p + '</div></div>');
+  }
+
+  function norm(s){ return String(s).toLowerCase().replace(/[’'`ʼ]/g, '').replace(/[«»"„“”]/g, '').replace(/[^0-9a-zа-яіїєґ ]+/gi, ' ').replace(/\s+/g, ' ').trim(); }
+  function tSearch(t, box){
+    var logo = '<div class="logo"><b>Ш</b><b>у</b><b>к</b><b>айко</b></div>';
+    box.innerHTML = win('Шукайко — пошукова система', '<div class="win-body"><div class="se">' + logo + '</div>' +
+      '<div class="srow"><input class="winp" id="sq" placeholder="Введи запит… Порада: точну фразу бери в лапки &quot;…&quot;"><button class="wbtn" type="button" id="sgo">Шукати</button></div>' +
+      '<div style="margin-top:8px"><button class="wbtn alt" type="button" id="spaste">📋 Вставити виділене в документі</button></div>' +
+      '<div class="sres" id="sres"></div></div>');
+    var q = $('sq');
+    $('spaste').onclick = function(){ if (!lastSel) { toast('Спершу виділи текст у документі (вкладка 📄)'); return; } q.value = '"' + lastSel.slice(0, 160) + '"'; q.focus(); };
+    function run(){
+      var raw = q.value.trim(); if (!raw) return;
+      var quoted = /^["«„“].+["»“”]$/.test(raw), nq = norm(raw), words = nq.split(' ').filter(Boolean).length;
+      var hit = null;
+      t.hits.forEach(function(h){ if (words >= 4 && norm(h.q).indexOf(nq) >= 0) hit = h; });
+      var out = '';
+      if (hit && quoted) {
+        out = '<div class="cnt">Знайдено точних збігів: 1</div>' + srHtml(hit, true, nq);
+        t.generic.slice(0, 1).forEach(function(g){ out += srHtml(g); });
+        SFX.ok();
+      } else if (hit) {
+        out = '<div class="stip">💡 Схожий текст є в мережі. Візьми фразу в лапки, щоб шукати точний збіг.</div><div class="cnt">Приблизно 184 000 результатів</div>';
+        t.generic.forEach(function(g){ out += srHtml(g); });
+      } else {
+        out = (words < 4 ? '<div class="stip">💡 Запит закороткий. Для перевірки на плагіат шукай 6–10 слів підряд у лапках.</div>' : '') +
+              '<div class="cnt">Приблизно 1 240 000 результатів</div>';
+        t.generic.forEach(function(g){ out += srHtml(g); });
+      }
+      $('sres').innerHTML = '<div class="spin"></div>';
+      setTimeout(function(){ var el = $('sres'); if (el) el.innerHTML = out; }, 450);
+    }
+    $('sgo').onclick = run; q.onkeydown = function(e){ if (e.key === 'Enter') run(); };
+  }
+  function srHtml(h, hit, nq){
+    var snip = esc(h.snip);
+    if (hit) snip = '<mark>' + snip + '</mark>';
+    return '<div class="sr' + (hit ? ' hit' : '') + '"><div class="u">' + esc(h.url) + '</div><div class="h">' + esc(h.title) + '</div><div class="s">' + (h.date ? '<span class="d">' + esc(h.date) + ' — </span>' : '') + snip + '</div></div>';
+  }
+
+  function tIsbn(t, box){
+    box.innerHTML = win('Перевірка ISBN і бібліотечний каталог', '<div class="win-body">' +
+      '<p style="margin:0 0 10px;font-weight:600;font-size:14px">ISBN-13 — номер книжки з 13 цифр. Остання цифра — <b>контрольна</b>: її обчислюють з перших 12, тож вигаданий номер часто «не сходиться».</p>' +
+      '<div class="srow"><input class="winp" id="iq" placeholder="напр. 978-617-7408-12-…" inputmode="numeric"><button class="wbtn" type="button" id="igo">Перевірити</button></div>' +
+      '<div style="margin-top:8px"><button class="wbtn alt" type="button" id="ipaste">📋 Вставити виділене в документі</button></div>' +
+      '<div class="isbn-out" id="iout"></div></div>');
+    $('ipaste').onclick = function(){ if (!lastSel) { toast('Спершу виділи ISBN у документі (вкладка 📄)'); return; } $('iq').value = lastSel.replace(/[^0-9Xx-]/g, ''); };
+    function run(){
+      var d = $('iq').value.replace(/[^0-9]/g, '');
+      var out = $('iout');
+      if (d.length !== 13) { out.innerHTML = '<div class="badline">Потрібно 13 цифр (зараз ' + d.length + ').</div>'; return; }
+      var s = 0, parts = [];
+      for (var i = 0; i < 12; i++) { var w = i % 2 ? 3 : 1; s += +d[i] * w; parts.push(d[i] + '×' + w); }
+      var need = (10 - s % 10) % 10, ok = need === +d[12];
+      var h = '<div class="isbn-calc">Сума = ' + parts.join(' + ') + ' = <b>' + s + '</b><br>Контрольна цифра = (10 − ' + s + ' mod 10) mod 10 = <b>' + need + '</b><br>У номері остання цифра: <b>' + d[12] + '</b></div>' +
+              '<div class="' + (ok ? 'okline' : 'badline') + '" style="margin-top:8px">' + (ok ? '✅ Контрольна цифра правильна' : '❌ Контрольна цифра НЕ збігається — такого ISBN не може існувати') + '</div>';
+      var cat = t.catalog[d];
+      h += '<div class="cat">' + (cat ? '📗 Каталог: ' + esc(cat) : '📕 Каталог: книжку з таким ISBN не знайдено в жодній із 1 248 бібліотек України') + '</div>';
+      out.innerHTML = h; ok && cat ? SFX.ok() : SFX.bad();
+    }
+    $('igo').onclick = run; $('iq').onkeydown = function(e){ if (e.key === 'Enter') run(); };
+  }
+
+  function colL(i){ return String.fromCharCode(65 + i); }
+  function tSheet(t, box){
+    var sh = DATA.sheets[t.gen], showHist = false, sel = null;
+    function draw(){
+      var cols = sh.cols, h = '<table class="xl"><tr><th></th>';
+      cols.forEach(function(_, i){ h += '<th>' + colL(i) + '</th>'; });
+      h += '</tr><tr><td class="rn">1</td>';
+      cols.forEach(function(cn){ h += '<td style="font-weight:800">' + esc(cn) + '</td>'; });
+      h += '</tr>';
+      sh.rows.forEach(function(r, ri){
+        var tot = r[0] === 'РАЗОМ';
+        h += '<tr' + (tot ? ' class="tot"' : '') + '><td class="rn">' + (ri + 2) + '</td>';
+        r.forEach(function(v, ci){
+          var key = ri + ',' + ci, chg = showHist && sh.changed && sh.changed[key] !== undefined;
+          h += '<td data-r="' + ri + '" data-c="' + ci + '" class="' + (chg ? 'chg' : '') + (sel === key ? ' sel' : '') + '"' + (chg ? ' title="Було: ' + esc(sh.changed[key]) + '"' : '') + '>' + esc(v) + '</td>';
+        });
+        h += '</tr>';
+      });
+      h += '</table>';
+      var fx = '', nm = '';
+      if (sel) { var p = sel.split(','), ri = +p[0], ci = +p[1]; nm = colL(ci) + (ri + 2);
+        fx = (sh.formulas && ci === 3 && sh.formulas[ri]) ? sh.formulas[ri] : sh.rows[ri][ci];
+        if (showHist && sh.changed && sh.changed[sel] !== undefined) fx += '   (змінено; було «' + sh.changed[sel] + '»)'; }
+      var status = '';
+      if (t.gen === 'survey') { var y = 0, n = 0; sh.rows.forEach(function(r){ r[2] === 'Так' ? y++ : n++; }); status = '<span>Відповідей: ' + sh.rows.length + '</span><span>«Так»: ' + y + '</span><span>«Ні»: ' + n + '</span>'; }
+      else status = '<span>' + esc(sh.note || '') + '</span>';
+      var hist = '';
+      if (sh.history) {
+        hist = '<div class="hist"' + (showHist ? '' : ' hidden') + '><h5>🕘 Історія версій</h5>';
+        sh.history.forEach(function(x){ hist += '<div class="hi' + (x.mark ? ' mark' : '') + '"><small>' + esc(x.when) + '</small><span><b>' + esc(x.who) + '</b> — ' + esc(x.what) + '</span></div>'; });
+        hist += '<div class="wtip">Змінені клітинки підсвічено червоним ✎ — наведи або клацни, щоб побачити старе значення.</div></div>';
+      }
+      box.innerHTML = win(t.name + ' — Excel', '<div class="xl-bar">Файл · Головна · Вставлення · Формули · Дані' +
+        (sh.history ? '<button class="wbtn alt" type="button" id="histBtn" style="margin-left:auto;padding:5px 10px;font-size:12px">🕘 Історія версій</button>' : '') + '</div>' +
+        '<div class="xl-f"><span class="nm">' + (nm || '—') + '</span><span class="fx">fx</span><span>' + esc(fx) + '</span></div>' +
+        '<div class="xl-wrap">' + h + '</div><div class="xl-status">' + status + '</div>' + hist);
+      box.querySelectorAll('td[data-r]').forEach(function(td){ td.onclick = function(){ sel = td.dataset.r + ',' + td.dataset.c; draw(); }; });
+      var hb = $('histBtn'); if (hb) hb.onclick = function(){ showHist = !showHist; draw(); if (showHist) SFX.hint(); };
+    }
+    draw();
+  }
+
+  function tProps(t, box){
+    var tab = 0, gen = ['Тип', 'Розмір', 'Створено', 'Змінено'];
+    function draw(){
+      var rows = t.rows.filter(function(r){ return (gen.indexOf(r[0]) >= 0) === (tab === 0); });
+      var h = '<table class="pr">'; rows.forEach(function(r){ h += '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td></tr>'; }); h += '</table>';
+      box.innerHTML = win('Властивості: ' + t.name, '<div class="props-tabs"><button type="button" data-t="0" class="' + (tab === 0 ? 'on' : '') + '">Загальні</button><button type="button" data-t="1" class="' + (tab === 1 ? 'on' : '') + '">Подробиці</button></div>' +
+        '<div class="win-body"><div style="display:flex;gap:12px;align-items:center;margin-bottom:12px"><span style="font-size:34px">📄</span><b>' + esc(t.name) + '</b></div>' + h +
+        (tab === 0 ? '<div class="wtip">Більше відомостей — на вкладці «Подробиці».</div>' : '') + '</div>');
+      box.querySelectorAll('.props-tabs button').forEach(function(b){ b.onclick = function(){ tab = +b.dataset.t; draw(); }; });
+    }
+    draw();
+  }
+
+  function tCompare(t, box){
+    box.innerHTML = win('Порівняння файлів', '<div class="win-body"><p style="margin:0 0 10px;font-weight:600;font-size:14px">Файл 1: <b>' + esc(t.a) + '</b><br>Файл 2: <b>' + esc(t.b) + '</b></p>' +
+      '<button class="wbtn" type="button" id="cgo">⚖️ Порівняти</button><div id="cout"></div></div>');
+    $('cgo').onclick = function(){
+      var A = DATA.sheets.budgetA, B = DATA.sheets.budgetB, same = 0, all = 0, diff = [];
+      A.rows.forEach(function(r, ri){ r.forEach(function(v, ci){ all++; if (v === B.rows[ri][ci]) same++; else diff.push(colL(ci) + (ri + 2)); }); });
+      var pct = Math.round(same / all * 100);
+      $('cout').innerHTML = '<div class="prog"><i id="cbar"></i></div><div class="spin"></div>';
+      setTimeout(function(){ var b = $('cbar'); if (b) b.style.width = '100%'; }, 30);
+      setTimeout(function(){
+        var o = $('cout'); if (!o) return;
+        o.innerHTML = '<div class="big-pct">' + pct + ' %</div><div style="font-weight:700">клітинок збігаються (' + same + ' з ' + all + ')</div>' +
+          '<ul class="cmp-list"><li>Відрізняються: ' + diff.join(', ') + ' — лише формулювання статей витрат.</li>' +
+          '<li>Рідкісний збіг у тексті: <code>' + esc(A.rows[0][0]) + '</code> в обох файлах.</li>' +
+          '<li>Однакова формула підсумку в обох файлах: <code>' + esc(A.formulas[String(A.rows.length - 1)]) + '</code></li>' +
+          '<li>Порада: перевір, які рядки охоплює формула підсумку, і порівняй із таблицею.</li></ul>';
+        SFX.hint();
+      }, 1500);
+    };
+  }
+
+  function tUniq(t, box){
+    box.innerHTML = win('Перевірка унікальності тексту', '<div class="win-body"><p style="margin:0 0 10px;font-weight:600;font-size:14px">Сервіс порівнює текст з інтернетом і з архівом робіт ліцею.</p>' +
+      '<button class="wbtn" type="button" id="ugo">🧾 Перевірити</button><div id="uout"></div></div>');
+    $('ugo').onclick = function(){
+      $('uout').innerHTML = '<div class="prog"><i id="ubar"></i></div><div class="wtip">Порівнюємо з 2,4 млн документів…</div>';
+      setTimeout(function(){ var b = $('ubar'); if (b) b.style.width = '100%'; }, 30);
+      setTimeout(function(){
+        var o = $('uout'); if (!o) return;
+        var h = '<div class="big-pct" style="color:#c0392b">' + t.pct + ' %</div><div style="font-weight:800">унікальність тексту</div><div class="wtip">Знайдені збіги:</div>';
+        t.sources.forEach(function(s){ h += '<div class="src' + (s.own ? ' own' : '') + '">' + (s.own ? '👤 ' : '🌐 ') + esc(s.name) + ' — <b>' + s.pct + ' %</b><div class="bar"><i style="width:' + s.pct + '%"></i></div></div>'; });
+        o.innerHTML = h; SFX.hint();
+      }, 1700);
+    };
+  }
+
+  function tChat(t, box){
+    var h = '<div class="chat-top"><span class="av">' + esc(t.title.charAt(0)) + '</span><span>' + esc(t.title) + '<small>в мережі</small></span></div><div class="chat">';
+    t.msgs.forEach(function(m){ h += '<div class="msg ' + (m.me ? 'me' : 'them') + '"><div class="n">' + esc(m.name) + '</div>' + esc(m.text) + '<div class="tm">' + esc(m.time) + (m.me ? ' ✓✓' : '') + '</div></div>'; });
+    box.innerHTML = win('Месенджер — скриншот листування', h + '</div>');
+  }
+
+  function tSlide(t, box){
+    box.innerHTML = win(t.name, '<div class="win-body" style="background:#3a3f4b"><div class="slide"><div><h4>' + esc(t.title) + '</h4><p>' + esc(t.text) + '</p></div><div>' + LOCO + '</div></div>' +
+      '<div class="wtip" style="color:#d7dce8">Підпис під фото: — (немає)</div></div>');
+  }
+  function tImg(t, box){
+    box.innerHTML = win('Пошук за зображенням', '<div class="win-body"><div class="imgq"><div class="thumb">' + LOCO + '</div><div><b>Зображення зі слайда 4</b><br>' +
+      '<button class="wbtn" type="button" id="igo2" style="margin-top:8px">🔍 Шукати за зображенням</button></div></div><div id="iout2"></div></div>');
+    $('igo2').onclick = function(){
+      $('iout2').innerHTML = '<div class="spin"></div>';
+      setTimeout(function(){
+        var o = $('iout2'); if (!o) return;
+        var h = '<div class="wtip" style="margin-top:12px">Знайдено 3 сторінки з цим зображенням. Найраніша публікація — перша:</div>';
+        t.results.forEach(function(r){ h += '<div class="ir' + (r.main ? ' main' : '') + '"><div class="thumb">' + LOCO + '</div><div><div class="site">' + esc(r.site) + '</div><div class="tt">' + esc(r.title) + '</div><div class="mm">' + esc(r.meta) + '</div></div></div>'; });
+        o.innerHTML = h; SFX.hint();
+      }, 1100);
+    };
+  }
+
+  // ---------- фінал ----------
+  function rank(p){ return p >= 22 ? '🏅 Головний детектив бюро' : p >= 17 ? '🥈 Старший слідчий' : p >= 11 ? '🔎 Слідчий' : '🎓 Курсант академії слідчих'; }
+  function showFinal(){
+    $('scrStart').hidden = true; $('scrGame').hidden = true; var F = $('scrFinal'); F.hidden = false; playing(true);
+    S.done = true; save();
+    var main = 0, bonusPts = null;
+    S.order.forEach(function(id){ if (S.res[id]) main += S.res[id].pts; });
+    if (S.res.b1) bonusPts = S.res.b1.pts;
+    main = Math.max(0, main);
+    var sec = Math.round(((S.finishedAt || Date.now()) - S.start) / 1000), solved = 0;
+    var rows = '';
+    S.order.forEach(function(id, i){ var c = ALL[id], r = S.res[id] || { pts: 0, typeOk: false, evOk: false }; if (r.typeOk) solved++;
+      rows += '<tr><td>' + (i + 1) + '. ' + c.emoji + ' ' + esc(c.title) + '</td><td>' + (r.typeOk ? '✅' : '❌') + ' ' + (r.pts > 0 ? '+' : '') + r.pts + '</td></tr>'; });
+    if (bonusPts !== null) rows += '<tr><td>⭐ ' + esc(ALL.b1.title) + '</td><td>' + (S.res.b1.typeOk ? '✅' : '❌') + ' ' + (bonusPts > 0 ? '+' : '') + bonusPts + '</td></tr>';
+    var now = new Date(S.finishedAt || Date.now());
+    var dt = ('0' + now.getDate()).slice(-2) + '.' + ('0' + (now.getMonth() + 1)).slice(-2) + '.' + now.getFullYear() + ', ' + ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2);
+    var h = '';
+    if (S.res.b1 === undefined) {
+      h += '<div class="card-glass bonus-offer"><span style="font-size:34px">⭐</span><div><b>Бонусна справа відкрита!</b><p>«' + esc(ALL.b1.title) + '» — до +3 балів. Правила доброчесності однакові для всіх 🙂</p></div>' +
+           '<button class="btn" type="button" id="bonusBtn">Взятися за справу</button></div>';
+    }
+    h += '<div class="cert"><div class="top"><img src="../assets/logo.png" alt=""><div><b>Детективне бюро доброчесності</b><small>Київський професійний ліцей транспорту · Тиждень академічної доброчесності</small></div></div>' +
+      '<h2>Посвідчення слідчого</h2><div class="names">' + esc(S.names.join(' · ')) + '</div>' +
+      '<div style="color:var(--muted);font-weight:700;margin-top:2px">Група ' + esc(S.group) + ' · ' + dt + '</div>' +
+      '<div class="cert-row"><div class="score">' + main + '<small> / 24</small>' + (bonusPts !== null ? '<div style="font-size:16px;color:#fbbf24;margin-top:6px">⭐ бонус: ' + (bonusPts > 0 ? '+' : '') + bonusPts + '</div>' : '') + '</div>' +
+      '<div><div class="rank">' + rank(main) + '</div><div style="color:var(--muted);font-weight:700;margin-top:8px;font-size:14px">Розкрито справ: ' + solved + ' з 8 · Час: ' + fmt(sec) + ' · Підказки: ' + Object.keys(S.hints).length + '</div></div></div>' +
+      '<table class="tbl">' + rows + '</table>' +
+      (S.attempt > 1 ? '<div class="attempt">⚠ Спроба №' + S.attempt + ' на цьому комп’ютері — чесно скажи про це викладачу 😉</div>' : '<div class="attempt" style="color:var(--mint)">✔ Перша спроба</div>') +
+      '<div class="show">🙋 Покажи цей екран викладачу</div></div>' +
+      '<div class="fin-actions"><button class="btn btn-ghost" type="button" id="dos2">📚 Довідник</button><button class="btn btn-ghost" type="button" id="againBtn">🔁 Нова спроба</button></div>';
+    F.innerHTML = h;
+    toTop();
+    if (main >= 17) { SFX.win(); confetti(90); }
+    var bb = $('bonusBtn'); if (bb) bb.onclick = startBonus;
+    $('dos2').onclick = openDos;
+    $('againBtn').onclick = function(){
+      if (!confirm('Почати нове розслідування? Воно буде позначене як спроба №' + (attempts() + 1) + '.')) return;
+      try { localStorage.removeItem(SKEY); } catch (e) {} S = null; $('contBox').hidden = true; showStart();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+  }
+
+  // ---------- довідник ----------
+  function openDos(){
+    var h = ''; TYPES.forEach(function(t){ h += '<div class="dos"><b><span>' + t[2] + '</span>' + esc(t[1]) + '</b><p>' + esc(t[3]) + '</p></div>'; });
+    $('dosGrid').innerHTML = h; $('dosModal').hidden = false;
+  }
+  $('dosBtn').onclick = openDos;
+  $('dosClose').onclick = function(){ $('dosModal').hidden = true; };
+  $('dosModal').onclick = function(e){ if (e.target === $('dosModal')) $('dosModal').hidden = true; };
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') $('dosModal').hidden = true; });
+  bindSound($('sndBtn'));
+
+  // для тестів
+  window.__dobro = { scoreOf: scoreOf, ANS: ANS, ALL: ALL, state: function(){ return S; } };
+  showStart();
+})();
+</script>
+</body>
+</html>
